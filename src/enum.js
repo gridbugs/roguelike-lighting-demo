@@ -5,9 +5,13 @@ class Enumeration {
         this.keys = Object.keys(object);
         this.values = [for (key of this.keys) object[key]];
 
+        let count = 0;
         for (let key of this.keys) {
             this[key] = object[key];
+            ++count;
         }
+
+        this.length = count;
 
         Object.freeze(this);
     }
