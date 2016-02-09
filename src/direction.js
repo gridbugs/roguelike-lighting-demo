@@ -7,11 +7,12 @@ export const DirectionType = makeEnum([
 ]);
 
 class DirectionInfo {
-    constructor(x, y, name, type, index) {
+    constructor(x, y, name, type, index, subIndex) {
         this.vector = new Vec2(x, y);
-        this.index = index;
         this.name = name;
         this.type = type;
+        this.index = index;
+        this.subIndex = subIndex;
     }
 
     get cardinal() {
@@ -23,22 +24,22 @@ class DirectionInfo {
     }
 }
 
-function d(x, y, name, type, index) {
-    return new DirectionInfo(x, y, name, type, index);
+function d(x, y, name, type, index, subIndex) {
+    return new DirectionInfo(x, y, name, type, index, subIndex);
 }
 
 const C = DirectionType.Cardinal;
 const O = DirectionType.Ordinal;
 
 export const Direction = makeEnum({
-    North:      d(+0, -1, 'North', C, 0),
-    East:       d(+1, +0, 'East', C, 1),
-    South:      d(+0, +1, 'South', C, 2),
-    West:       d(-1, +0, 'West', C, 3),
-    NorthEast:  d(+1, -1, 'NorthEast', O, 4),
-    SouthEast:  d(+1, +1, 'SouthEast', O, 5),
-    SouthWest:  d(-1, +1, 'SouthWest', O, 6),
-    NorthWest:  d(-1, -1, 'NorthWest', O, 7)
+    North:      d(+0, -1, 'North', C, 0, 0),
+    East:       d(+1, +0, 'East', C, 1, 1),
+    South:      d(+0, +1, 'South', C, 2, 2),
+    West:       d(-1, +0, 'West', C, 3, 3),
+    NorthEast:  d(+1, -1, 'NorthEast', O, 4, 0),
+    SouthEast:  d(+1, +1, 'SouthEast', O, 5, 1),
+    SouthWest:  d(-1, +1, 'SouthWest', O, 6, 2),
+    NorthWest:  d(-1, -1, 'NorthWest', O, 7, 3)
 });
 
 export const Directions = Direction.values;
