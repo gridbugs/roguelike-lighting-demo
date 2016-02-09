@@ -2,6 +2,7 @@ const gulp = require('gulp')
 const traceur = require('gulp-traceur')
 const plumber = require('gulp-plumber')
 const webserver = require('gulp-webserver')
+const clean = require('gulp-clean')
 const argv = require('yargs').argv
 
 const DEFAULT_SERVER_PORT = 8000
@@ -49,4 +50,9 @@ gulp.task('serve', () => {
         fallback: 'index.html',
         livereload: false
     }))
+})
+
+gulp.task('clean', () => {
+    gulp.src('build')
+    .pipe(clean())
 })

@@ -6,6 +6,7 @@
   "license": "MIT",
   "devDependencies": {
     "gulp": "*",
+    "gulp-clean": "*",
     "gulp-plumber": "*",
     "gulp-traceur": "*",
     "gulp-webserver": "*",
