@@ -24,7 +24,7 @@ const TRACEUR_OPTS = {
     sourceMaps: 'inline'
 }
 
-gulp.task('default',['stream', 'serve'])
+gulp.task('default',['build', 'stream', 'serve'])
 
 gulp.task('stream', () => {
     gulp.watch(SOURCE_GLOB, ['build'])
