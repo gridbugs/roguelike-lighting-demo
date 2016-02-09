@@ -34,7 +34,7 @@ gulp.task('stream', () => {
 gulp.task('build', () => {
     gulp.src(SOURCE_GLOB)
     .pipe(plumber({
-        errorHandler: (err) => {
+        handleError: (err) => {
             console.log(err.toString())
             this.emit('end')
         }
