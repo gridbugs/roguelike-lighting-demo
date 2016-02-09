@@ -2,14 +2,14 @@ const gulp = require('gulp')
 const traceur = require('gulp-traceur')
 const plumber = require('gulp-plumber')
 const webserver = require('gulp-webserver')
-const argv = require('yargs').argv;
+const argv = require('yargs').argv
 
-const DEFAULT_SERVER_PORT = 8000;
+const DEFAULT_SERVER_PORT = 8000
 
 const OUTPUT_DIR = 'build'
 const OUTPUT_FILE = 'app.js'
 const SOURCE_GLOB = 'src/**/*.js'
-const SERVER_PORT = argv.port == undefined ? DEFAULT_SERVER_PORT : parseInt(argv.port);
+const SERVER_PORT = argv.port == undefined ? DEFAULT_SERVER_PORT : parseInt(argv.port)
 
 const TRACEUR_OPTS = {
     asyncFunctions: true,
@@ -33,9 +33,9 @@ gulp.task('stream', () => {
 gulp.task('build', () => {
     gulp.src(SOURCE_GLOB)
     .pipe(plumber({
-        errorHandler: function (err) {
-            console.log(err.toString());
-            this.emit('end');
+        errorHandler: (err) => {
+            console.log(err.toString())
+            this.emit('end')
         }
     }))
     .pipe(traceur(TRACEUR_OPTS))
