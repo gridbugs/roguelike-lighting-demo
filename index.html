@@ -2,11 +2,19 @@
 <html>
 <head>
 
-<script src="lib/jquery.js"></script>
-<script src="lib/seedrandom.js"></script>
-<script src="lib/traceur-runtime.js"></script>
+    <script src="lib/require.js"></script>
+    <script>
+        requirejs.config({
+            baseUrl: 'build',
+            paths: {
+                jquery: '../lib/jquery',
+                seedrandom: '../lib/seedrandom'
+            }
+        });
+        requirejs(['requirejs-main'])
+    </script>
 
-<script src="build/app.js"></script>
+<script src="lib/traceur-runtime.js"></script>
 
 <style>
 #canvas {

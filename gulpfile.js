@@ -1,7 +1,5 @@
 const gulp = require('gulp')
 const traceur = require('gulp-traceur')
-const concat = require('gulp-concat')
-const sourcemaps = require('gulp-sourcemaps')
 const plumber = require('gulp-plumber')
 const webserver = require('gulp-webserver')
 const argv = require('yargs').argv;
@@ -15,13 +13,14 @@ const SERVER_PORT = argv.port == undefined ? DEFAULT_SERVER_PORT : parseInt(argv
 
 const TRACEUR_OPTS = {
     asyncFunctions: true,
-    modules: 'inline',
+    modules: 'amd',
     classes: 'parse',
     generators: 'parse',
     arrowFunctions: 'parse',
     blockBinding: 'parse',
     forOf: 'parse',
-    templateLiterals: 'parse'
+    templateLiterals: 'parse',
+    sourceMaps: 'inline'
 }
 
 gulp.task('default',['stream', 'serve'])
@@ -38,10 +37,7 @@ gulp.task('build', () => {
             this.emit('end');
         }
     }))
-    .pipe(sourcemaps.init())
     .pipe(traceur(TRACEUR_OPTS))
-    .pipe(concat(OUTPUT_FILE))
-    .pipe(sourcemaps.write())
     .pipe(gulp.dest(OUTPUT_DIR))
 })
 
