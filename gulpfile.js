@@ -20,6 +20,7 @@ const TRACEUR_OPTS = {
     blockBinding: 'parse',
     forOf: 'parse',
     templateLiterals: 'parse',
+    arrayComprehension: true,
     sourceMaps: 'inline'
 }
 
