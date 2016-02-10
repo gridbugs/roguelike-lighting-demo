@@ -1,0 +1,24 @@
+{
+  "name": "glacial",
+  "version": "0.0.1",
+  "description": "Turn-based dungeon crawler where the player explores a city under a glacier",
+  "author": "Stephen Sherratt",
+  "license": "MIT",
+  "devDependencies": {
+    "gulp": "*",
+    "gulp-concat": "*",
+    "gulp-plumber": "*",
+    "gulp-sourcemaps": "*",
+    "gulp-traceur": "*",
+    "gulp-webserver": "*",
+    "yargs": "*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/stevebob/glacial.git"
+  },
+  "bugs": {
+    "url": "https://github.com/stevebob/glacial/issues"
+  },
+  "homepage": "https://github.com/stevebob/glacial#readme"
+}
