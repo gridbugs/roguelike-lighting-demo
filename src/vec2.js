@@ -14,6 +14,11 @@ export class Vec2 {
         }
     }
 
+    copyTo(dest) {
+        dest.x = this.x;
+        dest.y = this.y;
+    }
+
     arraySet(index, value) {
         switch (index) {
         case 0:
