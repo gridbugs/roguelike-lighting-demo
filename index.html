@@ -17,6 +17,21 @@
 <script src="lib/traceur-runtime.js"></script>
 
 <style>
+* {
+    margin: 0px;
+    padding: 0px;
+}
+@font-face {
+    font-family: 'ps2p';
+    src: url('fonts/PressStart2P-Regular.ttf');
+}
+p.font-loader {
+    font-family: ps2p;
+    position: absolute;
+    top: -10px;
+    left: -10px;
+}
+
 #canvas {
     border: 2px solid black;
 }
@@ -24,6 +39,7 @@
 
 </head>
 <body>
+    <p class='font-loader'>.</p>
     <canvas id="canvas" width=800 height=600></canvas>
 </body>
 </html>
