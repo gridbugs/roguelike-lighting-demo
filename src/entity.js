@@ -1,33 +1,16 @@
-import {Components} from './components.js';
+import {ComponentTable} from './component_table.js';
 
-export class Entity {
+export class Entity extends ComponentTable {
     constructor(iterable = []) {
+        super();
+
         this.ecsContext = null;
-        this.components = new Array(Components.length);
-        for (let i = 0; i < Components.length; ++i) {
-            this.components[i] = null;
+        for (let component of iterable) {
+            this.set(component);
         }
-        for (let c of iterable) {
-            this.components[c.type] = c;
-        }
-    }
-
-    get(component) {
-        return this.components[component.type];
-    }
-
-    has(component) {
-        return this.get(component) !== null;
     }
 
     is(component) {
         return this.has(component);
-    }
-
-    with(component, f) {
-        let c = this.get(component);
-        if (c !== null) {
-            f(c);
-        }
     }
 }
