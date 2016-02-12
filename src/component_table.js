@@ -1,4 +1,5 @@
 import {Components} from './components.js';
+import {assert} from './assert.js';
 
 /* A data structure that can store at most 1 of each
  * type of component, and retrieve components by their
@@ -8,6 +9,19 @@ export class ComponentTable {
     constructor() {
         this.length = Components.length;
         this.components = new Array(this.length);
+        this.clear();
+    }
+
+    *[Symbol.iterator]() {
+        for (let component of this.components) {
+            if (component !== null) {
+                yield component;
+            }
+        }
+    }
+
+    /* Remove all values */
+    clear() {
         for (let i = 0; i < this.length; ++i) {
             this.components[i] = null;
         }
@@ -19,6 +33,20 @@ export class ComponentTable {
      */
     get(component) {
         return this.components[component.type];
+    }
+
+    /* Associate a value with a given component */
+    set(component, value) {
+        let index;
+        if (typeof component === 'number') {
+            index = component;
+        } else {
+            index = component.type;
+        }
+
+        assert(index !== undefined);
+
+        this.components[index] = value;
     }
 
     /* Stores a given component, replacing the stored

@@ -1,25 +1,38 @@
 import {EntityPrototype} from './entity_prototype.js';
 import {Components} from './components.js';
+import {Tiles} from './tiles.js';
 
-export function drawable(x, y, tile) {
-    return new EntityPrototype([
+export function PlayerCharacter(x, y) {
+    return [
         new Components.Position(x, y),
-        new Components.Tile(tile)
-    ]);
+        new Components.Tile(Tiles.PlayerCharacter)
+    ];
 }
 
-export function wall(x, y, tile) {
-    return drawable(x, y, tile)
-        .add([
-            new Components.Solid(),
-            new Components.Opacity(1)
-        ]);
+export function Wall(x, y) {
+    return [
+        new Components.Position(x, y),
+        new Components.WallTile(Tiles.WallFront, Tiles.WallTop)
+    ];
 }
 
-export function tree(x, y, tile) {
-    return drawable(x, y, tile)
-        .add([
-            new Components.Solid(),
-            new Components.Opacity(0.5)
-        ]);
+export function Tree(x, y) {
+    return [
+        new Components.Position(x, y),
+        new Components.Tile(Tiles.Tree)
+    ];
+}
+
+export function Floor(x, y) {
+    return [
+        new Components.Position(x, y),
+        new Components.Tile(Tiles.Floor)
+    ];
+}
+
+export function Ground(x, y) {
+    return [
+        new Components.Position(x, y),
+        new Components.Tile(Tiles.Floor)
+    ];
 }

@@ -80,3 +80,4 @@ export class TileStore {
         return new Tile(this.canvas, xOffset, 0, this.width, this.height);
     }
 }
+TileStore.transparent = 'rgba(0,0,0,0)';

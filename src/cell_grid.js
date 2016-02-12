@@ -4,14 +4,13 @@ import * as Direction from './direction.js';
 
 import {Grid} from './grid.js';
 
-class Cell {
+export class Cell {
     constructor(x, y, grid) {
         this.x = x;
         this.y = y;
         this.grid = grid;
 
         this.coord = new Vec2(x, y);
-        this.value = null;
 
         /* Cell geometry */
         this.centre = new Vec2(x + 0.5, y + 0.5);
@@ -66,20 +65,22 @@ class Cell {
     }
 }
 
-export class CellGrid extends Grid {
-    constructor(width, height) {
-        super(width, height);
-        for (let [x, y] of this.coords()) {
-            this.set(x, y, new Cell(x, y, this));
-        }
-        for (let cell of this) {
-            cell.initNeighbours();
-        }
-    }
-
-    *values() {
-        for (let cell of this) {
-            yield* cell.value;
+/* This function returns a cless which extends Grid by initializing an object
+ * of the specified class in each cell and allowing the object to link its
+ * neighbours together for convenient navigation. */
+export function CellGrid(T) {
+    return class CellGridInstance extends Grid {
+        constructor(width, height) {
+            super(width, height);
+            for (let [x, y] of this.coords()) {
+                this.set(x, y, new T(x, y, this));
+            }
+            if (T.prototype.initNeighbours !== undefined) {
+                console.debug('hi');
+                for (let cell of this) {
+                    cell.initNeighbours();
+                }
+            }
         }
     }
 }

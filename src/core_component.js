@@ -1,5 +1,6 @@
 import {Component} from './component.js';
 import {Vec2} from './vec2.js';
+import {assert} from './assert.js';
 
 export class Position extends Component {
     constructor(x, y) {
@@ -40,12 +41,36 @@ export class Position extends Component {
     set y(value) {
         this.vector.y = value;
     }
+
+    onAdd(entity) {
+        super.onAdd(entity);
+
+        /* add the entity to its spacial hash */
+        entity.cell = this.ecsContext.spacialHash.get(this.vector);
+        assert(entity.cell !== null);
+        assert(entity.cell !== undefined);
+        entity.cell.entities.add(entity);
+    }
+
+    onRemove(entity) {
+        entity.cell.entities.delete(entity);
+        entity.cell = null;
+        super.onRemove(entity);
+    }
 }
 
 export class Tile extends Component {
-    constructor(character) {
+    constructor(tile) {
         super();
-        this.character = character;
+        this.tile = tile;
+    }
+}
+
+export class WallTile extends Component {
+    constructor(frontTile, topTile) {
+        super();
+        this.frontTile = frontTile;
+        this.topTile = topTile;
     }
 }
 
