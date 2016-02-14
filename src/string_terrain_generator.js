@@ -28,6 +28,8 @@ export class StringTerrainGenerator {
             break;
         case '.':
         case ',':
+        case '+':
+        case '>':
             add('Floor');
             break;
         case ' ':

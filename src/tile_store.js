@@ -1,10 +1,37 @@
+import {Transparent} from './colour.js';
+
 class Tile {
-    constructor(canvas, x, y, width, height) {
+    constructor(canvas, x, y, width, height, transparentBackground) {
         this.canvas = canvas;
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
+        this.transparentBackground = transparentBackground;
+    }
+
+    get background() {
+        return this;
+    }
+
+    get foreground() {
+        return this;
+    }
+}
+
+class LayeredTile extends Tile {
+    constructor(canvas, x, y, width, height, transparentBackground, background, foreground) {
+        super(canvas, x, y, width, height, transparentBackground);
+        this._background = background;
+        this._foreground = foreground;
+    }
+
+    get background() {
+        return this._background;
+    }
+
+    get foreground() {
+        return this._foreground;
     }
 }
 
@@ -52,13 +79,31 @@ export class TileStore {
         this.centreYOffset = (this.height - this.fontHeight)/1.5;
     }
 
-    allocateCharacterTile(character, foreColour = '#ffffff', backColour = '#000000') {
+    getNextOffset() {
         let xOffset = this.count * this.width;
         ++this.count;
+        return xOffset;
+    }
+
+    allocateCharacterTile(character, foreColour = '#ffffff', backColour = Transparent) {
+
+        let background, foreground;
+        let xOffset;
+        let transparent = backColour === Transparent;
+
+        if (!transparent) {
+            xOffset = this.getNextOffset();
+
+            this.ctx.beginPath();
+            this.ctx.fillStyle = backColour;
+            this.ctx.fillRect(xOffset, 0, this.width, this.height);
+            this.ctx.fill();
+            background = new Tile(this.canvas, xOffset, 0, this.width, this.height, backColour === Transparent);
+        }
+
+        xOffset = this.getNextOffset();
 
         this.ctx.beginPath();
-        this.ctx.fillStyle = backColour;
-        this.ctx.fillRect(xOffset, 0, this.width, this.height);
         this.ctx.fillStyle = foreColour;
         this.ctx.fillText(
             character,
@@ -66,18 +111,37 @@ export class TileStore {
             this.height - this.centreYOffset + this.yOffset
         );
         this.ctx.fill();
+        foreground = new Tile(this.canvas, xOffset, 0, this.width, this.height, backColour === Transparent);
 
-        return new Tile(this.canvas, xOffset, 0, this.width, this.height);
+        if (transparent) {
+            return foreground;
+        } else {
+            return this.allocateFromTiles(background, foreground);
+        }
     }
 
-    allocateImage(image) {
-        let xOffset = this.count * this.width;
-        ++this.count;
+    drawTile(tile, x, y) {
+        this.ctx.drawImage(
+            this.canvas,
+            tile.x, tile.y,
+            tile.width, tile.height,
+            x, y,
+            tile.width, tile.height
+        );
+    }
 
-        this.ctx.beginPath();
+    allocateFromTiles(background, foreground) {
+        let xOffset = this.getNextOffset();
+        this.drawTile(background, xOffset, 0);
+        this.drawTile(foreground, xOffset, 0);
+        return new LayeredTile(this.canvas, xOffset, 0, this.width, this.height, false, background, foreground);
+    }
+
+    allocateImage(image, transparentBackground = false) {
+        let xOffset = this.getNextOffset();
+
         this.ctx.drawImage(image, xOffset, 0, this.width, this.height);
 
-        return new Tile(this.canvas, xOffset, 0, this.width, this.height);
+        return new Tile(this.canvas, xOffset, 0, this.width, this.height, transparentBackground);
     }
 }
-TileStore.transparent = 'rgba(0,0,0,0)';

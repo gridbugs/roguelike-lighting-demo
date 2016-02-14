@@ -1,13 +1,25 @@
 import {Entity} from './entity.js';
-import {SpacialHash} from './spacial_hash.js';
+
+import {CellGrid, Cell} from './cell_grid.js';
+import {ComponentCountingEntitySet} from './entity_set.js';
+import {SetWrapper} from './set_wrapper.js';
+
 import {Config} from './config.js';
 import {assert} from './assert.js';
+
+class SpacialHashCell extends Cell {
+    constructor(x, y, grid) {
+        super(x, y, grid);
+        this.entities = new ComponentCountingEntitySet();
+    }
+}
+
+class SpacialHash extends CellGrid(SpacialHashCell) {}
 
 export class EcsContext {
     constructor() {
         this.entities = new Set();
         this.spacialHash = new SpacialHash(Config.GRID_WIDTH, Config.GRID_HEIGHT);
-        console.debug(this);
     }
 
     emplaceEntity(components = []) {

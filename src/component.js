@@ -19,6 +19,10 @@ export class Component extends Typed {
         dest.valid = this.valid;
     }
 
+    is(ctor) {
+        return this.type == ctor.type;
+    }
+
     onAdd(entity) {
         assert(entity.ecsContext !== null);
         this.entity = entity;

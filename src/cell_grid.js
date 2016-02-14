@@ -63,6 +63,10 @@ export class Cell {
             }
         }
     }
+
+    getNeighbour(direction) {
+        return this.neighboursByDirection[direction.index];
+    }
 }
 
 /* This function returns a cless which extends Grid by initializing an object
@@ -76,7 +80,6 @@ export function CellGrid(T) {
                 this.set(x, y, new T(x, y, this));
             }
             if (T.prototype.initNeighbours !== undefined) {
-                console.debug('hi');
                 for (let cell of this) {
                     cell.initNeighbours();
                 }

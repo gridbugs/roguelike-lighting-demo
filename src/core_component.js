@@ -60,17 +60,19 @@ export class Position extends Component {
 }
 
 export class Tile extends Component {
-    constructor(tile) {
+    constructor(tile, depth) {
         super();
         this.tile = tile;
+        this.depth = depth;
     }
 }
 
 export class WallTile extends Component {
-    constructor(frontTile, topTile) {
+    constructor(frontTile, topTile, depth) {
         super();
         this.frontTile = frontTile;
         this.topTile = topTile;
+        this.depth = depth;
     }
 }
 
