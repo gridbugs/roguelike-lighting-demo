@@ -1,5 +1,4 @@
 import {ComponentTable} from './component_table.js';
-import {SetWrapper} from './set_wrapper.js';
 import {assert} from './assert.js';
 
 export class EntitySet {
@@ -56,13 +55,15 @@ export class ComponentCountingEntitySet extends EntitySet {
 
     incrementSingleComponent(component) {
         let count = this.componentCount.get(component);
+        assert(typeof count === 'number');
         this.componentCount.set(component, count + 1);
     }
 
     decrementSingleComponent(component) {
         let count = this.componentCount.get(component);
+        assert(typeof count === 'number');
         assert(count > 0);
-        this.componentCount.set(count - 1);
+        this.componentCount.set(component, count - 1);
     }
 
     clear() {

@@ -6,6 +6,7 @@ export class Component extends Typed {
         super();
         this.valid = true;
         this.entity = null;
+        this._ = this.name;
     }
 
     get ecsContext() {

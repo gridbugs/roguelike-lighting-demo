@@ -2,10 +2,13 @@ import {EntityPrototype} from './entity_prototype.js';
 import {Components} from './components.js';
 import {Tiles} from './tiles.js';
 
+import {playerTakeTurn} from './player_control.js';
+
 export function PlayerCharacter(x, y) {
     return [
         new Components.Position(x, y),
-        new Components.Tile(Tiles.PlayerCharacter, 2)
+        new Components.Tile(Tiles.PlayerCharacter, 2),
+        new Components.TurnTaker(playerTakeTurn)
     ];
 }
 

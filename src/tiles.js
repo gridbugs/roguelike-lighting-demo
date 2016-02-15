@@ -16,7 +16,7 @@ Tiles.init = async function() {
     tileStore.setFont(TILE_FONT_FACE, TILE_FONT_SIZE, false, false);
 
     this.PlayerCharacter = tileStore.allocateCharacterTile('@', '#ffffff');
-    this.Floor = tileStore.allocateCharacterTile('.', '#ffffff', '#000000');
+    this.Floor = tileStore.allocateCharacterTile('.', '#888888', '#000000');
     this.WallFront = tileStore.allocateImage(await loadImage('images/wall-front.png'));
     this.WallTop = tileStore.allocateImage(await loadImage('images/wall-top.png'));
     this.Tree = tileStore.allocateImage(await loadImage('images/tree.png'), true);

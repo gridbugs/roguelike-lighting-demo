@@ -2,7 +2,6 @@ import {Entity} from './entity.js';
 
 import {CellGrid, Cell} from './cell_grid.js';
 import {ComponentCountingEntitySet} from './entity_set.js';
-import {SetWrapper} from './set_wrapper.js';
 
 import {Config} from './config.js';
 import {assert} from './assert.js';
