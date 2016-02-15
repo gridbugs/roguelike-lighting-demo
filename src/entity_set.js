@@ -86,4 +86,12 @@ export class ComponentCountingEntitySet extends EntitySet {
         this.decrementComponents(entity);
         super.delete(entity);
     }
+
+    hasComponent(component) {
+        return this.componentCount.get(component) > 0;
+    }
+
+    isComponent(component) {
+        return this.hasComponent(component);
+    }
 }

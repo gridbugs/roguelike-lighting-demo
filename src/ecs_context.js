@@ -11,6 +11,14 @@ class SpacialHashCell extends Cell {
         super(x, y, grid);
         this.entities = new ComponentCountingEntitySet();
     }
+
+    has(component) {
+        return this.entities.hasComponent(component);
+    }
+
+    is(component) {
+        return this.entities.isComponent(component);
+    }
 }
 
 class SpacialHash extends CellGrid(SpacialHashCell) {}

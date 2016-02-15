@@ -8,21 +8,24 @@ export function PlayerCharacter(x, y) {
     return [
         new Components.Position(x, y),
         new Components.Tile(Tiles.PlayerCharacter, 2),
-        new Components.TurnTaker(playerTakeTurn)
+        new Components.TurnTaker(playerTakeTurn),
+        new Components.Collider()
     ];
 }
 
 export function Wall(x, y) {
     return [
         new Components.Position(x, y),
-        new Components.WallTile(Tiles.WallFront, Tiles.WallTop, 1)
+        new Components.WallTile(Tiles.WallFront, Tiles.WallTop, 1),
+        new Components.Solid()
     ];
 }
 
 export function Tree(x, y) {
     return [
         new Components.Position(x, y),
-        new Components.Tile(Tiles.Tree, 1)
+        new Components.Tile(Tiles.Tree, 1),
+        new Components.Solid()
     ];
 }
 

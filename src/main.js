@@ -8,7 +8,7 @@ import {Tiles} from './tiles.js';
 import {StringTerrainGenerator} from './string_terrain_generator.js';
 import {EcsContext} from './ecs_context.js';
 
-import {Renderer} from './renderer.js';
+import {Systems} from './systems.js';
 
 import {Schedule} from './schedule.js';
 import {Components} from './components.js';
@@ -66,9 +66,13 @@ export async function main() {
         }
     })();
 
-    var renderer = new Renderer(ecs, GlobalDrawer.Drawer);
+    var renderer = new Systems.Renderer(ecs, GlobalDrawer.Drawer);
+    var collision = new Systems.Collision(ecs);
 
     function maybeApplyAction(action) {
+
+        collision.run(action);
+
         if (action.success) {
             action.commit();
             return true;

@@ -60,6 +60,7 @@ export class Position extends Component {
         /* remove the entity from its cell */
         this.entity.cell.entities.delete(this.entity);
         this.entity.cell = null;
+
     }
 
     postChange() {

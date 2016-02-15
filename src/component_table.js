@@ -63,6 +63,10 @@ export class ComponentTable {
         return this.components[component.type] !== null;
     }
 
+    is(component) {
+        return this.has(component);
+    }
+
     /* Removes a component of a given type if such a
      * component is stored
      */

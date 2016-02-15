@@ -1,3 +1,5 @@
+import {System} from './system.js';
+
 import {BestTracker} from './best_tracker.js';
 import {CellGrid, Cell} from './cell_grid.js';
 import {Components} from './components.js';
@@ -21,11 +23,11 @@ class RendererCell extends Cell {
 
 class RendererGrid extends CellGrid(RendererCell) {}
 
-export class Renderer {
-    constructor(ecs, drawer) {
+export class Renderer extends System {
+    constructor(ecsContext, drawer) {
+        super(ecsContext);
         this.drawer = drawer;
-        this.ecs = ecs;
-        this.grid = new RendererGrid(ecs.spacialHash.width, ecs.spacialHash.height);
+        this.grid = new RendererGrid(this.width, this.height);
     }
 
     maybeAddTile(rendererCell, entity) {
@@ -41,7 +43,7 @@ export class Renderer {
     }
 
     updateGrid() {
-        for (let cell of this.ecs.spacialHash) {
+        for (let cell of this.spacialHash) {
             let rendererCell = this.grid.get(cell.coord);
 
             rendererCell.tiles.clear();

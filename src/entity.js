@@ -19,10 +19,6 @@ export class Entity extends ComponentTable {
         }
     }
 
-    is(component) {
-        return this.has(component);
-    }
-
     add(component) {
         assert(!this.has(component));
 

@@ -20,6 +20,9 @@ export class WallTile extends Component {
 export class Solid extends Component {
 }
 
+export class Collider extends Component {
+}
+
 export class Opacity extends Component {
     constructor(value) {
         super();

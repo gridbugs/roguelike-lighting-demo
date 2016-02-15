@@ -7,15 +7,15 @@ import {Direction} from './direction.js';
 import {getChar} from './input.js';
 
 const Controls = {
-    d:  (entity) => { return new Actions.Walk(entity, Direction.West) },
-    h:  (entity) => { return new Actions.Walk(entity, Direction.South) },
-    t:  (entity) => { return new Actions.Walk(entity, Direction.North) },
-    n:  (entity) => { return new Actions.Walk(entity, Direction.East) },
+    h:  (entity) => { return new Actions.Walk(entity, Direction.West) },
+    j:  (entity) => { return new Actions.Walk(entity, Direction.South) },
+    k:  (entity) => { return new Actions.Walk(entity, Direction.North) },
+    l:  (entity) => { return new Actions.Walk(entity, Direction.East) },
 
-    f:  (entity) => { return new Actions.Walk(entity, Direction.NorthWest) },
-    g:  (entity) => { return new Actions.Walk(entity, Direction.NorthEast) },
-    x:  (entity) => { return new Actions.Walk(entity, Direction.SouthWest) },
-    b:  (entity) => { return new Actions.Walk(entity, Direction.SouthEast) },
+    y:  (entity) => { return new Actions.Walk(entity, Direction.NorthWest) },
+    u:  (entity) => { return new Actions.Walk(entity, Direction.NorthEast) },
+    b:  (entity) => { return new Actions.Walk(entity, Direction.SouthWest) },
+    n:  (entity) => { return new Actions.Walk(entity, Direction.SouthEast) },
 };
 
 export async function playerTakeTurn(entity) {

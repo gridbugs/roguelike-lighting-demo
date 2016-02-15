@@ -6,11 +6,12 @@ export class Walk extends Action {
         super();
         this.entity = entity;
         this.direction = direction;
+        this.position = this.entity.get(Components.Position);
+        this.source = this.position.vector;
+        this.destination = this.source.add(this.direction.vector);
     }
 
     commit() {
-        let position = this.entity.get(Components.Position);
-        let destination = position.vector.add(this.direction.vector);
-        position.vector = destination;
+        this.position.vector = this.destination;
     }
 }
