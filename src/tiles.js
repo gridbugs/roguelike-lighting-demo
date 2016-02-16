@@ -22,8 +22,8 @@ Tiles.init = async function() {
         this.WallTop = tileStore.allocateCharacterTile('#', '#888888', '#000000');
         this.Tree = tileStore.allocateCharacterTile('&', 'green', 'black');
     } else {
-        this.WallFront = tileStore.allocateImage(await loadImage('images/ice-wall-front.png'));
         this.WallTop = tileStore.allocateImage(await loadImage('images/ice-wall-top.png'));
+        this.WallFront = tileStore.allocateImage(await loadImage('images/ice-wall-front.png'));
         this.Tree = tileStore.allocateImage(await loadImage('images/pine-tree.png'), true);
     }
 }
