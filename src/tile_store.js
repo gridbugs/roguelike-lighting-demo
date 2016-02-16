@@ -119,6 +119,16 @@ export class TileStore {
         return tile;
     }
 
+    drawTile(tile, x, y) {
+        this.ctx.drawImage(
+            this.canvas,
+            tile.x, tile.y,
+            tile.width, tile.height,
+            x, y,
+            tile.width, tile.height
+        );
+    }
+
     allocateFromTiles(background, foreground) {
         this.getNextOffset();
         this.drawTile(background, this.xOffset, this.yOffset);
@@ -174,21 +184,14 @@ export class TileStore {
         foreground = this.allocateTile(this.xOffset, this.yOffset,
                                 this.width, this.height, backColour === Transparent);
 
+        let tile;
         if (transparent) {
-            return foreground;
+            tile = foreground;
         } else {
-            return this.allocateFromTiles(background, foreground);
+            tile = this.allocateFromTiles(background, foreground);
         }
-    }
-
-    drawTile(tile, x, y) {
-        this.ctx.drawImage(
-            this.canvas,
-            tile.x, tile.y,
-            tile.width, tile.height,
-            x, y,
-            tile.width, tile.height
-        );
+        tile._ = `character(${character}, ${foreColour}, ${backColour})`;
+        return tile;
     }
 
     allocateImage(image, transparentBackground = false) {
@@ -218,7 +221,9 @@ export class TileStore {
 
         this.ctx.putImageData(toImageData, this.xOffset, this.yOffset);
 
-        return this.allocateTile(this.xOffset, this.yOffset, this.width, this.height, transparentBackground);
+        let tile = this.allocateTile(this.xOffset, this.yOffset, this.width, this.height, transparentBackground);
+        tile._ = `image(${image.src})`;
+        return tile;
     }
 
     allocateDotTile(size, foreColour, backColour) {
@@ -237,6 +242,8 @@ export class TileStore {
         this.ctx.fill();
         let foreground = this.allocateTile(this.xOffset, this.yOffset, this.width, this.height, true);
 
-        return this.allocateFromTiles(background, foreground);
+        let tile = this.allocateFromTiles(background, foreground);
+        tile._ = `dot(${foreColour}, ${backColour})`;
+        return tile;
     }
 }

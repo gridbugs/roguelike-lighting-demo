@@ -1,6 +1,8 @@
 import {Component} from './component.js';
 import {Knowledge} from './knowledge.js';
 
+import {Components} from './components.js';
+
 export class Tile extends Component {
     constructor(tile, depth) {
         super();
@@ -72,4 +74,32 @@ export class Observer extends Component {
 }
 
 export class PlayerCharacter extends Component {
+}
+
+export class Door extends Component {
+    constructor(open, openTile, closedTile) {
+        super();
+        this._open = open;
+        this.openTile = openTile;
+        this.closedTile = closedTile;
+    }
+
+    get open() {
+        return this._open;
+    }
+
+    get closed() {
+        return !this._open;
+    }
+
+    set open(value) {
+        this._open = value;
+        this.entity.with(Components.Tile, (tile) => {
+            if (value) {
+                tile.tile = this.openTile;
+            } else {
+                tile.tile = this.closedTile;
+            }
+        });
+    }
 }

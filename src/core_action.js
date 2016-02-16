@@ -15,3 +15,29 @@ export class Walk extends Action {
         this.position.vector = this.destination;
     }
 }
+
+export class OpenDoor extends Action {
+    constructor(entity, door) {
+        super();
+        this.entity = entity;
+        this.door = door;
+    }
+
+    commit() {
+        this.door.with(Components.Door, (door) => {
+            door.open = true;
+        });
+    }
+}
+
+export class CloseDoor extends Action {
+    constructor(entity, door) {
+        super();
+        this.entity = entity;
+        this.door = door;
+    }
+
+    commit() {
+        this.door.open = false;
+    }
+}

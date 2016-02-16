@@ -6,6 +6,10 @@ import {ComponentCountingEntitySet} from './entity_set.js';
 import {Config} from './config.js';
 import {assert} from './assert.js';
 
+import {Schedule} from './schedule.js';
+
+import {Systems} from './systems.js';
+
 class SpacialHashCell extends Cell {
     constructor(x, y, grid) {
         super(x, y, grid);
@@ -19,6 +23,10 @@ class SpacialHashCell extends Cell {
     is(component) {
         return this.entities.isComponent(component);
     }
+
+    *[Symbol.iterator]() {
+        yield* this.entities;
+    }
 }
 
 class SpacialHash extends CellGrid(SpacialHashCell) {}
@@ -31,8 +39,17 @@ export class EcsContext {
         this.width = Config.GRID_WIDTH;
         this.height = Config.GRID_HEIGHT;
         this.spacialHash = new SpacialHash(this.width, this.height);
+
+        this.schedule = new Schedule();
+
+        this.initSystems();
+
         this.id = instanceCount;
         ++instanceCount;
+    }
+
+    initSystems() {
+        this.collision = new Systems.Collision(this);
     }
 
     emplaceEntity(components = []) {
@@ -51,5 +68,23 @@ export class EcsContext {
         assert(entity.ecsContext === this);
         this.entities.delete(entity);
         entity.onRemove(this);
+    }
+
+    maybeApplyAction(action) {
+
+        this.collision.run(action);
+
+        if (action.success) {
+            action.commit();
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    scheduleImmediateAction(action, relativeTime = 0) {
+        this.schedule.scheduleTask(async () => {
+            this.maybeApplyAction(action);
+        }, relativeTime, /* immediate */ true);
     }
 }

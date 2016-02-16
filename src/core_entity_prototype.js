@@ -44,7 +44,7 @@ export function Door(x, y) {
     return [
         new Components.Position(x, y),
         new Components.Tile(Tiles.Door, 1),
-        new Components.Solid()
+        new Components.Door(false, Tiles.OpenDoor, Tiles.Door)
     ];
 }
 
@@ -52,6 +52,7 @@ export function OpenDoor(x, y) {
     return [
         new Components.Position(x, y),
         new Components.Tile(Tiles.OpenDoor, 1),
+        new Components.Door(true, Tiles.OpenDoor, Tiles.Door)
     ];
 }
 

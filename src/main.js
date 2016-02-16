@@ -10,7 +10,6 @@ import {EcsContext} from './ecs_context.js';
 
 import {Systems} from './systems.js';
 
-import {Schedule} from './schedule.js';
 import {Components} from './components.js';
 import {getChar} from './input.js';
 import {assert} from './assert.js';
@@ -18,8 +17,6 @@ import {assert} from './assert.js';
 export async function main() {
     await initGlobals();
     Math.seedrandom(0);
-
-    var schedule = new Schedule();
 
     var terrainStringArray = [
 '&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&',
@@ -31,7 +28,7 @@ export async function main() {
 '&      &      #........#........#....................#        &',
 '& &   &       #........#........#....................#  &     &',
 '&             #........#........#....................#   &    &',
-'& &           #.................#........@...........+        &',
+'& &           #.................#..................@.+        &',
 '&             #........#........#..>.................#      & &',
 '&     #############.####........#....................#   &    &',
 '&     #................#.............................#        &',
@@ -86,7 +83,7 @@ export async function main() {
     function scheduleTurn(entity, relativeTime) {
         assert(entity.is(Components.TurnTaker));
 
-        let task = schedule.scheduleTask(async () => {
+        let task = ecs.schedule.scheduleTask(async () => {
             if (!entity.is(Components.TurnTaker)) {
                 return;
             }
@@ -122,7 +119,7 @@ export async function main() {
     }
 
     async function progressSchedule() {
-        await schedule.pop().task();
+        await ecs.schedule.pop().task();
     }
 
     while (true) {
