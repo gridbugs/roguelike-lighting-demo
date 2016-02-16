@@ -140,8 +140,49 @@ export class TileStore {
     allocateImage(image, transparentBackground = false) {
         let xOffset = this.getNextOffset();
 
-        this.ctx.drawImage(image, xOffset, 0, this.width, this.height);
+        /* Draw the image to a temporary canvas */
+        let canvas = document.createElement('canvas');
+        let ctx = canvas.getContext('2d');
+        ctx.drawImage(image, 0, 0);
+
+        let fromImageData = ctx.getImageData(0, 0, image.width, image.height);
+        let toImageData = this.ctx.getImageData(xOffset, 0, this.width, this.height);
+
+        let xScale = image.width / this.width;
+        let yScale = image.height / this.height;
+
+        for (let y = 0; y < this.height; ++y) {
+            for (let x = 0; x < this.width; ++x) {
+                let toI = (y * this.width + x) * 4;
+                let fromI = (Math.floor(y * yScale) * image.width + Math.floor(x * xScale)) * 4;
+
+                toImageData.data[toI] = fromImageData.data[fromI];
+                toImageData.data[toI+1] = fromImageData.data[fromI+1];
+                toImageData.data[toI+2] = fromImageData.data[fromI+2];
+                toImageData.data[toI+3] = fromImageData.data[fromI+3];
+            }
+        }
+
+        this.ctx.putImageData(toImageData, xOffset, 0);
 
         return new Tile(this.canvas, xOffset, 0, this.width, this.height, transparentBackground);
+    }
+
+    allocateDotTile(size, foreColour, backColour) {
+        let xOffset = this.getNextOffset();
+        this.ctx.beginPath();
+        this.ctx.fillStyle = backColour;
+        this.ctx.fillRect(xOffset, 0, this.width, this.height);
+        this.ctx.fill();
+        let background = new Tile(this.canvas, xOffset, 0, this.width, this.height, false);
+
+        xOffset = this.getNextOffset();
+        this.ctx.beginPath();
+        this.ctx.fillStyle = foreColour;
+        this.ctx.fillRect(xOffset + ((this.width - size) / 2), (this.height - size) / 2, size, size);
+        this.ctx.fill();
+        let foreground = new Tile(this.canvas, xOffset, 0, this.width, this.height);
+
+        return this.allocateFromTiles(background, foreground);
     }
 }
