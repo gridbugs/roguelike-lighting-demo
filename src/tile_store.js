@@ -8,6 +8,7 @@ class Tile {
         this.width = width;
         this.height = height;
         this.transparentBackground = transparentBackground;
+        this.greyScale = null;
     }
 
     get background() {
@@ -45,9 +46,13 @@ export class TileStore {
 
         this.setFont('Monospace', 16);
 
-        this.count = 0;
+        this.column = 0;
+        this.row = 0;
+
         this.xOffset = 0;
         this.yOffset = 0;
+
+        this.maxColumns = 40;
     }
 
     getFontString() {
@@ -80,38 +85,73 @@ export class TileStore {
     }
 
     getNextOffset() {
-        let xOffset = this.count * this.width;
-        ++this.count;
-        return xOffset;
+        if (this.column == this.maxColumns) {
+            this.column = 0;
+            ++this.row;
+        }
+        this.xOffset = this.column * this.width;
+        this.yOffset = this.row * this.height;
+        ++this.column;
+    }
+
+    allocateTile(x, y, width, height, transparentBackground) {
+        let tile = new Tile(this.canvas, this.xOffset, this.yOffset,
+                        this.width, this.height, transparentBackground);
+        tile.greyScale = this.allocateGreyScaleTile(tile);
+        return tile;
+    }
+
+    allocateLayeredTile(x, y, width, height, greyScale, transparentBackground, background, foreground) {
+        let tile = new LayeredTile(this.canvas, this.xOffset, this.yOffset,
+                               this.width, this.height, false, background, foreground);
+        tile.greyScale = this.allocateGreyScaleTile(tile);
+        return tile;
+    }
+
+    allocateGreyScaleTile(tile) {
+        this.getNextOffset();
+        let imageData = this.ctx.getImageData(tile.x, tile.y, tile.width, tile.height);
+        let data = imageData.data;
+        for (let i = 0; i < data.length; i += 4) {
+            let total = data[i] + data[i+1] + data[i+2];
+            let average = total / 3;
+            data[i] = average;
+            data[i+1] = average;
+            data[i+2] = average;
+        }
+        this.ctx.putImageData(imageData, this.xOffset, this.yOffset);
+        return new Tile(this.canvas, this.xOffset, this.yOffset,
+                        this.width, this.height, tile.transparentBackground);
     }
 
     allocateCharacterTile(character, foreColour = '#ffffff', backColour = Transparent) {
 
         let background, foreground;
-        let xOffset;
         let transparent = backColour === Transparent;
 
         if (!transparent) {
-            xOffset = this.getNextOffset();
+            this.getNextOffset();
 
             this.ctx.beginPath();
             this.ctx.fillStyle = backColour;
-            this.ctx.fillRect(xOffset, 0, this.width, this.height);
+            this.ctx.fillRect(this.xOffset, this.yOffset, this.width, this.height);
             this.ctx.fill();
-            background = new Tile(this.canvas, xOffset, 0, this.width, this.height, backColour === Transparent);
+            background = this.allocateTile(this.xOffset, this.yOffset,
+                                    this.width, this.height, backColour === Transparent);
         }
 
-        xOffset = this.getNextOffset();
+        this.getNextOffset();
 
         this.ctx.beginPath();
         this.ctx.fillStyle = foreColour;
         this.ctx.fillText(
             character,
-            xOffset + this.centreXOffset + this.xOffset,
-            this.height - this.centreYOffset + this.yOffset
+            this.xOffset + this.centreXOffset,
+            this.yOffset + this.height - this.centreYOffset
         );
         this.ctx.fill();
-        foreground = new Tile(this.canvas, xOffset, 0, this.width, this.height, backColour === Transparent);
+        foreground = this.allocateTile(this.xOffset, this.yOffset,
+                                this.width, this.height, backColour === Transparent);
 
         if (transparent) {
             return foreground;
@@ -131,14 +171,15 @@ export class TileStore {
     }
 
     allocateFromTiles(background, foreground) {
-        let xOffset = this.getNextOffset();
-        this.drawTile(background, xOffset, 0);
-        this.drawTile(foreground, xOffset, 0);
-        return new LayeredTile(this.canvas, xOffset, 0, this.width, this.height, false, background, foreground);
+        this.getNextOffset();
+        this.drawTile(background, this.xOffset, this.yOffset);
+        this.drawTile(foreground, this.xOffset, this.yOffset);
+        return this.allocateLayeredTile(this.xOffset, this.yOffset,
+                                this.width, this.height, false, background, foreground);
     }
 
     allocateImage(image, transparentBackground = false) {
-        let xOffset = this.getNextOffset();
+        this.getNextOffset();
 
         /* Draw the image to a temporary canvas */
         let canvas = document.createElement('canvas');
@@ -146,7 +187,7 @@ export class TileStore {
         ctx.drawImage(image, 0, 0);
 
         let fromImageData = ctx.getImageData(0, 0, image.width, image.height);
-        let toImageData = this.ctx.getImageData(xOffset, 0, this.width, this.height);
+        let toImageData = this.ctx.getImageData(this.xOffset, this.yOffset, this.width, this.height);
 
         let xScale = image.width / this.width;
         let yScale = image.height / this.height;
@@ -163,25 +204,26 @@ export class TileStore {
             }
         }
 
-        this.ctx.putImageData(toImageData, xOffset, 0);
+        this.ctx.putImageData(toImageData, this.xOffset, this.yOffset);
 
-        return new Tile(this.canvas, xOffset, 0, this.width, this.height, transparentBackground);
+        return this.allocateTile(this.xOffset, this.yOffset, this.width, this.height, transparentBackground);
     }
 
     allocateDotTile(size, foreColour, backColour) {
-        let xOffset = this.getNextOffset();
+        this.getNextOffset();
         this.ctx.beginPath();
         this.ctx.fillStyle = backColour;
-        this.ctx.fillRect(xOffset, 0, this.width, this.height);
+        this.ctx.fillRect(this.xOffset, this.yOffset, this.width, this.height);
         this.ctx.fill();
-        let background = new Tile(this.canvas, xOffset, 0, this.width, this.height, false);
+        let background = this.allocateTile(this.xOffset, this.yOffset, this.width, this.height, false);
 
-        xOffset = this.getNextOffset();
+        this.getNextOffset();
         this.ctx.beginPath();
         this.ctx.fillStyle = foreColour;
-        this.ctx.fillRect(xOffset + ((this.width - size) / 2), (this.height - size) / 2, size, size);
+        this.ctx.fillRect(this.xOffset + ((this.width - size) / 2),
+                          this.yOffset + ((this.height - size) / 2), size, size);
         this.ctx.fill();
-        let foreground = new Tile(this.canvas, xOffset, 0, this.width, this.height);
+        let foreground = this.allocateTile(this.xOffset, this.yOffset, this.width, this.height);
 
         return this.allocateFromTiles(background, foreground);
     }

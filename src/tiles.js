@@ -16,7 +16,7 @@ Tiles.init = async function() {
     tileStore.setFont(TILE_FONT_FACE, TILE_FONT_SIZE, false, false);
 
     this.PlayerCharacter = tileStore.allocateCharacterTile('@', '#ffffff');
-    this.Floor = tileStore.allocateDotTile(4, '#ccccff', '#000022');
+    this.Floor = tileStore.allocateDotTile(4, '#224488', '#000022');
     if (Config.ASCII) {
         this.WallFront = tileStore.allocateCharacterTile('#', '#888888', '#000000');
         this.WallTop = tileStore.allocateCharacterTile('#', '#888888', '#000000');
