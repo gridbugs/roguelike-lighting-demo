@@ -27,7 +27,7 @@ export class InvalidatingComponentTable extends ComponentTable {
 
     has(component) {
         let c = this.components[component.type];
-        return c === null || !c.valid;
+        return c !== null && c.valid;
     }
 
     remove(component) {
@@ -41,6 +41,15 @@ export class InvalidatingComponentTable extends ComponentTable {
         let c = this.components[component.type];
         if (c !== null && c.valid) {
             f(c);
+        }
+    }
+
+    invalidate() {
+        for (let i = 0; i < this.length; ++i) {
+            let c = this.components[i];
+            if (c !== null) {
+                c.valid = false;
+            }
         }
     }
 }

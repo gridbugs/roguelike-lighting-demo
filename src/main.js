@@ -68,6 +68,7 @@ export async function main() {
 
     var renderer = new Systems.Renderer(ecs, GlobalDrawer.Drawer);
     var collision = new Systems.Collision(ecs);
+    var observation = new Systems.Observation(ecs);
 
     function maybeApplyAction(action) {
 
@@ -101,7 +102,14 @@ export async function main() {
     }
 
     async function takeTurn(entity) {
-        renderer.run();
+
+        if (entity.is(Components.Observer)) {
+            observation.run(entity);
+        }
+
+        if (entity.is(Components.PlayerCharacter)) {
+            renderer.run();
+        }
 
         var turn = await entity.get(Components.TurnTaker).takeTurn(entity);
 

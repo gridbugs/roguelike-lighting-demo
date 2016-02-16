@@ -1,10 +1,15 @@
 import {Component} from './component.js';
+import {Knowledge} from './knowledge.js';
 
 export class Tile extends Component {
     constructor(tile, depth) {
         super();
         this.tile = tile;
         this.depth = depth;
+    }
+
+    clone() {
+        return new Tile(this.tile, this.depth);
     }
 }
 
@@ -14,6 +19,10 @@ export class WallTile extends Component {
         this.frontTile = frontTile;
         this.topTile = topTile;
         this.depth = depth;
+    }
+
+    clone() {
+        return new WallTile(this.frontTile, this.topTile, this.depth);
     }
 }
 
@@ -28,6 +37,10 @@ export class Opacity extends Component {
         super();
         this.value = value;
     }
+
+    clone() {
+        return new Opacity(this.value);
+    }
 }
 
 export class TurnTaker extends Component {
@@ -40,11 +53,23 @@ export class TurnTaker extends Component {
     get scheduled() {
         return this.nextTurn !== null;
     }
+
+    clone() {
+        return new TurnTaker(this.takeTurn);
+    }
 }
 
 export class Observer extends Component {
     constructor(observe) {
         super();
         this.observe = observe;
+        this.knowledge = new Knowledge();
     }
+
+    clone() {
+        return new Observer(this.observe);
+    }
+}
+
+export class PlayerCharacter extends Component {
 }

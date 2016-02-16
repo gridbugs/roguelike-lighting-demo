@@ -17,6 +17,7 @@ import * as CoreAction from './core_action.js';
 
 import * as Collision from './collision.js';
 import * as Renderer from './renderer.js';
+import * as Observation from './observation.js';
 
 function populateNamespace(sources, dest) {
     let count = 0;
@@ -41,4 +42,4 @@ populateNamespace([StringTerrainGenerator], TerrainGenerators);
 populateNamespace([CoreEntityPrototype], EntityPrototypes);
 populateNamespace([CoreComponent, Position], Components);
 populateNamespace([CoreAction], Actions);
-populateNamespace([Collision, Renderer], Systems);
+populateNamespace([Collision, Renderer, Observation], Systems);

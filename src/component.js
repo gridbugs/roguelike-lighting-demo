@@ -20,6 +20,10 @@ export class Component extends Typed {
         dest.valid = this.valid;
     }
 
+    clone() {
+        return new this.constructor();
+    }
+
     is(ctor) {
         return this.type == ctor.type;
     }

@@ -3,13 +3,16 @@ import {Components} from './components.js';
 import {Tiles} from './tiles.js';
 
 import {playerTakeTurn} from './player_control.js';
+import * as Shadowcast from './shadowcast.js';
 
 export function PlayerCharacter(x, y) {
     return [
         new Components.Position(x, y),
         new Components.Tile(Tiles.PlayerCharacter, 2),
         new Components.TurnTaker(playerTakeTurn),
-        new Components.Collider()
+        new Components.Collider(),
+        new Components.PlayerCharacter(),
+        new Components.Observer(Shadowcast.detectVisibleAreas)
     ];
 }
 

@@ -23,10 +23,16 @@ class SpacialHashCell extends Cell {
 
 class SpacialHash extends CellGrid(SpacialHashCell) {}
 
+var instanceCount = 0;
+
 export class EcsContext {
     constructor() {
         this.entities = new Set();
-        this.spacialHash = new SpacialHash(Config.GRID_WIDTH, Config.GRID_HEIGHT);
+        this.width = Config.GRID_WIDTH;
+        this.height = Config.GRID_HEIGHT;
+        this.spacialHash = new SpacialHash(this.width, this.height);
+        this.id = instanceCount;
+        ++instanceCount;
     }
 
     emplaceEntity(components = []) {
