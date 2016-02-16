@@ -59,6 +59,7 @@ export class Position extends Component {
     preChange() {
         /* remove the entity from its cell */
         this.entity.cell.entities.delete(this.entity);
+        this.entity.cell.recompute();
         this.entity.cell = null;
 
     }
@@ -68,6 +69,7 @@ export class Position extends Component {
         let cell = this.ecsContext.spacialHash.get(this.vector);
         cell.entities.add(this.entity);
         this.entity.cell = cell;
+        cell.recompute();
     }
 
     onAdd(entity) {
@@ -78,10 +80,13 @@ export class Position extends Component {
         assert(entity.cell !== null);
         assert(entity.cell !== undefined);
         entity.cell.entities.add(entity);
+
+        entity.cell.recompute();
     }
 
     onRemove(entity) {
         entity.cell.entities.delete(entity);
+        entity.cell.recompute();
         entity.cell = null;
         super.onRemove(entity);
     }

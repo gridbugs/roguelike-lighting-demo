@@ -9,11 +9,24 @@ import {assert} from './assert.js';
 import {Schedule} from './schedule.js';
 
 import {Systems} from './systems.js';
+import {Components} from './components.js';
 
 class SpacialHashCell extends Cell {
     constructor(x, y, grid) {
         super(x, y, grid);
         this.entities = new ComponentCountingEntitySet();
+        this.opacity = 0;
+
+        this.recompute();
+    }
+
+    recompute() {
+        this.opacity = 0;
+        for (let entity of this) {
+            entity.with(Components.Opacity, (opacity) => {
+                this.opacity += opacity.value;
+            });
+        }
     }
 
     has(component) {

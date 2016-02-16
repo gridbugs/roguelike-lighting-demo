@@ -12,7 +12,7 @@ export function PlayerCharacter(x, y) {
         new Components.TurnTaker(playerTakeTurn),
         new Components.Collider(),
         new Components.PlayerCharacter(),
-        new Components.Observer(Shadowcast.detectVisibleAreas)
+        new Components.Observer(Shadowcast.detectVisibleArea, 10)
     ];
 }
 
@@ -20,7 +20,8 @@ export function Wall(x, y) {
     return [
         new Components.Position(x, y),
         new Components.WallTile(Tiles.WallFront, Tiles.WallTop, 1),
-        new Components.Solid()
+        new Components.Solid(),
+        new Components.Opacity(1)
     ];
 }
 
@@ -28,7 +29,8 @@ export function Tree(x, y) {
     return [
         new Components.Position(x, y),
         new Components.Tile(Tiles.Tree, 1),
-        new Components.Solid()
+        new Components.Solid(),
+        new Components.Opacity(0.5)
     ];
 }
 
@@ -36,7 +38,8 @@ export function DeadTree(x, y) {
     return [
         new Components.Position(x, y),
         new Components.Tile(Tiles.DeadTree, 1),
-        new Components.Solid()
+        new Components.Solid(),
+        new Components.Opacity(0.25)
     ];
 }
 
@@ -44,7 +47,8 @@ export function Door(x, y) {
     return [
         new Components.Position(x, y),
         new Components.Tile(Tiles.Door, 1),
-        new Components.Door(false, Tiles.OpenDoor, Tiles.Door)
+        new Components.Door(false, Tiles.OpenDoor, Tiles.Door),
+        new Components.Opacity(1)
     ];
 }
 
@@ -52,7 +56,8 @@ export function OpenDoor(x, y) {
     return [
         new Components.Position(x, y),
         new Components.Tile(Tiles.OpenDoor, 1),
-        new Components.Door(true, Tiles.OpenDoor, Tiles.Door)
+        new Components.Door(true, Tiles.OpenDoor, Tiles.Door),
+        new Components.Opacity(0)
     ];
 }
 

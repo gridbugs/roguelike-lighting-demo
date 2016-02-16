@@ -80,14 +80,15 @@ export class TurnTaker extends Component {
 }
 
 export class Observer extends Component {
-    constructor(observe) {
+    constructor(observe, viewDistance) {
         super();
         this.observe = observe;
+        this.viewDistance = viewDistance;
         this.knowledge = new Knowledge();
     }
 
     clone() {
-        return new Observer(this.observe);
+        return new Observer(this.observe, this.viewDistance);
     }
 }
 
@@ -110,15 +111,23 @@ export class Door extends Component {
         return !this._open;
     }
 
-    set open(value) {
-        this._open = value;
+    set open(open) {
+        this._open = open;
         this.entity.with(Components.Tile, (tile) => {
-            if (value) {
+            if (open) {
                 tile.tile = this.openTile;
             } else {
                 tile.tile = this.closedTile;
             }
         });
+        this.entity.with(Components.Opacity, (opacity) => {
+            if (open) {
+                opacity.value = 0;
+            } else {
+                opacity.value = 1;
+            }
+        });
+        this.entity.cell.recompute();
     }
 
     clone() {

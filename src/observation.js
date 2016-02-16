@@ -9,9 +9,14 @@ export class Observation extends System {
 
     run(entity) {
         entity.with(Components.Observer, (observer) => {
-            let grid = observer.knowledge.getGrid(this.ecsContext);
-            for (let cell of observer.observe(entity, this.ecsContext)) {
-                let knowledgeCell = grid.get(cell.coord);
+            let knowledgeGrid = observer.knowledge.getGrid(this.ecsContext);
+
+            let grid = this.ecsContext.spacialHash;
+            let eyePosition = entity.get(Components.Position).vector;
+            let viewDistance = observer.viewDistance;
+
+            for (let cell of observer.observe(eyePosition, viewDistance, grid)) {
+                let knowledgeCell = knowledgeGrid.get(cell.coord);
 
                 knowledgeCell.clear();
                 knowledgeCell.turn = this.ecsContext.turn;
