@@ -12,7 +12,7 @@ export function PlayerCharacter(x, y) {
         new Components.TurnTaker(playerTakeTurn),
         new Components.Collider(),
         new Components.PlayerCharacter(),
-        new Components.Observer(Shadowcast.detectVisibleArea, 10)
+        new Components.Observer(Shadowcast.detectVisibleArea, 20)
     ];
 }
 
