@@ -18,19 +18,30 @@ export class StringTerrainGenerator {
     addEntities(ecs, character, x, y) {
 
         let add = (name) => {
-            ecs.emplaceEntity(EntityPrototypes[name](x, y));
+            return ecs.emplaceEntity(EntityPrototypes[name](x, y));
         }
 
         switch (character) {
         case '&':
-            add('Tree');
+            if (Math.random() < 0.1) {
+                add('DeadTree');
+            } else {
+                add('Tree');
+            }
             add('Ground');
             break;
         case '.':
         case ',':
-        case '+':
         case '>':
             add('Floor');
+            break;
+        case '+':
+            add('Door');
+            add('Ground');
+            break;
+        case '-':
+            add('OpenDoor');
+            add('Ground');
             break;
         case ' ':
             add('Ground');

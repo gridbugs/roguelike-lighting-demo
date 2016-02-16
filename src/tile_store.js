@@ -41,13 +41,15 @@ export class TileStore {
         this.width = width;
         this.height = height;
 
-        this.canvas = document.createElement('canvas');
+        this.canvas = document.getElementById('tile-store');
         this.ctx = this.canvas.getContext('2d');
 
         this.tempCanvas = document.createElement('canvas');
         this.tempCtx = this.tempCanvas.getContext('2d');
 
-        this.setFont('Monospace', 16);
+        this.setFont('IBM-BIOS', 16);
+        this.textXOffset = 2;
+        this.textYOffset = -1;
 
         this.column = 0;
         this.row = 0;
@@ -132,6 +134,8 @@ export class TileStore {
         for (let i = 0; i < data.length; i += 4) {
             let total = data[i] + data[i+1] + data[i+2];
             let average = total / 3;
+            // darken the result
+            average /= 2;
             data[i] = average;
             data[i+1] = average;
             data[i+2] = average;
@@ -163,8 +167,8 @@ export class TileStore {
         this.ctx.fillStyle = foreColour;
         this.ctx.fillText(
             character,
-            this.xOffset + this.centreXOffset,
-            this.yOffset + this.height - this.centreYOffset
+            this.xOffset + this.centreXOffset + this.textXOffset,
+            this.yOffset + this.height - this.centreYOffset + this.textYOffset
         );
         this.ctx.fill();
         foreground = this.allocateTile(this.xOffset, this.yOffset,

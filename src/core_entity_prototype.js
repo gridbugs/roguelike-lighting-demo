@@ -32,6 +32,29 @@ export function Tree(x, y) {
     ];
 }
 
+export function DeadTree(x, y) {
+    return [
+        new Components.Position(x, y),
+        new Components.Tile(Tiles.DeadTree, 1),
+        new Components.Solid()
+    ];
+}
+
+export function Door(x, y) {
+    return [
+        new Components.Position(x, y),
+        new Components.Tile(Tiles.Door, 1),
+        new Components.Solid()
+    ];
+}
+
+export function OpenDoor(x, y) {
+    return [
+        new Components.Position(x, y),
+        new Components.Tile(Tiles.OpenDoor, 1),
+    ];
+}
+
 export function Floor(x, y) {
     return [
         new Components.Position(x, y),
