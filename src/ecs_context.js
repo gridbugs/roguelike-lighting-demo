@@ -70,6 +70,10 @@ export class EcsContext {
         entity.onRemove(this);
     }
 
+    get turn() {
+        return this.schedule.sequenceNumber;
+    }
+
     maybeApplyAction(action) {
 
         this.collision.run(action);
