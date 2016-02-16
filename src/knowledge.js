@@ -14,6 +14,7 @@ class EntityMemory extends InvalidatingComponentTable {
         this.rememberedComponents = [
             Components.Position,
             Components.Tile,
+            Components.WallTile,
             Components.Solid
         ];
     }
@@ -25,6 +26,16 @@ class EntityMemory extends InvalidatingComponentTable {
                 this.cell.componentTable.set(component, true);
             }
         }
+    }
+
+    hasBackground() {
+        if (this.has(Components.WallTile)) {
+            return true;
+        }
+        if (this.has(Components.Tile)) {
+            return !this.get(Components.Tile).tile.transparentBackground;
+        }
+        return false;
     }
 }
 
@@ -47,6 +58,7 @@ class KnowledgeCell extends Cell {
         this.turn = -1;
         this.entityMemoryPool = new ObjectPool(EntityMemory, this);
         this.topEntityMemory = new BestTracker(compare);
+        this.topBackgroundEntityMemory = new BestTracker(compare);
         this.componentTable = new ComponentTable();
     }
 
@@ -55,11 +67,15 @@ class KnowledgeCell extends Cell {
         entityMemory.invalidate();
         entityMemory.see(entity);
         this.topEntityMemory.insert(entityMemory);
+        if (entityMemory.hasBackground()) {
+            this.topBackgroundEntityMemory.insert(entityMemory);
+        }
     }
 
     clear() {
         this.entityMemoryPool.flush();
         this.topEntityMemory.clear();
+        this.topBackgroundEntityMemory.clear();
         this.componentTable.clear();
     }
 }

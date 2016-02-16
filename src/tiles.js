@@ -11,6 +11,7 @@ Tiles.init = async function() {
 
     this.PlayerCharacter = tileStore.allocateCharacterTile('@', '#ffffff');
     this.Floor = tileStore.allocateDotTile(4, '#224488', '#000022');
+    this.Unseen = tileStore.allocateCharacterTile(' ', '#000000', '#000000');
 
     if (Config.ASCII) {
         this.WallFront = tileStore.allocateCharacterTile('#', '#888888', '#000000');

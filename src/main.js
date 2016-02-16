@@ -28,7 +28,7 @@ export async function main() {
 '&      &      #........#........#....................#        &',
 '& &   &       #........#........#....................#  &     &',
 '&             #........#........#....................#   &    &',
-'& &           #.................#..................@.+        &',
+'& &           #.................#...................@+        &',
 '&             #........#........#..>.................#      & &',
 '&     #############.####........#....................#   &    &',
 '&     #................#.............................#        &',
@@ -64,7 +64,7 @@ export async function main() {
         }
     })();
 
-    var renderer = new Systems.Renderer(ecs, GlobalDrawer.Drawer);
+    var renderer = new Systems.KnowledgeRenderer(ecs, GlobalDrawer.Drawer);
     var collision = new Systems.Collision(ecs);
     var observation = new Systems.Observation(ecs);
 
@@ -106,7 +106,7 @@ export async function main() {
         }
 
         if (entity.is(Components.PlayerCharacter)) {
-            renderer.run();
+            renderer.run(entity);
         }
 
         var turn = await entity.get(Components.TurnTaker).takeTurn(entity);

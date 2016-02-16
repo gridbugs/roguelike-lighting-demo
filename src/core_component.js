@@ -13,6 +13,12 @@ export class Tile extends Component {
     clone() {
         return new Tile(this.tile, this.depth);
     }
+
+    copyTo(dest) {
+        super.copyTo(dest);
+        dest.tile = this.tile;
+        dest.depth = this.depth;
+    }
 }
 
 export class WallTile extends Component {
@@ -25,6 +31,13 @@ export class WallTile extends Component {
 
     clone() {
         return new WallTile(this.frontTile, this.topTile, this.depth);
+    }
+
+    copyTo(dest) {
+        super.copyTo(dest);
+        dest.frontTile = this.frontTile;
+        dest.topTile = this.topTile;
+        dest.depth = this.depth;
     }
 }
 
@@ -42,6 +55,11 @@ export class Opacity extends Component {
 
     clone() {
         return new Opacity(this.value);
+    }
+
+    copyTo(dest) {
+        super.copyTo(dest);
+        dest.value = this.value;
     }
 }
 
@@ -101,5 +119,16 @@ export class Door extends Component {
                 tile.tile = this.closedTile;
             }
         });
+    }
+
+    clone() {
+        return new Door(this.open, this.openTile, this.closedTile);
+    }
+
+    copyTo(dest) {
+        super.copyTo(dest);
+        dest._open = this._open;
+        dest.openTile = this.openTile;
+        dest.closedTile = this.closedTile;
     }
 }
