@@ -15,7 +15,8 @@ class EntityMemory extends InvalidatingComponentTable {
             Components.Position,
             Components.Tile,
             Components.WallTile,
-            Components.Solid
+            Components.Solid,
+            Components.PlayerCharacter
         ];
     }
 
@@ -77,6 +78,14 @@ class KnowledgeCell extends Cell {
         this.topEntityMemory.clear();
         this.topBackgroundEntityMemory.clear();
         this.componentTable.clear();
+    }
+
+    has(component) {
+        return this.componentTable.has(component);
+    }
+
+    is(component) {
+        return this.componentTable.is(component);
     }
 }
 

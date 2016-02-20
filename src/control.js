@@ -15,7 +15,8 @@ export const ControlTypes = makeEnum([
     'SouthWest',
     'SouthEast',
     'CloseDoor',
-    'Fire'
+    'Fire',
+    'Wait'
 ], true);
 
 export const ControlKeys = substituteValues(ControlTypes, {
@@ -28,7 +29,8 @@ export const ControlKeys = substituteValues(ControlTypes, {
     b: 'SouthWest',
     n: 'SouthEast',
     c: 'CloseDoor',
-    f: 'Fire'
+    f: 'Fire',
+    a: 'Wait'
 });
 
 function closeDoor(entity) {
@@ -62,7 +64,8 @@ export const ControlTable = makeTable(ControlTypes, {
     SouthWest:  (entity) => { return new Actions.Walk(entity, Direction.SouthWest) },
     SouthEast:  (entity) => { return new Actions.Walk(entity, Direction.SouthEast) },
     CloseDoor:  closeDoor,
-    Fire:       fire
+    Fire:       fire,
+    Wait:       (entity) => { return new Actions.Wait(entity) }
 });
 
 export function controlFromChar(character) {

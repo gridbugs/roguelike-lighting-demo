@@ -19,6 +19,8 @@ import {Line} from './line.js';
 import {Vec2} from './vec2.js';
 
 import {msDelay} from './time.js';
+import {DoublyLinkedList} from './doubly_linked_list.js';
+import {SearchQueue} from './search_queue.js';
 
 export async function main() {
     await initGlobals();
@@ -32,7 +34,7 @@ export async function main() {
 '&    &                          #....................#     && &',
 '&      &      ###################....................#      &&&',
 '&      &      #........#........#....................#        &',
-'& &   &       #..c.....#........#....................#  &     &',
+'& &   &       #........#........#...c................#  &     &',
 '&             #........#........#....................#   &    &',
 '& &           #.................#...................@+        &',
 '&             #........#........#..>.................#      & &',
@@ -64,8 +66,10 @@ export async function main() {
 
     (() => {
         for (let entity of ecs.entities) {
-            if (entity.is(Components.TurnTaker)) {
+            if (entity.is(Components.PlayerCharacter)) {
                 scheduleTurn(entity, 0);
+            } else if (entity.is(Components.TurnTaker)) {
+                scheduleTurn(entity, 1);
             }
         }
     })();
@@ -127,8 +131,7 @@ export async function main() {
         await ecs.schedule.pop().task();
     }
 
-    (() => {
-    })();
+    var a = new SearchQueue();
 
     while (true) {
         await progressSchedule();

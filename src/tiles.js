@@ -39,15 +39,15 @@ Tiles.init = async function() {
     if (Config.DEBUG) {
         this.debugArray = [];
         for (var i = 0; i <= 9; ++i) {
-            this.debugArray.push(tileStore.allocateCharacterTile('' + i, '#000000', 'rgba(255, 255, 255, 0.5)'));
+            this.debugArray.push(tileStore.allocateCharacterTile('' + i, '#000000', 'rgba(255, 255, 255, 0.25)'));
         }
         for (var i = 0; i < 26; ++i) {
             var c = String.fromCharCode('a'.charCodeAt(0) + i);
-            this.debugArray.push(tileStore.allocateCharacterTile(c, '#000000', 'rgba(255, 255, 255, 0.5)'));
+            this.debugArray.push(tileStore.allocateCharacterTile(c, '#000000', 'rgba(255, 255, 255, 0.25)'));
         }
         for (var i = 0; i < 26; ++i) {
             var c = String.fromCharCode('A'.charCodeAt(0) + i);
-            this.debugArray.push(tileStore.allocateCharacterTile(c, '#000000', 'rgba(255, 255, 255, 0.5)'));
+            this.debugArray.push(tileStore.allocateCharacterTile(c, '#000000', 'rgba(255, 255, 255, 0.25)'));
         }
 
     }
