@@ -27,5 +27,16 @@ export class Collision extends System {
                 }
             }
         });
+
+        this.on(Actions.ProjectileStep, (action) => {
+            let destination = this.getCell(action.destination);
+            if (action.entity.is(Components.Projectile) &&
+                destination.is(Components.Solid)) {
+
+                action.success = false;
+                this.ecsContext.scheduleImmediateAction(
+                        new Actions.ProjectileTerminate(action.entity));
+            }
+        });
     }
 }

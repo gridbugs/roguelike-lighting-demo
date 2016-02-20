@@ -4,36 +4,42 @@ import {Action} from './action.js';
 import {Actions} from './actions.js';
 import {Direction} from './direction.js';
 
-import {getChar} from './input.js';
+import * as Input from './input.js';
+import {controlFromChar} from './control.js';
 
-const Controls = {
-    h:  (entity) => { return new Actions.Walk(entity, Direction.West) },
-    j:  (entity) => { return new Actions.Walk(entity, Direction.South) },
-    k:  (entity) => { return new Actions.Walk(entity, Direction.North) },
-    l:  (entity) => { return new Actions.Walk(entity, Direction.East) },
+async function getControlFunction() {
+    var key = await Input.getNonModifierKey();
+    if (Input.isCharKey(key)) {
+        var character = Input.getCharFromKey(key);
+        return controlFromChar(character);
+    }
+    return null;
+}
 
-    y:  (entity) => { return new Actions.Walk(entity, Direction.NorthWest) },
-    u:  (entity) => { return new Actions.Walk(entity, Direction.NorthEast) },
-    b:  (entity) => { return new Actions.Walk(entity, Direction.SouthWest) },
-    n:  (entity) => { return new Actions.Walk(entity, Direction.SouthEast) },
-};
-
-export async function playerTakeTurn(entity) {
+async function getControlAction(entity) {
     while (true) {
-        var character = await getChar();
-        var f = Controls[character];
+        var fn = await getControlFunction();
 
-        if (f === undefined) {
+        if (fn === null) {
             continue;
         }
 
-        var action = f(entity);
-        if (action instanceof Action) {
-            return new Turn(action);
-        } else if (action instanceof Turn) {
-            return action;
-        } else {
-            throw Error('invalid action');
+        var action = await fn(entity);
+        if (action === null) {
+            continue;
         }
+
+        return action;
+    }
+}
+
+export async function playerTakeTurn(entity) {
+    var action = await getControlAction(entity);
+    if (action instanceof Action) {
+        return new Turn(action);
+    } else if (action instanceof Turn) {
+        return action;
+    } else {
+        throw Error('invalid action');
     }
 }

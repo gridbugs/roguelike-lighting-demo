@@ -6,10 +6,16 @@ import {ComponentCountingEntitySet} from './entity_set.js';
 import {Config} from './config.js';
 import {assert} from './assert.js';
 
-import {Schedule} from './schedule.js';
+import {GlobalDrawer} from './global_drawer.js';
 
-import {Systems} from './systems.js';
 import {Components} from './components.js';
+
+import {Schedule} from './schedule.js';
+import {Collision} from './collision.js';
+import {Observation} from './observation.js';
+import {KnowledgeRenderer} from './knowledge_renderer.js';
+import {PathPlanner} from './path_planner.js';
+import {msDelay} from './time.js';
 
 class SpacialHashCell extends Cell {
     constructor(x, y, grid) {
@@ -37,6 +43,17 @@ class SpacialHashCell extends Cell {
         return this.entities.isComponent(component);
     }
 
+    find(component) {
+        if (this.has(component)) {
+            for (let entity of this) {
+                if (entity.is(component)) {
+                    return entity;
+                }
+            }
+        }
+        return null;
+    }
+
     *[Symbol.iterator]() {
         yield* this.entities;
     }
@@ -53,8 +70,6 @@ export class EcsContext {
         this.height = Config.GRID_HEIGHT;
         this.spacialHash = new SpacialHash(this.width, this.height);
 
-        this.schedule = new Schedule();
-
         this.initSystems();
 
         this.id = instanceCount;
@@ -62,7 +77,16 @@ export class EcsContext {
     }
 
     initSystems() {
-        this.collision = new Systems.Collision(this);
+        this.drawer = GlobalDrawer.Drawer;
+        this.schedule = new Schedule();
+        this.pathPlanner = new PathPlanner(this);
+        this.collision = new Collision(this);
+        this.observation = new Observation(this);
+        this.knowledgeRenderer = new KnowledgeRenderer(this, this.drawer);
+    }
+
+    setPlayerCharacter(playerCharacter) {
+        this.playerCharacter = playerCharacter;
     }
 
     emplaceEntity(components = []) {
@@ -75,6 +99,10 @@ export class EcsContext {
         assert(entity.ecsContext === null);
         this.entities.add(entity);
         entity.onAdd(this);
+
+        if (entity.has(Components.PlayerCharacter)) {
+            this.setPlayerCharacter(entity);
+        }
     }
 
     removeEntity(entity) {
@@ -92,15 +120,24 @@ export class EcsContext {
         this.collision.run(action);
 
         if (action.success) {
-            action.commit();
+            action.commit(this);
             return true;
         } else {
             return false;
         }
     }
 
+    updatePlayer() {
+        this.observation.run(this.playerCharacter);
+        this.knowledgeRenderer.run(this.playerCharacter);
+    }
+
     scheduleImmediateAction(action, relativeTime = 0) {
         this.schedule.scheduleTask(async () => {
+            if (relativeTime > 0) {
+                this.updatePlayer();
+                await msDelay(relativeTime);
+            }
             this.maybeApplyAction(action);
         }, relativeTime, /* immediate */ true);
     }

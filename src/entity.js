@@ -27,19 +27,19 @@ export class Entity extends ComponentTable {
             component.onAdd(this);
         }
         if (this.cell !== null) {
-            this.cell.incrementSingleComponent(component);
+            this.cell.entities.incrementSingleComponent(component);
         }
     }
 
     remove(component) {
         assert(this.has(component));
 
-        super.remove(component);
         if (this.ecsContext !== null) {
-            component.onRemove(this);
+            this.get(component).onRemove(this);
         }
+        super.remove(component);
         if (this.cell !== null) {
-            this.cell.decrementSingleComponent(component);
+            this.cell.entities.decrementSingleComponent(component);
         }
     }
 
@@ -54,9 +54,9 @@ export class Entity extends ComponentTable {
     onRemove(ecsContext) {
         assert(this.ecsContext !== null);
         assert(this.ecsContext === ecsContext);
-        this.ecsContext = null;
         for (let component of this) {
             component.onRemove(this);
         }
+        this.ecsContext = null;
     }
 }

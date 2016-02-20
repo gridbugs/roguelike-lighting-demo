@@ -48,7 +48,8 @@ export function Door(x, y) {
         new Components.Position(x, y),
         new Components.Tile(Tiles.Door, 1),
         new Components.Door(false, Tiles.OpenDoor, Tiles.Door),
-        new Components.Opacity(1)
+        new Components.Opacity(1),
+        new Components.Solid()
     ];
 }
 
@@ -72,5 +73,13 @@ export function Ground(x, y) {
     return [
         new Components.Position(x, y),
         new Components.Tile(Tiles.Floor, 0)
+    ];
+}
+
+export function Fireball(x, y) {
+    return [
+        new Components.Position(x, y),
+        new Components.Tile(Tiles.Fireball, 3),
+        new Components.Projectile()
     ];
 }

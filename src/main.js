@@ -7,12 +7,18 @@ import {Tiles} from './tiles.js';
 
 import {StringTerrainGenerator} from './string_terrain_generator.js';
 import {EcsContext} from './ecs_context.js';
-
-import {Systems} from './systems.js';
+import {KnowledgeRenderer} from './knowledge_renderer.js';
+import {Collision} from './collision.js';
+import {Observation} from './observation.js';
 
 import {Components} from './components.js';
 import {getChar} from './input.js';
 import {assert} from './assert.js';
+
+import {Line} from './line.js';
+import {Vec2} from './vec2.js';
+
+import {msDelay} from './time.js';
 
 export async function main() {
     await initGlobals();
@@ -64,13 +70,9 @@ export async function main() {
         }
     })();
 
-    var renderer = new Systems.KnowledgeRenderer(ecs, GlobalDrawer.Drawer);
-    var collision = new Systems.Collision(ecs);
-    var observation = new Systems.Observation(ecs);
-
     function maybeApplyAction(action) {
 
-        collision.run(action);
+        ecs.collision.run(action);
 
         if (action.success) {
             action.commit();
@@ -102,16 +104,20 @@ export async function main() {
     async function takeTurn(entity) {
 
         if (entity.is(Components.Observer)) {
-            observation.run(entity);
+            ecs.observation.run(entity);
         }
 
         if (entity.is(Components.PlayerCharacter)) {
-            renderer.run(entity);
+            ecs.knowledgeRenderer.run(entity);
         }
 
         var turn = await entity.get(Components.TurnTaker).takeTurn(entity);
 
-        maybeApplyAction(turn.action);
+        ecs.maybeApplyAction(turn.action);
+
+        if (entity.is(Components.PlayerCharacter)) {
+            await msDelay(1);
+        }
 
         if (turn.reschedule) {
             scheduleTurn(entity, turn.time);
@@ -121,6 +127,9 @@ export async function main() {
     async function progressSchedule() {
         await ecs.schedule.pop().task();
     }
+
+    (() => {
+    })();
 
     while (true) {
         await progressSchedule();

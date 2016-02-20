@@ -12,6 +12,9 @@ Tiles.init = async function() {
     this.PlayerCharacter = tileStore.allocateCharacterTile('@', '#ffffff');
     this.Floor = tileStore.allocateDotTile(4, '#224488', '#000022');
     this.Unseen = tileStore.allocateCharacterTile(' ', '#000000', '#000000');
+    this.Target = tileStore.allocateImageTile(await loadImage('images/target.png'), true);
+    this.Path = tileStore.allocateImageTile(await loadImage('images/path.png'), true);
+    this.Fireball = tileStore.allocateImageTile(await loadImage('images/fireball.png'), true);
 
     if (Config.ASCII) {
         this.WallFront = tileStore.allocateCharacterTile('#', '#888888', '#000000');
@@ -21,11 +24,11 @@ Tiles.init = async function() {
         this.Door = tileStore.allocateCharacterTile('+', '#ffffff');
         this.OpenDoor = tileStore.allocateCharacterTile('-', '#ffffff');
     } else {
-        this.WallTop = tileStore.allocateImage(await loadImage('images/ice-wall-top.png'));
-        this.WallFront = tileStore.allocateImage(await loadImage('images/ice-wall-front.png'));
-        this.Tree = tileStore.allocateImage(await loadImage('images/pine-tree.png'), true);
-        this.DeadTree = tileStore.allocateImage(await loadImage('images/dead-tree.png'), true);
-        this.Door = tileStore.allocateImage(await loadImage('images/door.png'), true);
-        this.OpenDoor = tileStore.allocateImage(await loadImage('images/door-open.png'), true);
+        this.WallTop = tileStore.allocateImageTile(await loadImage('images/ice-wall-top.png'));
+        this.WallFront = tileStore.allocateImageTile(await loadImage('images/ice-wall-front.png'));
+        this.Tree = tileStore.allocateImageTile(await loadImage('images/pine-tree.png'), true);
+        this.DeadTree = tileStore.allocateImageTile(await loadImage('images/dead-tree.png'), true);
+        this.Door = tileStore.allocateImageTile(await loadImage('images/door.png'), true);
+        this.OpenDoor = tileStore.allocateImageTile(await loadImage('images/door-open.png'), true);
     }
 }

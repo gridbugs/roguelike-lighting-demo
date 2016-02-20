@@ -5,6 +5,13 @@ export class ObjectPool {
         this.index = 0;
         this.numObjects = 0;
 
+        /* Args are passed to the constructor rather than the allocate method,
+         * as the object's constructor is only invoked if new objects are
+         * needed, so they won't be used each time allocate is called.
+         *
+         * The args are given to object constructors only when new objects
+         * are needed.
+         */
         this.args = args;
     }
 

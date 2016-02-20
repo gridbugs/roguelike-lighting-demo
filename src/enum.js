@@ -48,3 +48,18 @@ export function makeEnum(x, ints=false) {
         return new Enumeration(x);
     }
 }
+
+export function substituteValues(enumeration, object) {
+    for (let key in object) {
+        object[key] = enumeration[object[key]];
+    }
+    return object;
+}
+
+export function makeTable(enumeration, object) {
+    let table = [];
+    for (let key in object) {
+        table[enumeration[key]] = object[key];
+    }
+    return table;
+}

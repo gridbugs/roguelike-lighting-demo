@@ -194,7 +194,7 @@ export class TileStore {
         return tile;
     }
 
-    allocateImage(image, transparentBackground = false) {
+    allocateImageTile(image, transparentBackground = false) {
         this.getNextOffset();
 
         /* Draw the image to a temporary canvas */
