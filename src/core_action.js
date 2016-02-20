@@ -16,6 +16,17 @@ export class Walk extends Action {
     }
 }
 
+export class Wait extends Action {
+    constructor(entity) {
+        super();
+        this.entity = entity;
+    }
+
+    commit() {
+
+    }
+}
+
 export class OpenDoor extends Action {
     constructor(entity, door) {
         super();

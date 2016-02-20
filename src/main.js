@@ -84,7 +84,6 @@ export async function main() {
 
     function scheduleTurn(entity, relativeTime) {
         assert(entity.is(Components.TurnTaker));
-
         let task = ecs.schedule.scheduleTask(async () => {
             if (!entity.is(Components.TurnTaker)) {
                 return;
@@ -96,7 +95,7 @@ export async function main() {
             turnTaker.nextTurn = null;
 
             await takeTurn(entity);
-        });
+        }, relativeTime);
 
         entity.get(Components.TurnTaker).nextTurn = task;
     }

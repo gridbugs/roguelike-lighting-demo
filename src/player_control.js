@@ -36,7 +36,7 @@ async function getControlAction(entity) {
 
 export class PlayerTurnTaker extends Controller{}
 
-PlayerTurnTaker.prototype.getAction = async function() {
+PlayerTurnTaker.prototype.takeTurn = async function() {
     var action = await getControlAction(this.entity);
     if (action instanceof Action) {
         return new Turn(action);

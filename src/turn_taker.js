@@ -21,5 +21,5 @@ export class TurnTaker extends Component {
 }
 
 TurnTaker.prototype.takeTurn = async function() {
-    return await this.controller.getAction();
+    return await this.controller.takeTurn();
 }

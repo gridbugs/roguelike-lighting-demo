@@ -11,7 +11,7 @@ Tiles.init = async function() {
 
     // characters
     this.PlayerCharacter = tileStore.allocateCharacterTile('@', '#ffffff');
-    this.SpiderChild = tileStore.allocateCharacterTile('g', '#95b9c7');
+    this.SpiderChild = tileStore.allocateCharacterTile('c', '#95b9c7');
 
 
     this.Floor = tileStore.allocateDotTile(4, '#224488', '#000022');
