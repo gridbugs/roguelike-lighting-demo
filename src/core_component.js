@@ -63,22 +63,6 @@ export class Opacity extends Component {
     }
 }
 
-export class TurnTaker extends Component {
-    constructor(takeTurn) {
-        super();
-        this.takeTurn = takeTurn;
-        this.nextTurn = null;
-    }
-
-    get scheduled() {
-        return this.nextTurn !== null;
-    }
-
-    clone() {
-        return new TurnTaker(this.takeTurn);
-    }
-}
-
 export class Observer extends Component {
     constructor(observe, viewDistance) {
         super();

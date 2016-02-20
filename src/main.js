@@ -111,7 +111,7 @@ export async function main() {
             ecs.knowledgeRenderer.run(entity);
         }
 
-        var turn = await entity.get(Components.TurnTaker).takeTurn(entity);
+        var turn = await entity.get(Components.TurnTaker).takeTurn();
 
         ecs.maybeApplyAction(turn.action);
 

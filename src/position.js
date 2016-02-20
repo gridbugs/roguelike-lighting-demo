@@ -91,5 +91,3 @@ export class Position extends Component {
         super.onRemove(entity);
     }
 }
-
-

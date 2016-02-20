@@ -6,6 +6,7 @@ import {Direction} from './direction.js';
 
 import * as Input from './input.js';
 import {controlFromChar} from './control.js';
+import {Controller} from './controller.js';
 
 async function getControlFunction() {
     var key = await Input.getNonModifierKey();
@@ -33,8 +34,10 @@ async function getControlAction(entity) {
     }
 }
 
-export async function playerTakeTurn(entity) {
-    var action = await getControlAction(entity);
+export class PlayerTurnTaker extends Controller{}
+
+PlayerTurnTaker.prototype.getAction = async function() {
+    var action = await getControlAction(this.entity);
     if (action instanceof Action) {
         return new Turn(action);
     } else if (action instanceof Turn) {
