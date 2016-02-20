@@ -3,5 +3,6 @@ export const Config = {
     TILE_HEIGHT: 16,
     GRID_WIDTH: 63,
     GRID_HEIGHT: 30,
-    ASCII: false
+    ASCII: false,
+    DEBUG: true
 };

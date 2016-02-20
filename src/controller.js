@@ -1,5 +1,5 @@
 export class Controller {
     constructor() {
-        this.enitity = null;
+        this.entity = null;
     }
 }

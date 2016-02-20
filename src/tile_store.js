@@ -83,6 +83,7 @@ export class TileStore {
     updateFont() {
         /* Calculate the font width */
         this.ctx.font = this.getFontString();
+        this.tempCtx.font = this.getFontString();
         this.fontWidth = Math.ceil(this.ctx.measureText('@').width);
 
         this.centreXOffset = (this.width - this.fontWidth)/2;
@@ -173,14 +174,19 @@ export class TileStore {
 
         this.getNextOffset();
 
-        this.ctx.beginPath();
-        this.ctx.fillStyle = foreColour;
-        this.ctx.fillText(
+        this.clearTempCanvas();
+        this.tempCtx.beginPath();
+        this.tempCtx.fillStyle = foreColour;
+        this.tempCtx.fillText(
             character,
-            this.xOffset + this.centreXOffset + this.textXOffset,
-            this.yOffset + this.height - this.centreYOffset + this.textYOffset
+            this.centreXOffset + this.textXOffset,
+            this.height - this.centreYOffset + this.textYOffset
         );
-        this.ctx.fill();
+        this.tempCtx.fill();
+
+        this.ctx.drawImage(this.tempCanvas, 0, 0, this.width, this.height,
+                this.xOffset, this.yOffset, this.width, this.height);
+
         foreground = this.allocateTile(this.xOffset, this.yOffset,
                                 this.width, this.height, backColour === Transparent);
 

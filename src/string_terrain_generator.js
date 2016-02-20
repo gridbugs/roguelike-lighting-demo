@@ -55,6 +55,11 @@ export class StringTerrainGenerator {
             add('PlayerCharacter');
             add('Floor');
             break;
+        case 'c':
+            console.debug('hi');
+            add('SpiderChild');
+            add('Floor');
+            break;
         }
     }
 }

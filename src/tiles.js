@@ -9,7 +9,11 @@ Tiles.init = async function() {
 
     const tileStore = new TileStore(Config.TILE_WIDTH, Config.TILE_HEIGHT);
 
+    // characters
     this.PlayerCharacter = tileStore.allocateCharacterTile('@', '#ffffff');
+    this.SpiderChild = tileStore.allocateCharacterTile('g', '#95b9c7');
+
+
     this.Floor = tileStore.allocateDotTile(4, '#224488', '#000022');
     this.Unseen = tileStore.allocateCharacterTile(' ', '#000000', '#000000');
     this.Target = tileStore.allocateImageTile(await loadImage('images/target.png'), true);
@@ -30,5 +34,21 @@ Tiles.init = async function() {
         this.DeadTree = tileStore.allocateImageTile(await loadImage('images/dead-tree.png'), true);
         this.Door = tileStore.allocateImageTile(await loadImage('images/door.png'), true);
         this.OpenDoor = tileStore.allocateImageTile(await loadImage('images/door-open.png'), true);
+    }
+
+    if (Config.DEBUG) {
+        this.debugArray = [];
+        for (var i = 0; i <= 9; ++i) {
+            this.debugArray.push(tileStore.allocateCharacterTile('' + i, '#000000', 'rgba(255, 255, 255, 0.5)'));
+        }
+        for (var i = 0; i < 26; ++i) {
+            var c = String.fromCharCode('a'.charCodeAt(0) + i);
+            this.debugArray.push(tileStore.allocateCharacterTile(c, '#000000', 'rgba(255, 255, 255, 0.5)'));
+        }
+        for (var i = 0; i < 26; ++i) {
+            var c = String.fromCharCode('A'.charCodeAt(0) + i);
+            this.debugArray.push(tileStore.allocateCharacterTile(c, '#000000', 'rgba(255, 255, 255, 0.5)'));
+        }
+
     }
 }

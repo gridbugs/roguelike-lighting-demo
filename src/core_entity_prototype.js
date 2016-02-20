@@ -2,21 +2,6 @@ import {EntityPrototype} from './entity_prototype.js';
 import {Components} from './components.js';
 import {Tiles} from './tiles.js';
 
-import {playerTakeTurn} from './player_control.js';
-import * as Shadowcast from './shadowcast.js';
-import {PlayerTurnTaker} from './player_control.js';
-
-export function PlayerCharacter(x, y) {
-    return [
-        new Components.Position(x, y),
-        new Components.Tile(Tiles.PlayerCharacter, 2),
-        new Components.TurnTaker(new PlayerTurnTaker()),
-        new Components.Collider(),
-        new Components.PlayerCharacter(),
-        new Components.Observer(Shadowcast.detectVisibleArea, 20)
-    ];
-}
-
 export function Wall(x, y) {
     return [
         new Components.Position(x, y),
