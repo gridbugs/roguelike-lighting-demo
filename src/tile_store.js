@@ -1,4 +1,8 @@
 import {Transparent} from './colour.js';
+import {Config} from './config.js';
+
+const CANVAS_WIDTH = 1000;
+const CANVAS_HEIGHT = 1000;
 
 class Tile {
     constructor(canvas, x, y, width, height, transparentBackground) {
@@ -41,10 +45,15 @@ export class TileStore {
         this.width = width;
         this.height = height;
 
-        this.canvas = document.getElementById('tile-store');
+        this.canvas = this.createMemoryCanvas();
         this.ctx = this.canvas.getContext('2d');
 
-        this.tempCanvas = document.createElement('canvas');
+        if (Config.DEBUG) {
+            this.canvas.style.backgroundColor = 'pink';
+            $('#canvas').after(this.canvas);
+        }
+
+        this.tempCanvas = this.createMemoryCanvas();
         this.tempCtx = this.tempCanvas.getContext('2d');
 
         this.setFont('IBM-BIOS', 16);
@@ -58,6 +67,12 @@ export class TileStore {
         this.yOffset = 0;
 
         this.maxColumns = 40;
+    }
+    createMemoryCanvas() {
+        let canvas = document.createElement('canvas');
+        canvas.width = CANVAS_WIDTH;
+        canvas.height = CANVAS_HEIGHT;
+        return canvas;
     }
 
     getFontString() {

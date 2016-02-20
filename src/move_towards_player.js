@@ -5,6 +5,5 @@ export class MoveTowardsPlayer extends Controller {
     constructor() {
         super();
         this.debugDrawer = GlobalDrawer.Drawer;
-        console.debug(this);
     }
 }
