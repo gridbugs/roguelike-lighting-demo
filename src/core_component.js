@@ -82,3 +82,18 @@ export class PlayerCharacter extends Component {
 
 export class Projectile extends Component {
 }
+
+export class Health extends Component {
+    constructor(value) {
+        super();
+        this.value = value;
+    }
+
+    clone() {
+        return new Health(this.value);
+    }
+
+    copyTo(dest) {
+        dest.value = value;
+    }
+}

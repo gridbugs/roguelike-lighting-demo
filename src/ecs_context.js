@@ -7,6 +7,7 @@ import {Config} from './config.js';
 import {assert} from './assert.js';
 
 import {GlobalDrawer} from './global_drawer.js';
+import {GlobalHud} from './global_hud.js';
 
 import {Components} from './components.js';
 
@@ -78,6 +79,8 @@ export class EcsContext {
 
     initSystems() {
         this.drawer = GlobalDrawer.Drawer;
+        this.hud = GlobalHud.Hud;
+
         this.schedule = new Schedule();
         this.pathPlanner = new PathPlanner(this);
         this.collision = new Collision(this);
@@ -130,6 +133,7 @@ export class EcsContext {
     updatePlayer() {
         this.observation.run(this.playerCharacter);
         this.knowledgeRenderer.run(this.playerCharacter);
+        this.hud.update(this.playerCharacter);
     }
 
     scheduleImmediateAction(action, relativeTime = 0) {
@@ -141,4 +145,49 @@ export class EcsContext {
             this.maybeApplyAction(action);
         }, relativeTime, /* immediate */ true);
     }
+}
+
+EcsContext.prototype.takeTurn = async function(entity) {
+    if (entity.is(Components.Observer)) {
+        this.observation.run(entity);
+    }
+
+    if (entity.is(Components.PlayerCharacter)) {
+        this.knowledgeRenderer.run(entity);
+        this.hud.update(entity);
+    }
+
+    var turn = await entity.get(Components.TurnTaker).takeTurn();
+
+    this.maybeApplyAction(turn.action);
+
+    if (entity.is(Components.PlayerCharacter)) {
+        await msDelay(1);
+    }
+
+    if (turn.reschedule) {
+        this.scheduleTurn(entity, turn.time);
+    }
+}
+
+EcsContext.prototype.scheduleTurn = async function(entity, relativeTime) {
+    assert(entity.is(Components.TurnTaker));
+    let task = this.schedule.scheduleTask(async () => {
+        if (!entity.is(Components.TurnTaker)) {
+            return;
+        }
+
+        var turnTaker = entity.get(Components.TurnTaker);
+
+        assert(turnTaker.nextTurn !== null);
+        turnTaker.nextTurn = null;
+
+        await this.takeTurn(entity);
+    }, relativeTime);
+
+    entity.get(Components.TurnTaker).nextTurn = task;
+}
+
+EcsContext.prototype.progressSchedule = async function() {
+    await this.schedule.pop().task();
 }

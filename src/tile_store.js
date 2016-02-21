@@ -49,8 +49,11 @@ export class TileStore {
         this.ctx = this.canvas.getContext('2d');
 
         if (Config.DEBUG) {
-            this.canvas.style.backgroundColor = 'pink';
             $('#canvas').after(this.canvas);
+            this.canvas.style.backgroundColor = 'pink';
+            this.canvas.style.position = 'absolute';
+            this.canvas.style.top = '800px';
+            this.canvas.style.left = '0px';
         }
 
         this.tempCanvas = this.createMemoryCanvas();
@@ -161,7 +164,7 @@ export class TileStore {
             let total = data[i] + data[i+1] + data[i+2];
             let average = total / 3;
             // darken the result
-            average /= 2;
+            average *= 0.75;
             data[i] = average;
             data[i+1] = average;
             data[i+2] = average;

@@ -112,3 +112,11 @@ export class ProjectileTerminate extends Action {
         ecsContext.removeEntity(this.entity);
     }
 }
+
+export class MeleeAttack extends Action {
+    constructor(attacker, target) {
+        super();
+        this.attacker = attacker;
+        this.target = target;
+    }
+}

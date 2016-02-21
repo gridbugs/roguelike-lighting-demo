@@ -34,12 +34,28 @@ p.font-loader {
     left: -10px;
 }
 #canvas {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+}
+#hud {
+    position: absolute;
+    font-family: IBM-BIOS;
+    width: 1024px;
+    height: 16px;
+    top: 480px;
+    left: 0px;
+    background-color: #000000;
+    color: #ffffff;
+    text-align: right;
+    display: none;
 }
 </style>
 
 </head>
 <body>
     <p class='font-loader'>.</p>
-    <canvas id="canvas" width=1420 height=600></canvas>
+    <canvas id="canvas" width=1024 height=480></canvas>
+    <div id="hud"></div>
 </body>
 </html>
