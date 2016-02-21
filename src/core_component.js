@@ -64,15 +64,16 @@ export class Opacity extends Component {
 }
 
 export class Observer extends Component {
-    constructor(observe, viewDistance) {
+    constructor(observe, viewDistance, familiar = false) {
         super();
         this.observe = observe;
         this.viewDistance = viewDistance;
-        this.knowledge = new Knowledge();
+        this.knowledge = new Knowledge(familiar);
+        this.familiar = familiar;
     }
 
     clone() {
-        return new Observer(this.observe, this.viewDistance);
+        return new Observer(this.observe, this.viewDistance, this.familiar);
     }
 }
 

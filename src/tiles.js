@@ -49,6 +49,14 @@ Tiles.init = async function() {
             var c = String.fromCharCode('A'.charCodeAt(0) + i);
             this.debugArray.push(tileStore.allocateCharacterTile(c, '#000000', 'rgba(255, 255, 255, 0.25)'));
         }
-
+        this.debugExtra = tileStore.allocateCharacterTile('?', '#000000', 'rgba(255, 255, 255, 0.25)');
     }
+}
+
+Tiles.getDebug = function(i) {
+    let tile = this.debugArray[i];
+    if (tile === undefined) {
+        return this.debugExtra;
+    }
+    return tile;
 }

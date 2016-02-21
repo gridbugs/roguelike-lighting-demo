@@ -26,6 +26,10 @@ export class DoublyLinkedList {
         return this._tail.value;
     }
 
+    get empty() {
+        return this._head === null;
+    }
+
     clear() {
         this._head = null;
         this._tail = null;

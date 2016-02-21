@@ -11,6 +11,14 @@ export class SearchQueue {
         this.linkedList = new DoublyLinkedList(allocateNode);
     }
 
+    get length() {
+        return this.linkedList.length;
+    }
+
+    get empty() {
+        return this.linkedList.empty;
+    }
+
     push(value) {
         this.linkedList.push(value);
     }
@@ -22,5 +30,15 @@ export class SearchQueue {
     clear() {
         this.linkedList.clear();
         this.nodePool.flush();
+    }
+
+    populate(iterable) {
+        for (let x of iterable) {
+            this.push(x);
+        }
+    }
+
+    *[Symbol.iterator]() {
+        yield* this.linkedList;
     }
 }

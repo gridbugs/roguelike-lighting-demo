@@ -69,9 +69,9 @@ export class KnowledgeRenderer extends System {
         entity.with(Components.Observer, (observer) => {
             let grid = observer.knowledge.getGrid(this.ecsContext);
             for (let cell of grid) {
-                if (cell.turn === -1) {
+                if (!cell.known) {
                     this.drawer.drawTile(Tiles.Unseen, cell.x, cell.y);
-                } else if (cell.turn === this.ecsContext.turn) {
+                } else if (cell.visible) {
                     this.drawTile(cell);
                 } else {
                     this.drawGreyTile(cell);

@@ -19,7 +19,6 @@ export class Observation extends System {
                 let knowledgeCell = knowledgeGrid.get(cell.coord);
 
                 knowledgeCell.clear();
-                knowledgeCell.turn = this.ecsContext.turn;
 
                 for (let e of cell) {
                     knowledgeCell.see(e);

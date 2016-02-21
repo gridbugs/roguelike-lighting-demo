@@ -13,6 +13,7 @@ class DirectionInfo {
         this.type = type;
         this.index = index;
         this.subIndex = subIndex;
+        this.opposite = null;
     }
 
     get cardinal() {
@@ -41,6 +42,15 @@ export const Direction = makeEnum({
     SouthWest:  d(-1, +1, 'SouthWest', O, 6, 2),
     NorthWest:  d(-1, -1, 'NorthWest', O, 7, 3)
 });
+
+Direction.North.opposite = Direction.South;
+Direction.South.opposite = Direction.North;
+Direction.East.opposite = Direction.West;
+Direction.West.opposite = Direction.East;
+Direction.NorthWest.opposite = Direction.SouthEast;
+Direction.SouthEast.opposite = Direction.NorthWest;
+Direction.SouthWest.opposite = Direction.NorthEast;
+Direction.NorthEast.opposite = Direction.SouthWest;
 
 export const Directions = Direction.values;
 export const CardinalDirections = [for (dir of Directions) if (dir.cardinal) dir];

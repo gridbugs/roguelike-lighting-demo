@@ -57,10 +57,15 @@ class KnowledgeCell extends Cell {
     constructor(x, y, grid) {
         super(x, y, grid);
         this.turn = -1;
+        this.known = false;
         this.entityMemoryPool = new ObjectPool(EntityMemory, this);
         this.topEntityMemory = new BestTracker(compare);
         this.topBackgroundEntityMemory = new BestTracker(compare);
         this.componentTable = new ComponentTable();
+    }
+
+    get visible() {
+        return this.turn === this.grid.ecsContext.turn;
     }
 
     see(entity) {
@@ -71,6 +76,8 @@ class KnowledgeCell extends Cell {
         if (entityMemory.hasBackground()) {
             this.topBackgroundEntityMemory.insert(entityMemory);
         }
+        this.known = true;
+        this.turn = this.grid.ecsContext.turn;
     }
 
     clear() {
@@ -90,20 +97,29 @@ class KnowledgeCell extends Cell {
 }
 
 class KnowledgeGrid extends CellGrid(KnowledgeCell) {
-    constructor(ecsContext) {
+    constructor(ecsContext, knowledge) {
         super(ecsContext.width, ecsContext.height);
         this.ecsContext = ecsContext;
+        this.knowledge = knowledge;
+        if (knowledge.familiar) {
+            for (let entity of ecsContext.entities) {
+                let knowledgeCell = this.get(entity.cell.coord);
+                knowledgeCell.see(entity);
+                knowledgeCell.turn = -1;
+            }
+        }
     }
 }
 
 export class Knowledge {
-    constructor() {
+    constructor(familiar = false) {
         this.gridTable = [];
+        this.familiar = familiar;
     }
 
     maybeAddEcsContext(ecsContext) {
         if (this.gridTable[ecsContext.id] === undefined) {
-            this.gridTable[ecsContext.id] = new KnowledgeGrid(ecsContext);
+            this.gridTable[ecsContext.id] = new KnowledgeGrid(ecsContext, this);
         }
     }
 

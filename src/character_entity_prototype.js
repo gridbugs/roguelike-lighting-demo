@@ -26,6 +26,6 @@ export function SpiderChild(x, y) {
         new Components.Tile(Tiles.SpiderChild, 2),
         new Components.TurnTaker(new MoveTowardsPlayer()),
         new Components.Collider(),
-        new Components.Observer(Shadowcast.detectVisibleArea, 20)
+        new Components.Observer(Shadowcast.detectVisibleArea, 20, true)
     ];
 }
