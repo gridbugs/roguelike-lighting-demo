@@ -1,5 +1,6 @@
 import {Vec2} from './vec2.js';
 import {makeEnum} from './enum.js';
+import {SQRT2} from './math.js';
 
 export const DirectionType = makeEnum([
     'Cardinal',
@@ -7,13 +8,14 @@ export const DirectionType = makeEnum([
 ]);
 
 class DirectionInfo {
-    constructor(x, y, name, type, index, subIndex) {
+    constructor(x, y, name, type, index, subIndex, multiplier) {
         this.vector = new Vec2(x, y);
         this.name = name;
         this.type = type;
         this.index = index;
         this.subIndex = subIndex;
         this.opposite = null;
+        this.multiplier = multiplier;
     }
 
     get cardinal() {
@@ -25,22 +27,22 @@ class DirectionInfo {
     }
 }
 
-function d(x, y, name, type, index, subIndex) {
-    return new DirectionInfo(x, y, name, type, index, subIndex);
+function d(x, y, name, type, index, subIndex, multiplier) {
+    return new DirectionInfo(x, y, name, type, index, subIndex, multiplier);
 }
 
 const C = DirectionType.Cardinal;
 const O = DirectionType.Ordinal;
 
 export const Direction = makeEnum({
-    North:      d(+0, -1, 'North', C, 0, 0),
-    East:       d(+1, +0, 'East', C, 1, 1),
-    South:      d(+0, +1, 'South', C, 2, 2),
-    West:       d(-1, +0, 'West', C, 3, 3),
-    NorthEast:  d(+1, -1, 'NorthEast', O, 4, 0),
-    SouthEast:  d(+1, +1, 'SouthEast', O, 5, 1),
-    SouthWest:  d(-1, +1, 'SouthWest', O, 6, 2),
-    NorthWest:  d(-1, -1, 'NorthWest', O, 7, 3)
+    North:      d(+0, -1, 'North', C, 0, 0, 1),
+    East:       d(+1, +0, 'East', C, 1, 1, 1),
+    South:      d(+0, +1, 'South', C, 2, 2, 1),
+    West:       d(-1, +0, 'West', C, 3, 3, 1),
+    NorthEast:  d(+1, -1, 'NorthEast', O, 4, 0, SQRT2),
+    SouthEast:  d(+1, +1, 'SouthEast', O, 5, 1, SQRT2),
+    SouthWest:  d(-1, +1, 'SouthWest', O, 6, 2, SQRT2),
+    NorthWest:  d(-1, -1, 'NorthWest', O, 7, 3, SQRT2)
 });
 
 Direction.North.opposite = Direction.South;

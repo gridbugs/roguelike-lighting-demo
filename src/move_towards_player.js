@@ -10,6 +10,8 @@ import {Actions} from './actions.js';
 
 import {CellGrid, Cell} from './cell_grid.js';
 import {SearchQueue} from './search_queue.js';
+import {SearchPriorityQueue} from './search_priority_queue.js';
+import {SQRT2} from './math.js';
 import {BestSet} from './best_set.js';
 import {Directions} from './direction.js';
 
@@ -17,6 +19,8 @@ class DijkstraMapCell extends Cell {
     constructor(x, y, grid) {
         super(x, y, grid);
         this.value = 0;
+        this.seen = false;
+        this.transferCost = 0;
         this.visited = false;
         this.direction = null;
     }
@@ -31,15 +35,21 @@ class DijkstraMapCell extends Cell {
         for (let direction of Directions) {
             let neighbour = this.getNeighbour(direction);
             neighbour.direction = direction;
+            neighbour.totalCost = neighbour.value + direction.multiplier;
             best.insert(neighbour);
         }
         return best;
+    }
+
+    debugDraw() {
+        this.grid.controller.debugDrawer.drawTileUnstored(Tiles.getDebug(
+                    Math.floor(this.value)), this.x, this.y);
     }
 }
 
 DijkstraMapCell.compare = function(a, b) {
     if (a.visited && b.visited) {
-        return b.value - a.value;
+        return b.totalCost - a.totalCost;
     }
     if (a.visited) {
         return 1;
@@ -54,27 +64,26 @@ class DijkstraMap extends CellGrid(DijkstraMapCell) {
     constructor(width, height, controller) {
         super(width, height);
         this.controller = controller;
-        this.queue = new SearchQueue();
+        this.queue = new SearchPriorityQueue((a, b) => {return b.value - a.value});
         this.bestNeighbour = new BestSet(DijkstraMapCell.compare, 8); // 8 directions
     }
 
     clear() {
         for (let cell of this) {
             cell.visited = false;
+            cell.seen = false;
         }
     }
 
     computeFromZeroCoord(coord) {
         this.queue.clear();
-        this.queue.push(this.get(coord));
+        this.queue.insert(this.get(coord));
         this.compute();
     }
 
     computeFromZeroCoords(coords) {
         this.queue.clear();
-        for (let coord of coords) {
-            this.queue.push(this.get(coord));
-        }
+        this.queue.populate(coords);
         this.compute();
     }
 
@@ -82,24 +91,37 @@ class DijkstraMap extends CellGrid(DijkstraMapCell) {
         this.clear();
         for (let cell of this.queue) {
             cell.value = 0;
-            cell.visited = true;
         }
         while (!this.queue.empty) {
-            let cell = this.queue.shift();
-            let knowledgeCell = cell.getKnowledgeCell();
-            //this.controller.debugDrawer.drawTileUnstored(Tiles.getDebug(cell.value), cell.x, cell.y);
-            for (let neighbour of cell.neighbours) {
-                if (!neighbour.visited) {
-                    let knowledgeCell = neighbour.getKnowledgeCell();
-                    if (knowledgeCell.is(Components.Solid)) {
-                        continue;
-                    }
-                    if (!knowledgeCell.known) {
-                        continue;
-                    }
-                    neighbour.value = cell.value + 1;
-                    neighbour.visited = true;
-                    this.queue.push(neighbour);
+            let cell = this.queue.remove();
+
+            if (cell.visited) {
+                continue;
+            }
+
+            cell.visited = true;
+
+            for (let direction of Directions) {
+                let neighbour = cell.getNeighbour(direction);
+                if (neighbour === null) {
+                    continue;
+                }
+                if (neighbour.visited) {
+                    continue;
+                }
+                let knowledgeCell = neighbour.getKnowledgeCell();
+                if (!knowledgeCell.known) {
+                    continue;
+                }
+                if (knowledgeCell.is(Components.Solid)) {
+                    continue;
+                }
+
+                let value = cell.value + direction.multiplier;
+                if (!neighbour.seen || value < neighbour.value) {
+                    neighbour.seen = true;
+                    neighbour.value = value;
+                    this.queue.insert(neighbour);
                 }
             }
         }
@@ -137,6 +159,7 @@ export class MoveTowardsPlayer extends Controller {
 
     getAction() {
         let playerCell = this.getPlayerCell();
+
         if (playerCell === null) {
             if (this.lastKnownPosition === null) {
                 return new Actions.Wait(this.entity);
@@ -148,8 +171,10 @@ export class MoveTowardsPlayer extends Controller {
         }
         this.targetMap.clear();
         this.targetMap.computeFromZeroCoord(playerCell.coord);
+
         let candidates = this.targetMap.get(this.entity.cell.coord).getLowestNeighbours();
         let direction = candidates.getRandom().direction;
+
         return new Actions.Walk(this.entity, direction);
     }
 }

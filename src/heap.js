@@ -29,6 +29,12 @@ export class Heap {
         this.nextIndex = 1;
     }
 
+    *[Symbol.iterator]() {
+        for (let i = 1; i < this.nextIndex; ++i) {
+            yield this.array[i];
+        }
+    }
+
     insert(x) {
         var index = this.nextIndex;
         ++this.nextIndex;

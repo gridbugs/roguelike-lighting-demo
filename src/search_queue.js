@@ -19,11 +19,11 @@ export class SearchQueue {
         return this.linkedList.empty;
     }
 
-    push(value) {
+    insert(value) {
         this.linkedList.push(value);
     }
 
-    shift() {
+    remove() {
         return this.linkedList.shift();
     }
 
@@ -34,7 +34,7 @@ export class SearchQueue {
 
     populate(iterable) {
         for (let x of iterable) {
-            this.push(x);
+            this.insert(x);
         }
     }
 
