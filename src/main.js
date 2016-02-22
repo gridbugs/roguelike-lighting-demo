@@ -74,7 +74,6 @@ export async function main() {
         }
     })();
 
-    while (true) {
-        await ecs.progressSchedule();
-    }
+    while (await ecs.progressSchedule());
+    ecs.updatePlayer();
 }

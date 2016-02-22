@@ -26,6 +26,18 @@ export class Collision extends System {
                     }
                 }
             }
+
+            if (action.entity.has(Components.Combatant) &&
+                destination.has(Components.Combatant)) {
+
+                action.success = false;
+                let target = destination.find(Components.Combatant);
+                if (target.get(Components.Combatant).group !==
+                    action.entity.get(Components.Combatant).group) {
+                    this.ecsContext.scheduleImmediateAction(
+                            new Actions.MeleeAttack(action.entity, target));
+                }
+            }
         });
 
         this.on(Actions.ProjectileStep, (action) => {

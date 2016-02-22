@@ -97,3 +97,18 @@ export class Health extends Component {
         dest.value = value;
     }
 }
+
+export class Combatant extends Component {
+    constructor(group) {
+        super();
+        this.group = group;
+    }
+
+    clone() {
+        return new Combatant(this.group);
+    }
+
+    copyTo(dest) {
+        dest.group = this.group;
+    }
+}

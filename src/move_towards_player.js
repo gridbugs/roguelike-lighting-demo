@@ -87,7 +87,7 @@ class DijkstraMap extends CellGrid(DijkstraMapCell) {
         while (!this.queue.empty) {
             let cell = this.queue.shift();
             let knowledgeCell = cell.getKnowledgeCell();
-            this.controller.debugDrawer.drawTileUnstored(Tiles.getDebug(cell.value), cell.x, cell.y);
+            //this.controller.debugDrawer.drawTileUnstored(Tiles.getDebug(cell.value), cell.x, cell.y);
             for (let neighbour of cell.neighbours) {
                 if (!neighbour.visited) {
                     let knowledgeCell = neighbour.getKnowledgeCell();

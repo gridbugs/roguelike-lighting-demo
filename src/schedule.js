@@ -9,10 +9,6 @@ class Task {
 
         this.enabled = true;
     }
-
-    cancel() {
-        this.enabled = false;
-    }
 }
 
 function compare(a, b) {

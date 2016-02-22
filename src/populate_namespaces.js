@@ -9,6 +9,7 @@ import * as CoreComponent from './core_component.js';
 import * as Position from './position.js';
 import * as Door from './door.js';
 import * as TurnTaker from './turn_taker.js';
+import * as StatComponent from './stat_component.js';
 
 import * as CoreEntityPrototype from './core_entity_prototype.js';
 import * as CharacterEntityPrototype from './character_entity_prototype.js';
@@ -38,5 +39,5 @@ function populateNamespace(sources, dest) {
 
 populateNamespace([StringTerrainGenerator], TerrainGenerators);
 populateNamespace([CoreEntityPrototype, CharacterEntityPrototype], EntityPrototypes);
-populateNamespace([CoreComponent, Position, Door, TurnTaker], Components);
+populateNamespace([CoreComponent, Position, Door, TurnTaker, StatComponent], Components);
 populateNamespace([CoreAction], Actions);

@@ -13,6 +13,7 @@ import {Components} from './components.js';
 
 import {Schedule} from './schedule.js';
 import {Collision} from './collision.js';
+import {Combat} from './combat.js';
 import {Observation} from './observation.js';
 import {KnowledgeRenderer} from './knowledge_renderer.js';
 import {PathPlanner} from './path_planner.js';
@@ -84,6 +85,7 @@ export class EcsContext {
         this.schedule = new Schedule();
         this.pathPlanner = new PathPlanner(this);
         this.collision = new Collision(this);
+        this.combat = new Combat(this);
         this.observation = new Observation(this);
         this.knowledgeRenderer = new KnowledgeRenderer(this, this.drawer);
     }
@@ -121,6 +123,7 @@ export class EcsContext {
     maybeApplyAction(action) {
 
         this.collision.run(action);
+        this.combat.run(action);
 
         if (action.success) {
             action.commit(this);
@@ -189,5 +192,10 @@ EcsContext.prototype.scheduleTurn = async function(entity, relativeTime) {
 }
 
 EcsContext.prototype.progressSchedule = async function() {
+    if (this.playerCharacter.get(Components.Health).value <= 0) {
+        console.debug('you died');
+        return false;
+    }
     await this.schedule.pop().task();
+    return true;
 }

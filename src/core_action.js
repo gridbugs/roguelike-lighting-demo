@@ -119,4 +119,52 @@ export class MeleeAttack extends Action {
         this.attacker = attacker;
         this.target = target;
     }
+
+    commit(ecsContext) {}
+}
+
+export class MeleeAttackHit extends Action {
+    constructor(attacker, target, damage) {
+        super();
+        this.attacker = attacker;
+        this.target = target;
+        this.damage = damage;
+    }
+
+    commit(ecsContext) {
+        ecsContext.scheduleImmediateAction(
+            new TakeDamage(this.target, this.damage)
+        );
+    }
+}
+
+export class TakeDamage extends Action {
+    constructor(entity, damage) {
+        super();
+        this.entity = entity;
+        this.damage = damage;
+    }
+
+    commit(ecsContext) {
+        this.entity.with(Components.Health, (health) => {
+            health.value -= this.damage;
+            if (health.value <= 0) {
+                ecsContext.scheduleImmediateAction(
+                    new Die(this.entity)
+                );
+            }
+        });
+    }
+}
+
+export class Die extends Action {
+    constructor(entity) {
+        super();
+        this.entity = entity;
+    }
+
+    commit(ecsContext) {
+        this.entity.get(Components.TurnTaker).nextTurn.enabled = false;
+        ecsContext.removeEntity(this.entity);
+    }
 }
