@@ -11,18 +11,20 @@ class EntityMemory extends InvalidatingComponentTable {
 
         this.cell = cell;
 
-        this.rememberedComponents = [
-            Components.Position,
-            Components.Tile,
-            Components.WallTile,
-            Components.Solid,
-            Components.PlayerCharacter,
-            Components.Burning
-        ];
+        if (EntityMemory.RememberedComponents === null) {
+            EntityMemory.RememberedComponents = [
+                Components.Position,
+                Components.Tile,
+                Components.WallTile,
+                Components.Solid,
+                Components.PlayerCharacter,
+                Components.Burning
+            ];
+        }
     }
 
     see(entity) {
-        for (let component of this.rememberedComponents) {
+        for (let component of EntityMemory.RememberedComponents) {
             if (entity.has(component)) {
                 this.add(entity.get(component));
                 this.cell.componentTable.set(component, true);
@@ -40,6 +42,7 @@ class EntityMemory extends InvalidatingComponentTable {
         return false;
     }
 }
+EntityMemory.RememberedComponents = null;
 
 function getDepth(e) {
     if (e.has(Components.Tile)) {
