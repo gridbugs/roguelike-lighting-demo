@@ -45,6 +45,7 @@ export function SpiderChild(x, y) {
         new Components.Defense(1),
         new Components.Accuracy(100),
         new Components.Dodge(10),
-        new Components.Unfamiliar()
+        new Components.Unfamiliar(),
+        new Components.Flamable(5)
     ];
 }

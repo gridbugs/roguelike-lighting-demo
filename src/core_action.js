@@ -204,8 +204,17 @@ export class Burn extends Action {
     commit(ecsContext) {
         this.entity.with(Components.Burning, (burning) => {
             burning.time -= this.time;
+            if (this.entity.has(Components.Health)) {
+                ecsContext.scheduleImmediateAction(
+                    new TakeDamage(this.entity, this.time)
+                );
+            }
             if (burning.time <= 0) {
-                ecsContext.removeEntity(this.entity);
+                if (this.entity.has(Components.Health)) {
+                    this.entity.remove(Components.Burning);
+                } else {
+                    ecsContext.removeEntity(this.entity);
+                }
             }
         });
     }

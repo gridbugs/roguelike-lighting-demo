@@ -42,13 +42,20 @@ export class Collision extends ReactiveSystem {
 
         this.on(Actions.ProjectileStep, (action) => {
             let destination = this.getCell(action.destination);
-            if (action.entity.is(Components.Projectile) &&
-                destination.is(Components.Solid)) {
+            if (action.entity.is(Components.Projectile)) {
+                if (destination.is(Components.Solid)) {
 
-                action.success = false;
-                let contact = destination.find(Components.Solid);
-                this.ecsContext.scheduleImmediateAction(
-                        new Actions.ProjectileCollide(action.entity, contact));
+                    action.success = false;
+                    let contact = destination.find(Components.Solid);
+                    this.ecsContext.scheduleImmediateAction(
+                            new Actions.ProjectileCollide(action.entity, contact));
+                } else if (destination.has(Components.Combatant)) {
+
+                    action.success = false;
+                    let contact = destination.find(Components.Combatant);
+                    this.ecsContext.scheduleImmediateAction(
+                            new Actions.ProjectileCollide(action.entity, contact));
+                }
             }
         });
     }
