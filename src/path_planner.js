@@ -57,18 +57,26 @@ PathPlanner.prototype.getLine = async function(entity) {
             }
             default: {
                 var controlType = Control.controlTypeFromKey(key);
-                if (controlType === null) {
-                    continue;
+                switch (controlType) {
+                    case Control.ControlTypes.Fire:
+                        this.drawer.redraw();
+                        return line;
+                    default: {
+                        if (controlType === null) {
+                            continue;
+                        }
+
+                        var direction = DirectionTable[controlType];
+                        if (direction === undefined) {
+                            continue;
+                        }
+
+                        end.addInPlace(direction.vector, end);
+                        break;
+                    }
                 }
 
-                var direction = DirectionTable[controlType];
-                if (direction === undefined) {
-                    continue;
-                }
-
-                end.addInPlace(direction.vector, end);
-                break;
-            }
+           }
         }
     }
 }
