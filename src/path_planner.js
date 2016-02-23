@@ -25,8 +25,8 @@ export class PathPlanner {
     drawLine(line) {
         this.drawer.redraw();
         for (let coord of line.absoluteCoords()) {
-            this.drawer.redrawBackgroundTile(coord.x, coord.y);
             if (!coord.equals(line.endCoord)) {
+                this.drawer.redrawBackgroundTile(coord.x, coord.y);
                 this.drawer.drawTileUnstored(Tiles.Path, coord.x, coord.y);
             }
         }
