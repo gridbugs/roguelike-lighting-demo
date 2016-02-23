@@ -113,6 +113,18 @@ export class ProjectileTerminate extends Action {
     }
 }
 
+export class ProjectileCollide extends Action {
+    constructor(entity, contact) {
+        super();
+        this.entity = entity;
+        this.contact = contact;
+    }
+
+    commit(ecsContext) {
+        ecsContext.removeEntity(this.entity);
+    }
+}
+
 export class MeleeAttack extends Action {
     constructor(attacker, target) {
         super();
@@ -166,5 +178,35 @@ export class Die extends Action {
     commit(ecsContext) {
         this.entity.get(Components.TurnTaker).nextTurn.enabled = false;
         ecsContext.removeEntity(this.entity);
+    }
+}
+
+export class CatchFire extends Action {
+    constructor(entity) {
+        super();
+        this.entity = entity;
+    }
+
+    commit(ecsContext) {
+        this.entity.with(Components.Flamable, (flamable) => {
+            this.entity.add(new Components.Burning(flamable.time));
+        });
+    }
+}
+
+export class Burn extends Action {
+    constructor(entity, time) {
+        super();
+        this.entity = entity;
+        this.time = time;
+    }
+
+    commit(ecsContext) {
+        this.entity.with(Components.Burning, (burning) => {
+            burning.time -= this.time;
+            if (burning.time <= 0) {
+                ecsContext.removeEntity(this.entity);
+            }
+        });
     }
 }

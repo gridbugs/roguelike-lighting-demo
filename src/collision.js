@@ -46,8 +46,9 @@ export class Collision extends ReactiveSystem {
                 destination.is(Components.Solid)) {
 
                 action.success = false;
+                let contact = destination.find(Components.Solid);
                 this.ecsContext.scheduleImmediateAction(
-                        new Actions.ProjectileTerminate(action.entity));
+                        new Actions.ProjectileCollide(action.entity, contact));
             }
         });
     }

@@ -36,11 +36,11 @@ export class StringTerrainGenerator {
             add('Floor');
             break;
         case '+':
-            add('Door');
+            add('WoodenDoor');
             add('Ground');
             break;
         case '-':
-            add('OpenDoor');
+            add('OpenWoodenDoor');
             add('Ground');
             break;
         case ' ':

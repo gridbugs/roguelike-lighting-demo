@@ -112,3 +112,50 @@ export class Combatant extends Component {
         dest.group = this.group;
     }
 }
+
+export class FireStarter extends Component {
+}
+
+export class Flamable extends Component {
+    constructor(time) {
+        super();
+        this.time = time;
+    }
+
+    clone() {
+        return new Flamable(this.time);
+    }
+
+    copyTo(dest) {
+        dest.time = this.time;
+    }
+}
+
+export class Burning extends Component {
+    constructor(time) {
+        super();
+        this.time = time;
+    }
+
+    onAdd(entity) {
+        super.onAdd(entity);
+        this.ecsContext.fire.add(entity);
+    }
+
+    onRemove(entity) {
+        this.ecsContext.fire.remove(entity);
+        super.onRemove(entity);
+    }
+
+    clone() {
+        return new Burning(this.time);
+    }
+
+    copyTo(dest) {
+        dest.time = this.time;
+    }
+
+}
+
+export class Unfamiliar extends Component {
+}

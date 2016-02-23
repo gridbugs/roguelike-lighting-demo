@@ -16,7 +16,8 @@ class EntityMemory extends InvalidatingComponentTable {
             Components.Tile,
             Components.WallTile,
             Components.Solid,
-            Components.PlayerCharacter
+            Components.PlayerCharacter,
+            Components.Burning
         ];
     }
 
@@ -104,8 +105,10 @@ class KnowledgeGrid extends CellGrid(KnowledgeCell) {
         if (knowledge.familiar) {
             for (let entity of ecsContext.entities) {
                 let knowledgeCell = this.get(entity.cell.coord);
-                knowledgeCell.see(entity);
-                knowledgeCell.turn = -1;
+                if (!entity.is(Components.Unfamiliar)) {
+                    knowledgeCell.see(entity);
+                    knowledgeCell.turn = -1;
+                }
             }
         }
     }

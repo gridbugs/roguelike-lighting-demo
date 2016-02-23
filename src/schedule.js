@@ -24,6 +24,7 @@ function compare(a, b) {
 export class Schedule {
     constructor() {
         this.absoluteTime = 0;
+        this.timeDelta = 0;
         this.sequenceNumber = 0;
         this.heap = new Heap(compare);
     }
@@ -59,6 +60,7 @@ export class Schedule {
 
         var entry = this.heap.pop();
         if (!entry.immediate) {
+            this.timeDelta = entry.absoluteTime - this.absoluteTime;
             this.absoluteTime = entry.absoluteTime;
         }
         return entry;

@@ -48,8 +48,12 @@ export class KnowledgeRenderer extends System {
     drawTile(cell) {
         let tile = this.getMainTile(cell);
         if (tile.transparentBackground) {
-            let backgroundTile = this.getBackgroundTile(cell);
-            this.drawer.drawTile(backgroundTile, cell.x, cell.y);
+            if (cell.is(Components.Burning)) {
+                this.drawer.drawTile(Tiles.FireBackground, cell.x, cell.y);
+            } else {
+                let backgroundTile = this.getBackgroundTile(cell);
+                this.drawer.drawTile(backgroundTile, cell.x, cell.y);
+            }
         }
         this.drawer.drawTile(tile, cell.x, cell.y);
     }

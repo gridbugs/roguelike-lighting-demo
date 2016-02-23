@@ -17,6 +17,8 @@ import {Combat} from './combat.js';
 import {Observation} from './observation.js';
 import {KnowledgeRenderer} from './knowledge_renderer.js';
 import {PathPlanner} from './path_planner.js';
+import {Fire} from './fire.js';
+
 import {msDelay} from './time.js';
 
 class SpacialHashCell extends Cell {
@@ -88,6 +90,7 @@ export class EcsContext {
         this.combat = new Combat(this);
         this.observation = new Observation(this);
         this.knowledgeRenderer = new KnowledgeRenderer(this, this.drawer);
+        this.fire = new Fire(this);
     }
 
     setPlayerCharacter(playerCharacter) {
@@ -122,8 +125,7 @@ export class EcsContext {
 
     maybeApplyAction(action) {
 
-        this.collision.run(action);
-        this.combat.run(action);
+        this.runReactiveSystems(action);
 
         if (action.success) {
             action.commit(this);
@@ -148,6 +150,18 @@ export class EcsContext {
             this.maybeApplyAction(action);
         }, relativeTime, /* immediate */ true);
     }
+
+    runReactiveSystems(action) {
+        this.collision.run(action);
+        this.combat.run(action);
+        this.fire.run(action);
+    }
+
+    runContinuousSystems(timeDelta) {
+        if (timeDelta > 0) {
+            this.fire.progress(timeDelta);
+        }
+    }
 }
 
 EcsContext.prototype.takeTurn = async function(entity) {
@@ -171,6 +185,8 @@ EcsContext.prototype.takeTurn = async function(entity) {
     if (turn.reschedule) {
         this.scheduleTurn(entity, turn.time);
     }
+
+    this.runContinuousSystems(this.schedule.timeDelta);
 }
 
 EcsContext.prototype.scheduleTurn = async function(entity, relativeTime) {
