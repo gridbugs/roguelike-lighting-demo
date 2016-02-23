@@ -85,6 +85,8 @@ export class EcsContext {
 
         this.id = instanceCount;
         ++instanceCount;
+
+        this.playerCharacter = null;
     }
 
     initSystems() {
@@ -169,6 +171,32 @@ export class EcsContext {
             this.fire.progress(timeDelta);
         }
     }
+
+    scheduleTurn(entity, relativeTime) {
+        assert(entity.is(Components.TurnTaker));
+        let task = this.schedule.scheduleTask(async () => {
+            if (!entity.is(Components.TurnTaker)) {
+                return;
+            }
+
+            var turnTaker = entity.get(Components.TurnTaker);
+
+            assert(turnTaker.nextTurn !== null);
+            turnTaker.nextTurn = null;
+
+            await this.takeTurn(entity);
+        }, relativeTime);
+
+        entity.get(Components.TurnTaker).nextTurn = task;
+    }
+
+    scheduleInitialTurns() {
+        for (let entity of this.entities) {
+            if (entity.is(Components.TurnTaker)) {
+                this.scheduleTurn(entity, 0);
+            }
+        }
+    }
 }
 
 EcsContext.prototype.takeTurn = async function(entity) {
@@ -196,29 +224,6 @@ EcsContext.prototype.takeTurn = async function(entity) {
     this.runContinuousSystems(this.schedule.timeDelta);
 }
 
-EcsContext.prototype.scheduleTurn = async function(entity, relativeTime) {
-    assert(entity.is(Components.TurnTaker));
-    let task = this.schedule.scheduleTask(async () => {
-        if (!entity.is(Components.TurnTaker)) {
-            return;
-        }
-
-        var turnTaker = entity.get(Components.TurnTaker);
-
-        assert(turnTaker.nextTurn !== null);
-        turnTaker.nextTurn = null;
-
-        await this.takeTurn(entity);
-    }, relativeTime);
-
-    entity.get(Components.TurnTaker).nextTurn = task;
-}
-
 EcsContext.prototype.progressSchedule = async function() {
-    if (this.playerCharacter.get(Components.Health).value <= 0) {
-        console.debug('you died');
-        return false;
-    }
     await this.schedule.pop().task();
-    return true;
 }

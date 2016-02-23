@@ -2,25 +2,13 @@ import './populate_namespaces.js';
 
 import {initGlobals} from './globals.js';
 
-import {GlobalDrawer} from './global_drawer.js';
-import {Tiles} from './tiles.js';
-
 import {StringTerrainGenerator} from './string_terrain_generator.js';
-import {EcsContext} from './ecs_context.js';
-import {KnowledgeRenderer} from './knowledge_renderer.js';
-import {Collision} from './collision.js';
-import {Observation} from './observation.js';
+import {Level} from './level.js';
 
 import {Components} from './components.js';
-import {getChar} from './input.js';
+
 import {assert} from './assert.js';
 
-import {Line} from './line.js';
-import {Vec2} from './vec2.js';
-
-import {msDelay} from './time.js';
-import {DoublyLinkedList} from './doubly_linked_list.js';
-import {SearchQueue} from './search_queue.js';
 
 export async function main() {
     await initGlobals();
@@ -60,20 +48,18 @@ export async function main() {
     ];
 
     var generator = new StringTerrainGenerator(terrainStringArray);
-    var ecs = new EcsContext();
+    var firstLevel = new Level(generator);
+    var playerCharacter = firstLevel.ecsContext.playerCharacter;
 
-    generator.generate(ecs);
+    var currentEcsContext;
 
-    (() => {
-        for (let entity of ecs.entities) {
-            if (entity.is(Components.PlayerCharacter)) {
-                ecs.scheduleTurn(entity, 0);
-            } else if (entity.is(Components.TurnTaker)) {
-                ecs.scheduleTurn(entity, 1);
-            }
+    while (true) {
+        currentEcsContext = playerCharacter.ecsContext;
+        if (playerCharacter.get(Components.Health).value <= 0) {
+            break;
         }
-    })();
-
-    while (await ecs.progressSchedule());
-    ecs.updatePlayer();
+        await currentEcsContext.progressSchedule();
+    }
+    currentEcsContext.updatePlayer();
+    console.debug('you died');
 }
