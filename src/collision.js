@@ -1,8 +1,8 @@
-import {System} from './system.js';
+import {ReactiveSystem} from './reactive_system.js';
 import {Actions} from './actions.js';
 import {Components} from './components.js';
 
-export class Collision extends System {
+export class Collision extends ReactiveSystem {
     constructor(ecsContext) {
         super(ecsContext);
 

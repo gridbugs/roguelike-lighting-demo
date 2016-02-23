@@ -13,7 +13,7 @@ export class KnowledgeRenderer extends System {
 
     resolveWallTile(entity) {
         /* Get the cell below this one */
-        let realCell = this.spacialHash.get(entity.cell.coord);
+        let realCell = this.getCell(entity.cell.coord);
         let south = realCell.getNeighbour(Direction.South);
         if (south === null) {
             return entity.get(Components.WallTile).topTile;

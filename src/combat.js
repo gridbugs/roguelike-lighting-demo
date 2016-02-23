@@ -1,4 +1,4 @@
-import {System} from './system.js';
+import {ReactiveSystem} from './reactive_system.js';
 import {Actions} from './actions.js';
 import {Components} from './components.js';
 
@@ -12,7 +12,7 @@ function rollD6() {
     return getRandomIntInclusive(1, 6);
 }
 
-export class Combat extends System {
+export class Combat extends ReactiveSystem {
     constructor(ecsContext) {
         super(ecsContext);
 
