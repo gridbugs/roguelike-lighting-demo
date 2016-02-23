@@ -58,6 +58,13 @@ class SpacialHashCell extends Cell {
         return null;
     }
 
+    withEntity(component, callback) {
+        let entity = this.find(component);
+        if (entity !== null) {
+            callback(entity);
+        }
+    }
+
     *[Symbol.iterator]() {
         yield* this.entities;
     }

@@ -1,5 +1,6 @@
 import {Action} from './action.js';
 import {Components} from './components.js';
+import {roll} from './dice.js';
 
 export class Walk extends Action {
     constructor(entity, direction) {
@@ -203,12 +204,32 @@ export class Burn extends Action {
 
     commit(ecsContext) {
         this.entity.with(Components.Burning, (burning) => {
-            burning.time -= this.time;
+
+            /* Spread the fire to adjacent cells */
+            let nextBurningTime = burning.time - this.time;
+            let difference = Math.floor(burning.time) - Math.floor(nextBurningTime);
+            for (let i = 0; i < difference; ++i) {
+                for (let neighbour of this.entity.cell.neighbours) {
+                    neighbour.withEntity(Components.Flamable, (entity) => {
+                        if (!entity.is(Components.Burning) && roll(20) == 1) {
+                            ecsContext.scheduleImmediateAction(
+                                new CatchFire(entity)
+                            );
+                        }
+                    });
+                }
+            }
+
+            burning.time = nextBurningTime;
+
+            /* Damage burning characters */
             if (this.entity.has(Components.Health)) {
                 ecsContext.scheduleImmediateAction(
                     new TakeDamage(this.entity, this.time)
                 );
             }
+
+            /* Resolve burning running out */
             if (burning.time <= 0) {
                 if (this.entity.has(Components.Health)) {
                     this.entity.remove(Components.Burning);
