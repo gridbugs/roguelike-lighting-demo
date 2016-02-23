@@ -20,8 +20,6 @@ Tiles.init = async function() {
     this.Path = tileStore.allocateImageTile(await loadImage('images/path.png'), true);
     this.Fireball = tileStore.allocateImageTile(await loadImage('images/fireball.png'), true);
     this.FireBackground = tileStore.allocateImageTile(await loadImage('images/fire-background.png'), true);
-    this.DownStairs = tileStore.allocateCharacterTile('>', '#ffffff');
-    this.UpStairs = tileStore.allocateCharacterTile('<', '#ffffff');
 
     if (Config.ASCII) {
         this.WallFront = tileStore.allocateCharacterTile('#', '#888888', '#000000');
@@ -30,6 +28,8 @@ Tiles.init = async function() {
         this.DeadTree = tileStore.allocateCharacterTile('&', '#774e16');
         this.Door = tileStore.allocateCharacterTile('+', '#ffffff');
         this.OpenDoor = tileStore.allocateCharacterTile('-', '#ffffff');
+        this.DownStairs = tileStore.allocateCharacterTile('>', '#ffffff');
+        this.UpStairs = tileStore.allocateCharacterTile('<', '#ffffff');
     } else {
         this.WallTop = tileStore.allocateImageTile(await loadImage('images/ice-wall-top.png'));
         this.WallFront = tileStore.allocateImageTile(await loadImage('images/ice-wall-front.png'));
@@ -37,6 +37,8 @@ Tiles.init = async function() {
         this.DeadTree = tileStore.allocateImageTile(await loadImage('images/dead-tree.png'), true);
         this.Door = tileStore.allocateImageTile(await loadImage('images/door.png'), true);
         this.OpenDoor = tileStore.allocateImageTile(await loadImage('images/door-open.png'), true);
+        this.DownStairs = tileStore.allocateImageTile(await loadImage('images/down-stairs.png'));
+        this.UpStairs = tileStore.allocateImageTile(await loadImage('images/up-stairs.png'), true);
     }
 
     if (Config.DEBUG) {
