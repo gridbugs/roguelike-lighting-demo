@@ -16,7 +16,16 @@ export class TurnTaker extends Component {
     }
 
     onAdd(entity) {
+        super.onAdd(entity);
         this.controller.entity = entity;
+        this.ecsContext.scheduleTurn(entity, 0);
+    }
+
+    onRemove(entity) {
+        if (this.nextTurn !== null) {
+            this.nextTurn.enabled = false;
+        }
+        super.onRemove(entity);
     }
 }
 

@@ -174,3 +174,37 @@ export class CurrentAbility extends Component {
         dest.ability = this.ability;
     }
 }
+
+export class DownStairs extends Component {
+    constructor(level = null, upStairs = null) {
+        super();
+        this.level = level;
+        this.upStairs = upStairs;
+    }
+
+    clone() {
+        return new DownStairs(this.level, this.upStairs);
+    }
+
+    copyTo(dest) {
+        dest.level = this.level;
+        dest.upStairs = this.upStairs;
+    }
+}
+
+export class UpStairs extends Component {
+    constructor(level = null, downStairs = null) {
+        super();
+        this.level = level;
+        this.downStairs = downStairs;
+    }
+
+    clone() {
+        return new DownStairs(this.level, this.downStairs);
+    }
+
+    copyTo(dest) {
+        dest.level = this.level;
+        dest.downStairs = this.downStairs;
+    }
+}

@@ -8,9 +8,10 @@ export class Level {
     }
 
     generate() {
-        this.generator.generate(this._ecsContext);
-        this._ecsContext.scheduleInitialTurns();
-        this.generated = true;
+        if (!this.generated) {
+            this.generator.generate(this, this._ecsContext);
+            this.generated = true;
+        }
     }
 
     get ecsContext() {

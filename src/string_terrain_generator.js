@@ -1,11 +1,27 @@
 import {EntityPrototypes} from './entity_prototypes.js';
+import {Components} from './components.js';
+import {Level} from './level.js';
 
 export class StringTerrainGenerator {
-    constructor(stringArray) {
+    constructor(stringArray, nextStringArray = null) {
         this.stringArray = stringArray;
+        this.nextStringArray = nextStringArray;
+        this.stairsFromAbove = null;
+        this.aboveLevel = null;
     }
 
-    generate(ecsContext) {
+    addStairsFromAbove(stairs) {
+        this.stairsFromAbove = stairs;
+    }
+
+    generate(level, ecsContext) {
+
+        if (this.nextStringArray !== null) {
+            this.nextGenerator = new StringTerrainGenerator(this.nextStringArray)
+            this.nextGenerator.aboveLevel = level;
+            this.nextLevel = new Level(this.nextGenerator);
+        }
+
         for (let i = 0; i < this.stringArray.length; ++i) {
             let string = this.stringArray[i];
             for (let j = 0; j < string.length; ++j) {
@@ -32,9 +48,23 @@ export class StringTerrainGenerator {
             break;
         case '.':
         case ',':
-        case '>':
             add('Floor');
             break;
+        case '>': {
+            let stairs = add('DownStairs');
+            stairs.get(Components.DownStairs).level = this.nextLevel;
+            this.nextGenerator.addStairsFromAbove(stairs);
+            add('Floor');
+            break;
+        }
+        case '<': {
+            let stairs = add('UpStairs');
+            stairs.get(Components.UpStairs).level = this.aboveLevel;
+            stairs.get(Components.UpStairs).downStairs = this.stairsFromAbove;
+            this.stairsFromAbove.get(Components.DownStairs).upStairs = stairs;
+            add('Floor');
+            break;
+        }
         case '+':
             add('WoodenDoor');
             add('Ground');

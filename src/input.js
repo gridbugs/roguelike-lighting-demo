@@ -1,8 +1,22 @@
+/* Modifier Key Codes */
 export const KEYCODE_SHIFT      = 16;
 export const KEYCODE_CONTROL    = 17;
 export const KEYCODE_ALT        = 18;
 export const KEYCODE_ESCAPE     = 27;
 export const KEYCODE_ENTER      = 13;
+
+export const KEYCODE_A          = 65;
+export const KEYCODE_Z          = KEYCODE_A + 25;
+
+/* Character Table for Non Alpha Characters */
+const charTable = new Array(256);
+const shiftCharTable = new Array(256);
+
+charTable[188] = ',';
+charTable[190] = '.';
+
+shiftCharTable[188] = '<';
+shiftCharTable[190] = '>';
 
 export async function getKey() {
     var ret;
@@ -34,10 +48,23 @@ export async function getNonModifierKey() {
     return key;
 }
 
+export function keyIsAlpha(key) {
+    return key.keyCode >= KEYCODE_A && key.keyCode <= KEYCODE_Z;
+}
+
 export function getCharFromKey(key) {
-    var character = String.fromCharCode(key.keyCode);
-    if (!key.shiftKey) {
-        character = character.toLowerCase();
+    var character;
+    if (keyIsAlpha(key)) {
+        character = String.fromCharCode(key.keyCode);
+        if (!key.shiftKey) {
+            character = character.toLowerCase();
+        }
+    } else {
+        if (key.shiftKey) {
+            character = shiftCharTable[key.keyCode];
+        } else {
+            character = charTable[key.keyCode];
+        }
     }
     return character;
 }

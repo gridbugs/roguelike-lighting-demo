@@ -74,3 +74,19 @@ export function Fireball(x, y) {
         new Components.FireStarter()
     ];
 }
+
+export function DownStairs(x, y) {
+    return [
+        new Components.Position(x, y),
+        new Components.Tile(Tiles.DownStairs, 1),
+        new Components.DownStairs()
+    ];
+}
+
+export function UpStairs(x, y) {
+    return [
+        new Components.Position(x, y),
+        new Components.Tile(Tiles.UpStairs, 1),
+        new Components.UpStairs()
+    ];
+}

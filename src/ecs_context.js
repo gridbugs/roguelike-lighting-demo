@@ -189,14 +189,6 @@ export class EcsContext {
 
         entity.get(Components.TurnTaker).nextTurn = task;
     }
-
-    scheduleInitialTurns() {
-        for (let entity of this.entities) {
-            if (entity.is(Components.TurnTaker)) {
-                this.scheduleTurn(entity, 0);
-            }
-        }
-    }
 }
 
 EcsContext.prototype.takeTurn = async function(entity) {

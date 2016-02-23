@@ -240,3 +240,57 @@ export class Burn extends Action {
         });
     }
 }
+
+export class Descend extends Action {
+    constructor(entity, stairs) {
+        super();
+        this.entity = entity;
+        this.stairs = stairs;
+    }
+
+    commit(ecsContext) {
+        /* Find the level down the stairs */
+        let nextLevel = this.stairs.get(Components.DownStairs).level;
+
+        /* Make sure the level has been generated before proceeding */
+        nextLevel.generate();
+
+        /* Remove the entity from its ecs context, and add it to the
+         * new level's ecs context */
+        ecsContext.removeEntity(this.entity);
+        nextLevel.ecsContext.addEntity(this.entity);
+
+        /* Move the entity to be located at the corresponding upwards
+         * staircase */
+        let upStairs = this.stairs.get(Components.DownStairs).upStairs;
+        let position = this.entity.get(Components.Position);
+        position.vector = upStairs.get(Components.Position).vector;
+    }
+}
+
+export class Ascend extends Action {
+    constructor(entity, stairs) {
+        super();
+        this.entity = entity;
+        this.stairs = stairs;
+    }
+
+    commit(ecsContext) {
+        /* Find the level up the stairs */
+        let nextLevel = this.stairs.get(Components.UpStairs).level;
+
+        /* Make sure the level has been generated before proceeding */
+        nextLevel.generate();
+
+        /* Remove the entity from its ecs context, and add it to the
+         * new level's ecs context */
+        ecsContext.removeEntity(this.entity);
+        nextLevel.ecsContext.addEntity(this.entity);
+
+        /* Move the entity to be located at the corresponding upwards
+         * staircase */
+        let downStairs = this.stairs.get(Components.UpStairs).downStairs;
+        let position = this.entity.get(Components.Position);
+        position.vector = downStairs.get(Components.Position).vector;
+    }
+}

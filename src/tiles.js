@@ -20,6 +20,8 @@ Tiles.init = async function() {
     this.Path = tileStore.allocateImageTile(await loadImage('images/path.png'), true);
     this.Fireball = tileStore.allocateImageTile(await loadImage('images/fireball.png'), true);
     this.FireBackground = tileStore.allocateImageTile(await loadImage('images/fire-background.png'), true);
+    this.DownStairs = tileStore.allocateCharacterTile('>', '#ffffff');
+    this.UpStairs = tileStore.allocateCharacterTile('<', '#ffffff');
 
     if (Config.ASCII) {
         this.WallFront = tileStore.allocateCharacterTile('#', '#888888', '#000000');
