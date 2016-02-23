@@ -22,8 +22,8 @@ export class Drawer {
         this.tileWidth = tileWidth;
         this.tileHeight = tileHeight;
 
-        this.width = Math.floor(this.canvas.width / this.tileWidth) + 1;
-        this.height = Math.floor(this.canvas.height / this.tileHeight) + 1;
+        this.width = Math.floor(this.canvas.width / this.tileWidth);
+        this.height = Math.floor(this.canvas.height / this.tileHeight);
         this.grid = new DrawerGrid(this.width, this.height);
 
         this.dirtyList = new ObjectPool(Vec2);

@@ -71,7 +71,10 @@ PathPlanner.prototype.getLine = async function(entity) {
                             continue;
                         }
 
-                        end.addInPlace(direction.vector, end);
+                        var next = end.add(direction.vector);
+                        if (this.drawer.grid.isValid(next)) {
+                            end = next;
+                        }
                         break;
                     }
                 }
