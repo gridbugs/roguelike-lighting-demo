@@ -43,15 +43,12 @@ function closeDoor(entity) {
     return null;
 }
 
-async function fire(entity) {
-    var line = await entity.ecsContext.pathPlanner.getLine(entity);
-    if (line === null) {
-        return null;
-    }
-    var projectile = entity.ecsContext.emplaceEntity(
-        EntityPrototypes.Fireball(line.startCoord.x, line.startCoord.y)
+async function useAbility(entity) {
+    var ability = entity.get(Components.CurrentAbility).ability;
+    entity.ecsContext.scheduleImmediateAction(
+        new Actions.TakeDamage(entity, ability.cost)
     );
-    return new Actions.FireProjectile(entity, projectile, line);
+    return await ability.use(entity);
 }
 
 export const ControlTable = makeTable(ControlTypes, {
@@ -64,7 +61,7 @@ export const ControlTable = makeTable(ControlTypes, {
     SouthWest:  (entity) => { return new Actions.Walk(entity, Direction.SouthWest) },
     SouthEast:  (entity) => { return new Actions.Walk(entity, Direction.SouthEast) },
     CloseDoor:  closeDoor,
-    Fire:       fire,
+    Fire:       useAbility,
     Wait:       (entity) => { return new Actions.Wait(entity) }
 });
 

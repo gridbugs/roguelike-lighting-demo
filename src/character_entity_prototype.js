@@ -4,6 +4,8 @@ import {Tiles} from './tiles.js';
 import * as Shadowcast from './shadowcast.js';
 import * as Omniscient from './omniscient.js';
 
+import * as Abilities from './abilities.js';
+
 import {PlayerTurnTaker} from './player_control.js';
 import {MoveTowardsPlayer} from './move_towards_player.js';
 
@@ -21,14 +23,15 @@ export function PlayerCharacter(x, y) {
         new Components.TurnTaker(new PlayerTurnTaker()),
         new Components.Collider(),
         new Components.PlayerCharacter(),
-        new Components.Observer(Omniscient.detectVisibleArea, 20),
-        new Components.Health(1),
+        new Components.Observer(Shadowcast.detectVisibleArea, 20),
+        new Components.Health(20),
         new Components.Combatant(CombatGroups.Friendly),
         new Components.Attack(2),
         new Components.Defense(2),
         new Components.Accuracy(80),
         new Components.Dodge(20),
-        new Components.Unfamiliar()
+        new Components.Unfamiliar(),
+        new Components.CurrentAbility(Abilities.FireBall)
     ];
 }
 

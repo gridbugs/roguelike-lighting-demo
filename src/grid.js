@@ -46,11 +46,16 @@ export class Grid {
     }
 
     get(x, y) {
+        let ret;
         if (typeof x === 'number') {
-            return this.array[this._toIndex(x, y)];
+            ret = this.array[this._toIndex(x, y)];
         } else {
-            return this.array[this._toIndex(x.x, x.y)];
+            ret = this.array[this._toIndex(x.x, x.y)];
         }
+        if (ret === undefined) {
+            return null;
+        }
+        return ret;
     }
 
     set(x, y, value) {

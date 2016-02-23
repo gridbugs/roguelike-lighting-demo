@@ -159,3 +159,18 @@ export class Burning extends Component {
 
 export class Unfamiliar extends Component {
 }
+
+export class CurrentAbility extends Component {
+    constructor(ability) {
+        super();
+        this.ability = ability;
+    }
+
+    clone() {
+        return new CurrentAbility(this.ability);
+    }
+
+    copy(dest) {
+        dest.ability = this.ability;
+    }
+}
