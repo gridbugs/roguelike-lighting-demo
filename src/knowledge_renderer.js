@@ -45,6 +45,13 @@ export class KnowledgeRenderer extends System {
         return tile.background;
     }
 
+    getHealthBarTile(entity) {
+        let maxHealth = entity.get(Components.MaxHealth).value;
+        let health = Math.min(entity.get(Components.Health).value, maxHealth);
+        let barLength = Math.floor((Tiles.HealthBarSize * health) / maxHealth);
+        return Tiles.HealthBars[barLength];
+    }
+
     drawTile(cell) {
         let tile = this.getMainTile(cell);
         if (tile.transparentBackground) {
@@ -55,6 +62,9 @@ export class KnowledgeRenderer extends System {
             }
         }
         this.drawer.drawTile(tile, cell.x, cell.y);
+        cell.withEntity(Components.MaxHealth, (entity) => {
+            this.drawer.drawTile(this.getHealthBarTile(entity), cell.x, cell.y);
+        });
     }
 
     drawGreyTile(cell) {

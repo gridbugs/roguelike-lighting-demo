@@ -48,6 +48,12 @@ Tiles.init = async function() {
         this.FireBackground = tileStore.allocateImageTile(await loadImage('images/fire-background.png'), true);
     }
 
+    this.HealthBarSize = 8;
+    this.HealthBars = [];
+    for (var i = 0; i <= this.HealthBarSize; ++i) {
+        this.HealthBars[i] = tileStore.allocateImageTile(await loadImage(`images/health-bar-${i}.png`), true);
+    }
+
     if (Config.DEBUG) {
         this.debugArray = [];
         for (var i = 0; i <= 9; ++i) {

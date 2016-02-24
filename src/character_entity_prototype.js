@@ -31,7 +31,7 @@ export function PlayerCharacter(x, y) {
         new Components.Accuracy(80),
         new Components.Dodge(20),
         new Components.Unfamiliar(),
-        new Components.CurrentAbility(Abilities.FireBall)
+        new Components.CurrentAbility(Abilities.FireBall),
     ];
 }
 
@@ -43,6 +43,7 @@ export function SpiderChild(x, y) {
         new Components.Collider(),
         new Components.Observer(Shadowcast.detectVisibleArea, 20, true),
         new Components.Health(5),
+        new Components.MaxHealth(5),
         new Components.Combatant(CombatGroups.Hostile),
         new Components.Attack(4),
         new Components.Defense(1),

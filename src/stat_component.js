@@ -1,6 +1,6 @@
 import {Component} from './component.js';
 
-export class StatComponent extends Component {
+class StatComponent extends Component {
     constructor(value) {
         super();
         this.value = value;

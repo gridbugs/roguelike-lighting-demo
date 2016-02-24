@@ -18,7 +18,9 @@ class EntityMemory extends InvalidatingComponentTable {
                 Components.WallTile,
                 Components.Solid,
                 Components.PlayerCharacter,
-                Components.Burning
+                Components.Burning,
+                Components.Health,
+                Components.MaxHealth
             ];
         }
     }
@@ -68,6 +70,10 @@ class KnowledgeCell extends Cell {
         this.componentTable = new ComponentTable();
     }
 
+    *[Symbol.iterator]() {
+        yield* this.entityMemoryPool;
+    }
+
     get visible() {
         return this.turn === this.grid.ecsContext.turn;
     }
@@ -97,6 +103,24 @@ class KnowledgeCell extends Cell {
 
     is(component) {
         return this.componentTable.is(component);
+    }
+
+    find(component) {
+        if (this.has(component)) {
+            for (let entity of this) {
+                if (entity.is(component)) {
+                    return entity;
+                }
+            }
+        }
+        return null;
+    }
+
+    withEntity(component, callback) {
+        let entity = this.find(component);
+        if (entity !== null) {
+            callback(entity);
+        }
     }
 }
 

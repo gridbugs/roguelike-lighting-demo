@@ -3,6 +3,23 @@ import {Knowledge} from './knowledge.js';
 
 import {Components} from './components.js';
 
+class ValueComponent extends Component {
+    constructor(value) {
+        super();
+        this.value = value;
+    }
+
+    clone() {
+        return new this.constructor(this.value);
+    }
+
+    copyTo(dest) {
+        super.copyTo(dest);
+        dest.value = this.value;
+    }
+
+}
+
 export class Tile extends Component {
     constructor(tile, depth) {
         super();
@@ -83,19 +100,10 @@ export class PlayerCharacter extends Component {
 export class Projectile extends Component {
 }
 
-export class Health extends Component {
-    constructor(value) {
-        super();
-        this.value = value;
-    }
+export class Health extends ValueComponent {
+}
 
-    clone() {
-        return new Health(this.value);
-    }
-
-    copyTo(dest) {
-        dest.value = value;
-    }
+export class MaxHealth extends ValueComponent {
 }
 
 export class Combatant extends Component {
