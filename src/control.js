@@ -38,11 +38,17 @@ export const ControlKeys = substituteValues(ControlTypes, {
     '>': 'Down'
 });
 
-function closeDoor(entity) {
+function toggleDoor(entity) {
     for (let neighbour of entity.cell.neighbours) {
         let door = neighbour.find(Components.Door);
         if (door !== null && door.get(Components.Door).open) {
             return new Actions.CloseDoor(entity, door);
+        }
+    }
+    for (let neighbour of entity.cell.neighbours) {
+        let door = neighbour.find(Components.Door);
+        if (door !== null && door.get(Components.Door).closed) {
+            return new Actions.OpenDoor(entity, door);
         }
     }
     return null;
@@ -81,7 +87,7 @@ export const ControlTable = makeTable(ControlTypes, {
     NorthEast:  (entity) => { return new Actions.Walk(entity, Direction.NorthEast) },
     SouthWest:  (entity) => { return new Actions.Walk(entity, Direction.SouthWest) },
     SouthEast:  (entity) => { return new Actions.Walk(entity, Direction.SouthEast) },
-    CloseDoor:  closeDoor,
+    CloseDoor:  toggleDoor,
     Fire:       useAbility,
     Wait:       (entity) => { return new Actions.Wait(entity) },
     Up:         maybeUp,
