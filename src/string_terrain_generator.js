@@ -47,14 +47,16 @@ export class StringTerrainGenerator {
             add('Ground');
             break;
         case '.':
+            add('IceFloor');
+            break;
         case ',':
-            add('Floor');
+            add('StoneFloor');
             break;
         case '>': {
             let stairs = add('DownStairs');
             stairs.get(Components.DownStairs).level = this.nextLevel;
             this.nextGenerator.addStairsFromAbove(stairs);
-            add('Floor');
+            add('IceFloor');
             break;
         }
         case '<': {
@@ -62,7 +64,11 @@ export class StringTerrainGenerator {
             stairs.get(Components.UpStairs).level = this.aboveLevel;
             stairs.get(Components.UpStairs).downStairs = this.stairsFromAbove;
             this.stairsFromAbove.get(Components.DownStairs).upStairs = stairs;
-            add('Floor');
+            if (this.nextStringArray === null) {
+                add('StoneFloor');
+            } else {
+                add('IceFloor');
+            }
             break;
         }
         case '+':
@@ -77,17 +83,24 @@ export class StringTerrainGenerator {
             add('Ground');
             break;
         case '#':
+            add('IceWall');
+            add('IceFloor');
+            break;
         case '%':
-            add('Wall');
-            add('Floor');
+            add('BrickWall');
+            add('IceFloor');
             break;
         case '@':
             add('PlayerCharacter');
-            add('Floor');
+            add('IceFloor');
             break;
         case 'c':
             add('SpiderChild');
-            add('Floor');
+            if (this.nextStringArray === null) {
+                add('StoneFloor');
+            } else {
+                add('IceFloor');
+            }
             break;
         }
     }

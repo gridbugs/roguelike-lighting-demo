@@ -270,4 +270,13 @@ export class TileStore {
         tile._ = `dot(${foreColour}, ${backColour})`;
         return tile;
     }
+
+    allocateSquareTile(colour) {
+        this.getNextOffset();
+        this.ctx.beginPath();
+        this.ctx.fillStyle = colour;
+        this.ctx.fillRect(this.xOffset, this.yOffset, this.width, this.height);
+        this.ctx.fill();
+        return this.allocateTile(this.xOffset, this.yOffset, this.width, this.height, false);
+    }
 }

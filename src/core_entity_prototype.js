@@ -2,10 +2,19 @@ import {EntityPrototype} from './entity_prototype.js';
 import {Components} from './components.js';
 import {Tiles} from './tiles.js';
 
-export function Wall(x, y) {
+export function IceWall(x, y) {
     return [
         new Components.Position(x, y),
-        new Components.WallTile(Tiles.WallFront, Tiles.WallTop, 1),
+        new Components.WallTile(Tiles.IceWallFront, Tiles.IceWallTop, 1),
+        new Components.Solid(),
+        new Components.Opacity(1)
+    ];
+}
+
+export function BrickWall(x, y) {
+    return [
+        new Components.Position(x, y),
+        new Components.WallTile(Tiles.BrickWallFront, Tiles.BrickWallTop, 1),
         new Components.Solid(),
         new Components.Opacity(1)
     ];
@@ -52,17 +61,24 @@ export function OpenWoodenDoor(x, y) {
     ];
 }
 
-export function Floor(x, y) {
+export function IceFloor(x, y) {
     return [
         new Components.Position(x, y),
-        new Components.Tile(Tiles.Floor, 0)
+        new Components.Tile(Tiles.IceFloor, 0)
+    ];
+}
+
+export function StoneFloor(x, y) {
+    return [
+        new Components.Position(x, y),
+        new Components.Tile(Tiles.StoneFloor, 0)
     ];
 }
 
 export function Ground(x, y) {
     return [
         new Components.Position(x, y),
-        new Components.Tile(Tiles.Floor, 0)
+        new Components.Tile(Tiles.IceFloor, 0)
     ];
 }
 
