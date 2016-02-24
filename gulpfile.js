@@ -8,7 +8,6 @@ const argv = require('yargs').argv
 const DEFAULT_SERVER_PORT = 8000
 
 const OUTPUT_DIR = 'build'
-const OUTPUT_FILE = 'app.js'
 const SOURCE_GLOB = 'src/**/*.js'
 const SERVER_PORT = argv.port == undefined ? DEFAULT_SERVER_PORT : parseInt(argv.port)
 
