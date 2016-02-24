@@ -1,5 +1,6 @@
 import './populate_namespaces.js';
 
+import {Config} from './config.js';
 import {initGlobals} from './globals.js';
 
 import {StringTerrainGenerator} from './string_terrain_generator.js';
@@ -11,8 +12,13 @@ import {assert} from './assert.js';
 
 
 export async function main() {
+    if (window.location.hash === '#ascii') {
+        Config.ASCII = true;
+    }
+
     await initGlobals();
     Math.seedrandom(0);
+
 
     var terrainStringArrayL1 = [
 '&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&',
