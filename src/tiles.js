@@ -33,6 +33,11 @@ Tiles.init = async function() {
         this.UpStairs = tileStore.allocateCharacterTile('<', '#ffffff');
         this.Fireball = tileStore.allocateCharacterTile('*', '#ff8800');
         this.FireBackground = tileStore.allocateSquareTile('#ff8800');
+        this.WaterAnimationTiles = [
+            tileStore.allocateCharacterTile('~', '#2288cc', '#004488'),
+            tileStore.allocateCharacterTile('≈', '#2288cc', '#004488'),
+            tileStore.allocateSquareTile('#004488')
+        ];
     } else {
         this.BrickWallTop = tileStore.allocateImageTile(await loadImage('images/brick-wall-top.png'));
         this.BrickWallFront = tileStore.allocateImageTile(await loadImage('images/brick-wall-front.png'));
@@ -46,6 +51,11 @@ Tiles.init = async function() {
         this.UpStairs = tileStore.allocateImageTile(await loadImage('images/up-stairs.png'), true);
         this.Fireball = tileStore.allocateImageTile(await loadImage('images/fireball.png'), true);
         this.FireBackground = tileStore.allocateImageTile(await loadImage('images/fire-background.png'), true);
+        this.WaterAnimationTiles = [
+            tileStore.allocateImageTile(await loadImage('images/water-0.png')),
+            tileStore.allocateImageTile(await loadImage('images/water-1.png')),
+            tileStore.allocateImageTile(await loadImage('images/water-2.png')),
+        ];
     }
 
     this.HealthBarSize = 8;

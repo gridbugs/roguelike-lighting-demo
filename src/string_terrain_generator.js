@@ -86,6 +86,10 @@ export class StringTerrainGenerator {
             add('IceWall');
             add('IceFloor');
             break;
+        case '~':
+            add('Water');
+            add('IceFloor');
+            break;
         case '%':
             add('BrickWall');
             add('IceFloor');

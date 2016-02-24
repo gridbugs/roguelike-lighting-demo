@@ -9,6 +9,8 @@ export class KnowledgeRenderer extends System {
     constructor(ecsContext, drawer) {
         super(ecsContext);
         this.drawer = drawer;
+        this.time = this.ecsContext.schedule.absoluteTime;
+        this.timeDelta = 0;
     }
 
     resolveWallTile(entity) {
@@ -24,24 +26,31 @@ export class KnowledgeRenderer extends System {
         return entity.get(Components.WallTile).frontTile;
     }
 
-    getTileFromEntity(entity) {
+    getTileFromEntity(entity, visible) {
         if (entity.has(Components.Tile)) {
             return entity.get(Components.Tile).tile;
         }
         if (entity.has(Components.WallTile)) {
             return this.resolveWallTile(entity);
         }
+        if (entity.has(Components.RandomlyAnimatedTile)) {
+            let tileComponent = entity.get(Components.RandomlyAnimatedTile);
+            if (visible) {
+                tileComponent.maybeChange(this.timeDelta);
+            }
+            return tileComponent.tile;
+        }
         throw Error('no entity with tile');
     }
 
-    getMainTile(cell) {
+    getMainTile(cell, visible) {
         let entity = cell.topEntityMemory.best;
-        return this.getTileFromEntity(entity);
+        return this.getTileFromEntity(entity, visible);
     }
 
-    getBackgroundTile(cell) {
+    getBackgroundTile(cell, visible) {
         let entity = cell.topBackgroundEntityMemory.best;
-        let tile = this.getTileFromEntity(entity);
+        let tile = this.getTileFromEntity(entity, visible);
         return tile.background;
     }
 
@@ -53,9 +62,9 @@ export class KnowledgeRenderer extends System {
     }
 
     drawTile(cell) {
-        let tile = this.getMainTile(cell);
+        let tile = this.getMainTile(cell, true);
         if (tile.transparentBackground) {
-            let backgroundTile = this.getBackgroundTile(cell);
+            let backgroundTile = this.getBackgroundTile(cell, true);
             this.drawer.drawTile(backgroundTile, cell.x, cell.y);
             if (cell.is(Components.Burning)) {
                 this.drawer.drawTile(Tiles.FireBackground, cell.x, cell.y);
@@ -68,15 +77,18 @@ export class KnowledgeRenderer extends System {
     }
 
     drawGreyTile(cell) {
-        let tile = this.getMainTile(cell);
+        let tile = this.getMainTile(cell, false);
         if (tile.transparentBackground) {
-            let backgroundTile = this.getBackgroundTile(cell);
+            let backgroundTile = this.getBackgroundTile(cell, false);
             this.drawer.drawTile(backgroundTile.greyScale, cell.x, cell.y);
         }
         this.drawer.drawTile(tile.greyScale, cell.x, cell.y);
     }
 
     run(entity) {
+        this.timeDelta = this.ecsContext.schedule.absoluteTime - this.time;
+        this.time = this.ecsContext.schedule.absoluteTime;
+
         this.drawer.clear();
 
         entity.with(Components.Observer, (observer) => {

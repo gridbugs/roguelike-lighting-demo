@@ -4,6 +4,7 @@ import {InvalidatingComponentTable} from './invalidating_component_table';
 import {ComponentTable} from './component_table.js';
 import {ObjectPool} from './object_pool.js';
 import {BestTracker} from './best_tracker.js';
+import {getTileComponentDepth} from './tile_component.js';
 
 class EntityMemory extends InvalidatingComponentTable {
     constructor(cell) {
@@ -16,11 +17,12 @@ class EntityMemory extends InvalidatingComponentTable {
                 Components.Position,
                 Components.Tile,
                 Components.WallTile,
+                Components.RandomlyAnimatedTile,
                 Components.Solid,
                 Components.PlayerCharacter,
                 Components.Burning,
                 Components.Health,
-                Components.MaxHealth
+                Components.MaxHealth,
             ];
         }
     }
@@ -41,22 +43,21 @@ class EntityMemory extends InvalidatingComponentTable {
         if (this.has(Components.Tile)) {
             return !this.get(Components.Tile).tile.transparentBackground;
         }
+        if (this.has(Components.RandomlyAnimatedTile)) {
+            return !this.get(Components.RandomlyAnimatedTile).tile.transparentBackground;
+        }
         return false;
     }
 }
 EntityMemory.RememberedComponents = null;
 
-function getDepth(e) {
-    if (e.has(Components.Tile)) {
-        return e.get(Components.Tile).depth;
-    } else if (e.has(Components.WallTile)) {
-        return e.get(Components.WallTile).depth;
-    }
-    throw Error("no component with depth");
-}
-
 function compare(a, b) {
-    return getDepth(a) - getDepth(b);
+    let aDepth = getTileComponentDepth(a);
+    let bDepth = getTileComponentDepth(b);
+    if (aDepth === null || bDepth === null) {
+        throw 'entity has no component with depth';
+    }
+    return aDepth - bDepth;
 }
 
 class KnowledgeCell extends Cell {

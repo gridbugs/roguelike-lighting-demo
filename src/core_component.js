@@ -20,44 +20,6 @@ class ValueComponent extends Component {
 
 }
 
-export class Tile extends Component {
-    constructor(tile, depth) {
-        super();
-        this.tile = tile;
-        this.depth = depth;
-    }
-
-    clone() {
-        return new Tile(this.tile, this.depth);
-    }
-
-    copyTo(dest) {
-        super.copyTo(dest);
-        dest.tile = this.tile;
-        dest.depth = this.depth;
-    }
-}
-
-export class WallTile extends Component {
-    constructor(frontTile, topTile, depth) {
-        super();
-        this.frontTile = frontTile;
-        this.topTile = topTile;
-        this.depth = depth;
-    }
-
-    clone() {
-        return new WallTile(this.frontTile, this.topTile, this.depth);
-    }
-
-    copyTo(dest) {
-        super.copyTo(dest);
-        dest.frontTile = this.frontTile;
-        dest.topTile = this.topTile;
-        dest.depth = this.depth;
-    }
-}
-
 export class Solid extends Component {
 }
 
@@ -117,6 +79,7 @@ export class Combatant extends Component {
     }
 
     copyTo(dest) {
+        super.copyTo(dest);
         dest.group = this.group;
     }
 }
@@ -135,6 +98,7 @@ export class Flamable extends Component {
     }
 
     copyTo(dest) {
+        super.copyTo(dest);
         dest.time = this.time;
     }
 }
@@ -160,6 +124,7 @@ export class Burning extends Component {
     }
 
     copyTo(dest) {
+        super.copyTo(dest);
         dest.time = this.time;
     }
 
@@ -179,6 +144,7 @@ export class CurrentAbility extends Component {
     }
 
     copy(dest) {
+        super.copyTo(dest);
         dest.ability = this.ability;
     }
 }
@@ -195,6 +161,7 @@ export class DownStairs extends Component {
     }
 
     copyTo(dest) {
+        super.copyTo(dest);
         dest.level = this.level;
         dest.upStairs = this.upStairs;
     }
@@ -212,6 +179,7 @@ export class UpStairs extends Component {
     }
 
     copyTo(dest) {
+        super.copyTo(dest);
         dest.level = this.level;
         dest.downStairs = this.downStairs;
     }

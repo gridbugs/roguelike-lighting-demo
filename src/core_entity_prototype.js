@@ -106,3 +106,11 @@ export function UpStairs(x, y) {
         new Components.UpStairs()
     ];
 }
+
+export function Water(x, y) {
+    return [
+        new Components.Position(x, y),
+        new Components.RandomlyAnimatedTile(Tiles.WaterAnimationTiles,
+                /* depth */ 2, /* min time */ 0, /* max time */ 3)
+    ];
+}

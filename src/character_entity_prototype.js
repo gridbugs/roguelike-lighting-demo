@@ -19,7 +19,7 @@ export const CombatGroups = makeEnum([
 export function PlayerCharacter(x, y) {
     return [
         new Components.Position(x, y),
-        new Components.Tile(Tiles.PlayerCharacter, 2),
+        new Components.Tile(Tiles.PlayerCharacter, 3),
         new Components.TurnTaker(new PlayerTurnTaker()),
         new Components.Collider(),
         new Components.PlayerCharacter(),
@@ -38,7 +38,7 @@ export function PlayerCharacter(x, y) {
 export function SpiderChild(x, y) {
     return [
         new Components.Position(x, y),
-        new Components.Tile(Tiles.SpiderChild, 2),
+        new Components.Tile(Tiles.SpiderChild, 3),
         new Components.TurnTaker(new MoveTowardsPlayer()),
         new Components.Collider(),
         new Components.Observer(Shadowcast.detectVisibleArea, 20, true),
