@@ -9,6 +9,7 @@ import {Level} from './level.js';
 
 import {Components} from './components.js';
 
+import {getKey} from './input.js';
 import {assert} from './assert.js';
 
 
@@ -85,18 +86,23 @@ export async function main() {
     ];
 
     var generator = new StringTerrainGenerator(terrainStringArrayL1, terrainStringArrayL2);
-    var firstLevel = new Level(generator);
-    var playerCharacter = firstLevel.ecsContext.playerCharacter;
-
-    var currentEcsContext;
 
     while (true) {
-        currentEcsContext = playerCharacter.ecsContext;
-        if (playerCharacter.get(Components.Health).value <= 0) {
-            break;
+        var firstLevel = new Level(generator);
+        var playerCharacter = firstLevel.ecsContext.playerCharacter;
+
+        var currentEcsContext;
+
+        while (true) {
+            currentEcsContext = playerCharacter.ecsContext;
+            if (playerCharacter.get(Components.Health).value <= 0) {
+                break;
+            }
+            await currentEcsContext.progressSchedule();
         }
-        await currentEcsContext.progressSchedule();
+        currentEcsContext.updatePlayer();
+        console.debug('you died');
+
+        await getKey();
     }
-    currentEcsContext.updatePlayer();
-    console.debug('you died');
 }
