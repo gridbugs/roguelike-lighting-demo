@@ -1,5 +1,6 @@
 import './populate_namespaces.js';
 
+import {initConfigFromUrl} from './options.js';
 import {Config} from './config.js';
 import {initGlobals} from './globals.js';
 
@@ -12,10 +13,7 @@ import {assert} from './assert.js';
 
 
 export async function main() {
-    if (window.location.hash === '#ascii') {
-        Config.ASCII = true;
-    }
-
+    initConfigFromUrl();
     await initGlobals();
     Math.seedrandom(0);
 

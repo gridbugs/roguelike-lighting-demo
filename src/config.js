@@ -4,5 +4,5 @@ export const Config = {
     GRID_WIDTH: 64,
     GRID_HEIGHT: 30,
     ASCII: false,
-    DEBUG: true
+    DEBUG: false
 };
