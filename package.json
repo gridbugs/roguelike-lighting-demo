@@ -4,6 +4,8 @@
   "description": "Turn-based dungeon crawler where the player explores a city under a glacier",
   "author": "Stephen Sherratt",
   "license": "MIT",
+  "main": "index.html",
+  "js-flags": "--harmony --harmony_modules",
   "devDependencies": {
     "gulp": "*",
     "gulp-clean": "*",
@@ -19,5 +21,11 @@
   "bugs": {
     "url": "https://github.com/stevebob/glacial/issues"
   },
-  "homepage": "https://github.com/stevebob/glacial#readme"
+  "homepage": "https://github.com/stevebob/glacial#readme",
+  "window": {
+    "toolbar": false,
+    "resizable": false,
+    "width": 1024,
+    "height": 496
+  }
 }
