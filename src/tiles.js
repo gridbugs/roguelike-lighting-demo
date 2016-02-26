@@ -36,7 +36,6 @@ Tiles.init = async function() {
         this.WaterAnimationTiles = [
             tileStore.allocateCharacterTile('~', '#2288cc', '#004488'),
             tileStore.allocateCharacterTile('≈', '#2288cc', '#004488'),
-            tileStore.allocateSquareTile('#004488')
         ];
     } else {
         this.BrickWallTop = tileStore.allocateImageTile(await loadImage('images/brick-wall-top.png'));
@@ -54,7 +53,6 @@ Tiles.init = async function() {
         this.WaterAnimationTiles = [
             tileStore.allocateImageTile(await loadImage('images/water-0.png')),
             tileStore.allocateImageTile(await loadImage('images/water-1.png')),
-            tileStore.allocateImageTile(await loadImage('images/water-2.png')),
         ];
     }
 

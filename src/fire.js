@@ -8,11 +8,15 @@ export class Fire extends ReactiveSystem {
         this.entities = new Set();
 
         this.on(Actions.ProjectileCollide, (action) => {
-            if (action.entity.is(Components.FireStarter) &&
-                action.contact.is(Components.Flamable)) {
-
-                this.ecsContext.scheduleImmediateAction(
-                        new Actions.CatchFire(action.contact));
+            if (action.entity.is(Components.FireStarter)) {
+                if (action.contact.is(Components.Flamable)) {
+                    this.ecsContext.scheduleImmediateAction(
+                            new Actions.CatchFire(action.contact));
+                }
+                if (action.contact.is(Components.Meltable)) {
+                    this.ecsContext.scheduleImmediateAction(
+                            new Actions.Melt(action.contact));
+                }
             }
         });
     }

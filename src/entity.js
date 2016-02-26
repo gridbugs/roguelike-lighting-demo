@@ -59,4 +59,13 @@ export class Entity extends ComponentTable {
         }
         this.ecsContext = null;
     }
+
+    become(components) {
+        for (let component of this) {
+            this.remove(component);
+        }
+        for (let component of components) {
+            this.add(component);
+        }
+    }
 }

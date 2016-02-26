@@ -184,3 +184,6 @@ export class UpStairs extends Component {
         dest.downStairs = this.downStairs;
     }
 }
+
+export class Meltable extends Component {
+}

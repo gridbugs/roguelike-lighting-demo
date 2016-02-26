@@ -1,5 +1,6 @@
 import {Action} from './action.js';
 import {Components} from './components.js';
+import {EntityPrototypes} from './entity_prototypes.js';
 import {roll} from './dice.js';
 
 export class Walk extends Action {
@@ -292,5 +293,17 @@ export class Ascend extends Action {
         let downStairs = this.stairs.get(Components.UpStairs).downStairs;
         let position = this.entity.get(Components.Position);
         position.vector = downStairs.get(Components.Position).vector;
+    }
+}
+
+export class Melt extends Action {
+    constructor(entity) {
+        super();
+        this.entity = entity;
+    }
+
+    commit() {
+        let position = this.entity.get(Components.Position);
+        this.entity.become(EntityPrototypes.Water(position.vector));
     }
 }
