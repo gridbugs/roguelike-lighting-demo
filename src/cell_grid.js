@@ -67,6 +67,10 @@ export class Cell {
     getNeighbour(direction) {
         return this.neighboursByDirection[direction.index];
     }
+
+    isBorder() {
+        return this.grid.isBorder(this.coord);
+    }
 }
 
 /* This function returns a cless which extends Grid by initializing an object

@@ -46,6 +46,9 @@ export class Grid {
     }
 
     get(x, y) {
+        if (!this.isValid(x, y)) {
+            return null;
+        }
         let ret;
         if (typeof x === 'number') {
             ret = this.array[this._toIndex(x, y)];

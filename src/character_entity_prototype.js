@@ -1,3 +1,5 @@
+import {Config} from './config.js';
+
 import {Components} from './components.js';
 import {Tiles} from './tiles.js';
 
@@ -17,13 +19,20 @@ export const CombatGroups = makeEnum([
 ]);
 
 export function PlayerCharacter(x, y) {
+    let observe;
+    if (Config.OMNISCIENT) {
+        observe = Omniscient.detectVisibleArea;
+    } else {
+        observe = Shadowcast.detectVisibleArea;
+    }
+
     return [
         new Components.Position(x, y),
         new Components.Tile(Tiles.PlayerCharacter, 3),
         new Components.TurnTaker(new PlayerTurnTaker()),
         new Components.Collider(),
         new Components.PlayerCharacter(),
-        new Components.Observer(Shadowcast.detectVisibleArea, 20),
+        new Components.Observer(observe, 20),
         new Components.Health(20),
         new Components.Combatant(CombatGroups.Friendly),
         new Components.Attack(2),
