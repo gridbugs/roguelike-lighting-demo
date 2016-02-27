@@ -114,8 +114,11 @@ export async function main() {
             await currentEcsContext.progressSchedule();
         }
         currentEcsContext.updatePlayer();
-        console.debug('you died');
+
+        currentEcsContext.hud.message = "You Died (press any key to restart)"
 
         await getKey();
+
+        currentEcsContext.hud.message = "";
     }
 }

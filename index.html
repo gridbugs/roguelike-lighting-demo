@@ -22,6 +22,7 @@
     padding: 0px;
 }
 body {
+    background: black;
 }
 @font-face {
     font-family: 'IBM-BIOS';
@@ -47,8 +48,22 @@ p.font-loader {
     left: 0px;
     background-color: #000000;
     color: #ffffff;
-    text-align: right;
     display: none;
+}
+#health {
+    position: absolute;
+    right: 0px;
+    text-align: right;
+}
+#ability {
+    position: absolute;
+    left: 0px;
+    text-align: left;
+}
+#message {
+    position: absolute;
+    left: 288px;
+    text-align: left;
 }
 </style>
 
@@ -56,6 +71,10 @@ p.font-loader {
 <body>
     <p class='font-loader'>.</p>
     <canvas id="canvas" width=1024 height=640></canvas>
-    <div id="hud"></div>
+    <div id="hud">
+        <div id="ability"></div>
+        <div id="message"></div>
+        <div id="health"></div>
+    </div>
 </body>
 </html>
