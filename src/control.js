@@ -56,10 +56,13 @@ function toggleDoor(entity) {
 
 async function useAbility(entity) {
     var ability = entity.get(Components.CurrentAbility).ability;
-    entity.ecsContext.scheduleImmediateAction(
-        new Actions.TakeDamage(entity, ability.cost)
-    );
-    return await ability.use(entity);
+    var action = await ability.use(entity);
+    if (action !== null) {
+        entity.ecsContext.scheduleImmediateAction(
+            new Actions.TakeDamage(entity, ability.cost)
+        );
+    }
+    return action;
 }
 
 function maybeUp(entity) {
