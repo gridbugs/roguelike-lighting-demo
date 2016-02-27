@@ -307,3 +307,13 @@ export class Melt extends Action {
         this.entity.become(EntityPrototypes.Water(position.vector));
     }
 }
+
+export class Extinguish extends Action {
+    constructor(entity) {
+        super();
+        this.entity = entity;
+    }
+    commit() {
+        this.entity.remove(Components.Burning);
+    }
+}

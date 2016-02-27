@@ -187,3 +187,6 @@ export class UpStairs extends Component {
 
 export class Meltable extends Component {
 }
+
+export class Water extends Component {
+}

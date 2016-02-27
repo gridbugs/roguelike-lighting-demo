@@ -31,8 +31,13 @@ export class Fire extends ReactiveSystem {
 
     progress(timeDelta) {
         for (let entity of this.entities) {
-            this.ecsContext.scheduleImmediateAction(
-                    new Actions.Burn(entity, timeDelta));
+            if (entity.cell.has(Components.Water)) {
+                this.ecsContext.scheduleImmediateAction(
+                        new Actions.Extinguish(entity));
+            } else {
+                this.ecsContext.scheduleImmediateAction(
+                        new Actions.Burn(entity, timeDelta));
+            }
         }
     }
 }

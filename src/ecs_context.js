@@ -167,9 +167,7 @@ export class EcsContext {
     }
 
     runContinuousSystems(timeDelta) {
-        if (timeDelta > 0) {
-            this.fire.progress(timeDelta);
-        }
+        this.fire.progress(timeDelta);
     }
 
     scheduleTurn(entity, relativeTime) {
