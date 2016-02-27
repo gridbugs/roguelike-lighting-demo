@@ -272,7 +272,11 @@ class GeneratorGrid extends CellGrid(GeneratorCell) {
                 }
             );
 
-            door.cell.type = CellType.Door;
+            if (Math.random() > 0.2) {
+                door.cell.type = CellType.Door;
+            } else {
+                door.cell.type = CellType.Floor;
+            }
 
             ++count;
         }

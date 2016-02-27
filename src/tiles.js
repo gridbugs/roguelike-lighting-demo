@@ -21,8 +21,8 @@ Tiles.init = async function() {
     this.Path = tileStore.allocateImageTile(await loadImage('images/path.png'), true);
 
     if (Config.ASCII) {
-        this.IceWallFront = tileStore.allocateCharacterTile('#', '#888888', '#000000');
-        this.IceWallTop = tileStore.allocateCharacterTile('#', '#888888', '#000000');
+        this.IceWallFront = tileStore.allocateCharacterTile('#', '#4491cd', '#000000');
+        this.IceWallTop = tileStore.allocateCharacterTile('#', '#4491cd', '#000000');
         this.BrickWallFront = tileStore.allocateCharacterTile('#', '#888888', '#000000');
         this.BrickWallTop = tileStore.allocateCharacterTile('#', '#888888', '#000000');
         this.Tree = tileStore.allocateCharacterTile('&', 'green');
