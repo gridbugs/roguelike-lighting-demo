@@ -7,5 +7,5 @@ export const Config = {
     DEBUG: false,
     RNG_SEED: null,
     OMNISCIENT: false,
-    DEMO: true
+    DEMO: false
 };

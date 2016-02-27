@@ -6,7 +6,7 @@ export function IceWall(x, y) {
         new Components.Position(x, y),
         new Components.WallTile(Tiles.IceWallFront, Tiles.IceWallTop, 1),
         new Components.Solid(),
-        new Components.Opacity(1),
+        new Components.Opacity(0.5),
         new Components.Meltable()
     ];
 }

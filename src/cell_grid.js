@@ -31,6 +31,11 @@ export class Cell {
 
         /* Handy information */
         this.distanceToEdge = this.grid.getDistanceToEdge(this.coord);
+
+        /* Floodfill bookkeeping */
+        this._floodFillCount = 0;
+
+        this.outwardsDirection = null;
     }
 
     initNeighbours() {
@@ -71,6 +76,31 @@ export class Cell {
     isBorder() {
         return this.grid.isBorder(this.coord);
     }
+
+    floodFillCompare(cell) {
+        throw Error('unimplemented');
+    }
+
+    *floodFill(directions = Direction.Directions) {
+        ++this.grid._floodFillCount;
+        yield* this._floodFill(directions);
+    }
+
+    *_floodFill(directions) {
+        this._floodFillCount = this.grid._floodFillCount;
+
+        for (let direction of directions) {
+            let neighbour = this.getNeighbour(direction);
+            if (neighbour !== null &&
+                neighbour._floodFillCount !== this.grid._floodFillCount &&
+                this.floodFillCompare(neighbour) === 0
+            ) {
+                yield* neighbour._floodFill(directions);
+            }
+        }
+
+        yield this;
+    }
 }
 
 /* This function returns a cless which extends Grid by initializing an object
@@ -80,13 +110,47 @@ export function CellGrid(T) {
     return class CellGridInstance extends Grid {
         constructor(width, height) {
             super(width, height);
-            for (let [x, y] of this.coords()) {
-                this.set(x, y, new T(x, y, this));
+            for (let coord of super.coords()) {
+                this.set(coord.x, coord.y, new T(coord.x, coord.y, this));
             }
             if (T.prototype.initNeighbours !== undefined) {
                 for (let cell of this) {
                     cell.initNeighbours();
                 }
+            }
+
+            this._floodFillCount = 0;
+
+            this.initOutwardsDirections();
+
+        }
+
+        initOutwardsDirections() {
+            for (let i = 1; i < this.limits.x; ++i) {
+                this.get(i, 0).outwardsDirection = Direction.Direction.North;
+                this.get(i, this.limits.y).outwardsDirection = Direction.Direction.South;
+            }
+            for (let i = 1; i < this.limits.y; ++i) {
+                this.get(0, i).outwardsDirection = Direction.Direction.West;
+                this.get(this.limits.x, i).outwardsDirection = Direction.Direction.East;
+            }
+        }
+
+        *floodFill(directions = Direction.Directions) {
+            ++this._floodFillCount;
+
+            for (let cell of this) {
+                if (cell._floodFillCount !== this._floodFillCount) {
+                    /* Yield the generator so the caller can seperate
+                     * different flood-filled regions */
+                    yield cell._floodFill(directions);
+                }
+            }
+        }
+
+        *coords() {
+            for (let cell of this) {
+                yield cell.coord;
             }
         }
     }

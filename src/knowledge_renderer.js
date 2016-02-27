@@ -71,9 +71,11 @@ export class KnowledgeRenderer extends System {
             }
         }
         this.drawer.drawTile(tile, cell.x, cell.y);
-        cell.withEntity(Components.MaxHealth, (entity) => {
+
+        let entity = cell.find(Components.MaxHealth);
+        if (entity !== null) {
             this.drawer.drawTile(this.getHealthBarTile(entity), cell.x, cell.y);
-        });
+        }
     }
 
     drawGreyTile(cell) {
@@ -91,7 +93,8 @@ export class KnowledgeRenderer extends System {
 
         this.drawer.clear();
 
-        entity.with(Components.Observer, (observer) => {
+        let observer = entity.get(Components.Observer);
+        if (observer !== null) {
             let grid = observer.knowledge.getGrid(this.ecsContext);
             for (let cell of grid) {
                 if (!cell.known) {
@@ -102,6 +105,6 @@ export class KnowledgeRenderer extends System {
                     this.drawGreyTile(cell);
                 }
             }
-        });
+        };
     }
 }

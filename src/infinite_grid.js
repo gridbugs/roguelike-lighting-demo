@@ -1,4 +1,4 @@
-import {SignedArray} from './signed_array.js';
+import {SignedArray} from './signed_array_utils.js';
 
 export class InfiniteGrid {
     constructor() {

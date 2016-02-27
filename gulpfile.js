@@ -14,9 +14,9 @@ const SERVER_PORT = argv.port == undefined ? DEFAULT_SERVER_PORT : parseInt(argv
 const TRACEUR_OPTS = {
     asyncFunctions: true,
     modules: 'amd',
-    classes: true,
+    classes: 'parse',
     generators: 'parse',
-    arrowFunctions: true,
+    arrowFunctions: 'parse',
     blockBinding: 'parse',
     forOf: 'parse',
     templateLiterals: 'parse',

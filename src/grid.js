@@ -1,4 +1,5 @@
 import {Vec2} from './vec2.js';
+import {getRandomElement} from './array_utils.js';
 
 export class Grid {
     constructor(width, height) {
@@ -91,11 +92,26 @@ export class Grid {
         }
     }
 
+    *edge() {
+        for (let i = 1; i < this.limits.x; ++i) {
+            yield this.get(i, 0);
+            yield this.get(i, this.limits.y);
+        }
+        for (let i = 1; i < this.limits.y; ++i) {
+            yield this.get(0, i);
+            yield this.get(this.limits.x, i);
+        }
+    }
+
     *coords() {
         for (let y = 0; y < this.height; ++y) {
             for (let x = 0; x < this.width; ++x) {
-                yield [x, y];
+                yield new Vec2(x, y);
             }
         }
+    }
+
+    getRandom() {
+        return getRandomElement(this.array);
     }
 }
