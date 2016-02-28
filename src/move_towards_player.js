@@ -42,6 +42,7 @@ class FleeMap extends SafetyMap(FleeCell) {
         this.controller = controller;
     }
 }
+FleeMap.instance = new FleeMap(Config.GRID_WIDTH, Config.GRID_HEIGHT, 20, 2, null);
 
 class MoveCell extends DijkstraCell {
     constructor(x, y, grid) {
@@ -75,13 +76,14 @@ class MoveMap extends DijkstraMap(MoveCell) {
         super.debugDraw(this.controller.debugDrawer);
     }
 }
+MoveMap.instance = new MoveMap(Config.GRID_WIDTH, Config.GRID_HEIGHT, null);
 
 export class MoveTowardsPlayer extends Controller {
     constructor() {
         super();
         this.debugDrawer = GlobalDrawer.Drawer;
-        this.targetMap = new MoveMap(Config.GRID_WIDTH, Config.GRID_HEIGHT, this);
-        this.fleeMap = new FleeMap(Config.GRID_WIDTH, Config.GRID_HEIGHT, 20, 2, this);
+        this.targetMap = MoveMap.instance;
+        this.fleeMap = FleeMap.instance;
         this.lastKnownPosition = null;
     }
 
@@ -126,9 +128,11 @@ export class MoveTowardsPlayer extends Controller {
 
         let candidates;
         if (health / maxHealth < 0.5) {
+            this.fleeMap.controller = this;
             this.fleeMap.computeFromCoord(playerCell.coord);
             candidates = this.fleeMap.get(this.entity.cell.coord).getLowestNeighbours();
         } else {
+            this.targetMap.controller = this;
             this.targetMap.computeFromZeroCoord(playerCell.coord);
             candidates = this.targetMap.get(this.entity.cell.coord).getLowestNeighbours();
         }
