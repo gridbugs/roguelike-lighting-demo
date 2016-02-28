@@ -20,6 +20,18 @@ class ValueComponent extends Component {
 
 }
 
+class PassiveComponent extends Component {
+    onAdd(entity) {
+        super.onAdd(entity);
+        this.system.add(entity);
+    }
+
+    onRemove(entity) {
+        this.system.remove(entity);
+        super.onRemove(entity);
+    }
+}
+
 export class Solid extends Component {
 }
 
@@ -103,20 +115,14 @@ export class Flamable extends Component {
     }
 }
 
-export class Burning extends Component {
+export class Burning extends PassiveComponent {
     constructor(time) {
         super();
         this.time = time;
     }
 
-    onAdd(entity) {
-        super.onAdd(entity);
-        this.ecsContext.fire.add(entity);
-    }
-
-    onRemove(entity) {
-        this.ecsContext.fire.remove(entity);
-        super.onRemove(entity);
+    get system() {
+        return this.ecsContext.fire;
     }
 
     clone() {
@@ -189,4 +195,24 @@ export class Meltable extends Component {
 }
 
 export class Water extends Component {
+}
+
+export class HealthRecovery extends PassiveComponent {
+    constructor(rate) {
+        super();
+        this.rate = rate;
+    }
+
+    get system() {
+        return this.ecsContext.healing;
+    }
+
+    clone() {
+        return new HealthRecovery(this.rate);
+    }
+
+    copyTo(dest) {
+        super.copyTo(dest);
+        dest.rate = this.rate;
+    }
 }

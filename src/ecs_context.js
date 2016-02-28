@@ -18,6 +18,7 @@ import {Observation} from './observation.js';
 import {KnowledgeRenderer} from './knowledge_renderer.js';
 import {PathPlanner} from './path_planner.js';
 import {Fire} from './fire.js';
+import {Healing} from './healing.js';
 
 import {msDelay} from './time.js';
 
@@ -100,6 +101,7 @@ export class EcsContext {
         this.observation = new Observation(this);
         this.knowledgeRenderer = new KnowledgeRenderer(this, this.drawer);
         this.fire = new Fire(this);
+        this.healing = new Healing(this);
     }
 
     setPlayerCharacter(playerCharacter) {
@@ -168,6 +170,7 @@ export class EcsContext {
 
     runContinuousSystems(timeDelta) {
         this.fire.progress(timeDelta);
+        this.healing.progress(timeDelta);
     }
 
     scheduleTurn(entity, relativeTime) {
