@@ -1,4 +1,5 @@
 import {Vec2} from './vec2.js';
+import {Stack} from './stack.js';
 
 import * as Direction from './direction.js';
 
@@ -86,20 +87,40 @@ export class Cell {
         yield* this._floodFill(directions);
     }
 
-    *_floodFill(directions) {
+    _floodFillVisit() {
         this._floodFillCount = this.grid._floodFillCount;
+    }
 
-        for (let direction of directions) {
-            let neighbour = this.getNeighbour(direction);
-            if (neighbour !== null &&
-                neighbour._floodFillCount !== this.grid._floodFillCount &&
-                this.floodFillCompare(neighbour) === 0
-            ) {
-                yield* neighbour._floodFill(directions);
+    get _floodFillVisited() {
+        return this._floodFillCount === this.grid._floodFillCount;
+    }
+
+
+    *_floodFill(directions) {
+        let stack = this.grid._floodFillStack;
+
+        stack.clear();
+
+        this._floodFillVisit();
+        stack.push(this);
+
+        while (!stack.empty) {
+            let cell = stack.pop();
+
+            for (let direction of directions) {
+                let neighbour = cell.getNeighbour(direction);
+                if (neighbour !== null &&
+                    !neighbour._floodFillVisited &&
+                    cell.floodFillCompare(neighbour) === 0) {
+
+                    neighbour._floodFillVisit();
+                    stack.push(neighbour);
+                }
             }
+
+            yield cell;
         }
 
-        yield this;
     }
 }
 
@@ -120,9 +141,9 @@ export function CellGrid(T) {
             }
 
             this._floodFillCount = 0;
+            this._floodFillStack = new Stack();
 
             this.initOutwardsDirections();
-
         }
 
         initOutwardsDirections() {

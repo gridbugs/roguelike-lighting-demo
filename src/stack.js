@@ -11,7 +11,7 @@ export class Stack {
 
     pop() {
         --this.index;
-        return this.array[index];
+        return this.array[this.index];
     }
 
     clear() {
