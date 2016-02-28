@@ -8,6 +8,7 @@ import {getRandomElement, shuffleInPlace, getBestIndex} from './array_utils.js';
 import {makeEnum} from './enum.js';
 import {Vec2} from './vec2.js';
 import {DijkstraMap, DijkstraCell} from './dijkstra_map.js';
+import {BestTracker} from './best_tracker.js';
 
 class ConwayCell extends Cell {
     constructor(x, y, grid) {
@@ -105,6 +106,19 @@ class DoorDistanceMap extends DijkstraMap(DoorDistanceCell) {
     }
 }
 
+class WallDistanceCell extends DijkstraCell {
+    constructor(x, y, grid) {
+        super(x, y, grid);
+        this.stairsDistance = -1;
+    }
+    get enterable() {
+        return true;
+    }
+}
+
+class WallDistanceMap extends DijkstraMap(WallDistanceCell) {
+}
+
 class DoorCandidate {
     constructor(cell, roomCell, direction, outside) {
         this.cell = cell;
@@ -146,6 +160,7 @@ class GeneratorGrid extends CellGrid(GeneratorCell) {
     constructor(width, height) {
         super(width, height);
         this.doorDistanceMap = new DoorDistanceMap(width, height, this);
+        this.distanceFromWallsMap = new WallDistanceMap(width, height);
         this.naturalGroupSizes = [];
         this.naturalGroupTypes = [];
         this.groupSizes = [];
@@ -153,6 +168,21 @@ class GeneratorGrid extends CellGrid(GeneratorCell) {
         this.floorGroups = [];
         this.biggestFloorGroup = -1;
         this.stairsCandidates = [];
+    }
+
+    *wallCells() {
+        for (let cell of this) {
+            if (cell.type === CellType.Wall ||
+                cell.type === CellType.NaturalWall ||
+                cell.type === CellType.Door ||
+                cell.type === CellType.Floor) {
+                yield this.distanceFromWallsMap.get(cell.coord);
+            }
+        }
+    }
+
+    computeWallDistances() {
+        this.distanceFromWallsMap.computeFromZeroCoords(this.wallCells());
     }
 
     scoreRoom(room, offset) {
@@ -223,7 +253,7 @@ class GeneratorGrid extends CellGrid(GeneratorCell) {
     }
 
     *roomPositionCandidates(room) {
-        const attempts = 100;
+        const attempts = 10;
         for (let i = 0; i < attempts; ++i) {
             let coord = this.getRandom().coord;
             let score = this.scoreRoom(room, coord);
@@ -287,12 +317,13 @@ class GeneratorGrid extends CellGrid(GeneratorCell) {
 }
 
 export class ConwayTerrainGenerator {
-    constructor(parent = null) {
+    constructor(hasPlayer = false, parent = null) {
         this.conwayGrid = new ConwayGrid(Config.GRID_WIDTH, Config.GRID_HEIGHT);
         this.grid = new GeneratorGrid(Config.GRID_WIDTH, Config.GRID_HEIGHT);
         this.randomize();
         this.nextLevel = null;
         this.parent = parent;
+        this.hasPlayer = hasPlayer;
         this.playerCharacterStartCell = null;
         this.level = null;
     }
@@ -431,9 +462,7 @@ export class ConwayTerrainGenerator {
         }
 
         aCandidate.type = CellType.DownStairs;
-        if (this.parent === null) {
-            this.playerCharacterStartCell = bCandidate;
-        } else {
+        if (this.parent !== null) {
             bCandidate.type = CellType.UpStairs;
         }
     }
@@ -466,10 +495,27 @@ export class ConwayTerrainGenerator {
         this.grid.biggestFloorGroup = this.grid.floorGroups[bestIndex];
     }
 
+    placePlayerCharacter(ecs) {
+        let best = new BestTracker((a, b) => {
+            return (a.stairsDistance + a.value * 2) -
+                   (b.stairsDistance + b.value * 2);
+        });
+        this.grid.computeWallDistances();
+        for (let cell of this.grid.distanceFromWallsMap) {
+            let gridCell = this.grid.get(cell.coord);
+            if (cell.value !== 0 && gridCell.group === this.grid.biggestFloorGroup) {
+                cell.stairsDistance = cell.coord.getDistance(this.downStairs.cell.coord);
+                best.insert(cell);
+            }
+        }
+        let startCell = best.best;
+        ecs.emplaceEntity(EntityPrototypes.PlayerCharacter(startCell.coord));
+    }
+
     generate(level, ecs) {
 
         this.level = level;
-        this.nextLevel = new Level(new ConwayTerrainGenerator(this));
+        this.nextLevel = new Level(new ConwayTerrainGenerator(false, this));
 
         this.generateNatural();
         this.generateAllRooms();
@@ -519,8 +565,8 @@ export class ConwayTerrainGenerator {
             }
         }
 
-        if (this.playerCharacterStartCell !== null) {
-            ecs.emplaceEntity(EntityPrototypes.PlayerCharacter(this.playerCharacterStartCell.coord));
+        if (this.hasPlayer) {
+            this.placePlayerCharacter(ecs);
         }
     }
 }

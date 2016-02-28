@@ -45,6 +45,7 @@ export function DijkstraMap(T) {
             this.clear();
             for (let cell of this.queue) {
                 cell.value = 0;
+                cell.seen = true;
             }
             while (!this.queue.empty) {
                 let cell = this.queue.remove();
