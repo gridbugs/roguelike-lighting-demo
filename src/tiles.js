@@ -65,23 +65,20 @@ Tiles.init = async function() {
         this.HealthBars[i] = tileStore.allocateImageTile(await loadImage(`images/health-bar-${i}.png`), true);
     }
 
-
-
-    if (Config.DEBUG) {
-        this.debugArray = [];
-        for (var i = 0; i <= 9; ++i) {
-            this.debugArray.push(tileStore.allocateCharacterTile('' + i, '#000000', 'rgba(255, 255, 255, 0.25)'));
-        }
-        for (var i = 0; i < 26; ++i) {
-            var c = String.fromCharCode('a'.charCodeAt(0) + i);
-            this.debugArray.push(tileStore.allocateCharacterTile(c, '#000000', 'rgba(255, 255, 255, 0.25)'));
-        }
-        for (var i = 0; i < 26; ++i) {
-            var c = String.fromCharCode('A'.charCodeAt(0) + i);
-            this.debugArray.push(tileStore.allocateCharacterTile(c, '#000000', 'rgba(255, 255, 255, 0.25)'));
-        }
-        this.debugExtra = tileStore.allocateCharacterTile('?', '#000000', 'rgba(255, 255, 255, 0.25)');
+    // debugging tiles
+    this.debugArray = [];
+    for (var i = 0; i <= 9; ++i) {
+        this.debugArray.push(tileStore.allocateCharacterTile('' + i, '#000000', 'rgba(255, 255, 255, 0.25)'));
     }
+    for (var i = 0; i < 26; ++i) {
+        var c = String.fromCharCode('a'.charCodeAt(0) + i);
+        this.debugArray.push(tileStore.allocateCharacterTile(c, '#000000', 'rgba(255, 255, 255, 0.25)'));
+    }
+    for (var i = 0; i < 26; ++i) {
+        var c = String.fromCharCode('A'.charCodeAt(0) + i);
+        this.debugArray.push(tileStore.allocateCharacterTile(c, '#000000', 'rgba(255, 255, 255, 0.25)'));
+    }
+    this.debugExtra = tileStore.allocateCharacterTile('?', '#000000', 'rgba(255, 255, 255, 0.25)');
 }
 
 Tiles.getDebug = function(i) {

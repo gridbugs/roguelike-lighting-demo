@@ -10,7 +10,7 @@ export class DijkstraCell extends Cell {
         this.visited = false;
     }
 
-    get enterable() {
+    isEnterable() {
         return true;
     }
 }
@@ -64,7 +64,7 @@ export function DijkstraMap(T) {
                     if (neighbour.visited) {
                         continue;
                     }
-                    if (!neighbour.enterable) {
+                    if (!neighbour.isEnterable()) {
                         continue;
                     }
 

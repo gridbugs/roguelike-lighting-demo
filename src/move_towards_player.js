@@ -19,10 +19,13 @@ class MoveCell extends DijkstraCell {
         this.direction = null;
     }
 
-    get enterable() {
+    isEnterable() {
         let knowledgeCell = this.getKnowledgeCell();
         if (!knowledgeCell.known) {
             return false;
+        }
+        if (knowledgeCell.is(Components.Door)) {
+            return true;
         }
         if (knowledgeCell.is(Components.Solid)) {
             return false;
@@ -71,14 +74,18 @@ class MoveMap extends DijkstraMap(MoveCell) {
         this.controller = controller;
         this.bestNeighbour = new BestSet(compareMoveCost, 8); // 8 directions
     }
+
+    debugDraw() {
+        for (let cell of this) {
+            cell.debugDraw();
+        }
+    }
 }
 
 export class MoveTowardsPlayer extends Controller {
     constructor() {
         super();
-        if (Config.DEBUG) {
-            this.debugDrawer = GlobalDrawer.Drawer;
-        }
+        this.debugDrawer = GlobalDrawer.Drawer;
         this.targetMap = new MoveMap(Config.GRID_WIDTH, Config.GRID_HEIGHT, this);
         this.lastKnownPosition = null;
     }
@@ -116,6 +123,9 @@ export class MoveTowardsPlayer extends Controller {
         }
         this.targetMap.clear();
         this.targetMap.computeFromZeroCoord(playerCell.coord);
+
+        this.targetMap.debugDraw();
+        throw 'a';
 
         let candidates = this.targetMap.get(this.entity.cell.coord).getLowestNeighbours();
         let direction = candidates.getRandom().direction;

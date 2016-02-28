@@ -94,7 +94,7 @@ class Room extends CellGrid(RoomCell) {
 }
 
 class DoorDistanceCell extends DijkstraCell {
-    get enterable() {
+    isEnterable() {
         let cell = this.grid.grid.get(this.coord);
         return cell.type == CellType.NaturalFloor;
     }
@@ -112,7 +112,7 @@ class WallDistanceCell extends DijkstraCell {
         super(x, y, grid);
         this.stairsDistance = -1;
     }
-    get enterable() {
+    isEnterable() {
         return true;
     }
 }
@@ -599,8 +599,21 @@ export class ConwayTerrainGenerator {
     }
 
     populate(ecs) {
+        let candidates = [];
+        for (let cell of this.grid) {
+            if (cell.group === this.grid.biggestFloorGroup) {
+                candidates.push(cell);
+            }
+        }
+        shuffleInPlace(candidates);
+
         if (this.hasPlayer) {
             this.placePlayerCharacter(ecs);
+        }
+
+        for (let i = 0; i < 1; ++i) {
+            let cell = candidates.pop();
+            ecs.emplaceEntity(EntityPrototypes.SpiderChild(cell.coord));
         }
     }
 }
