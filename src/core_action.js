@@ -212,9 +212,16 @@ export class Burn extends Action {
             for (let i = 0; i < difference; ++i) {
                 for (let neighbour of this.entity.cell.neighbours) {
                     neighbour.withEntity(Components.Flamable, (entity) => {
-                        if (!entity.is(Components.Burning) && roll(20) == 1) {
+                        if (!entity.is(Components.Burning) && roll(20) === 1) {
                             ecsContext.scheduleImmediateAction(
                                 new CatchFire(entity)
+                            );
+                        }
+                    });
+                    neighbour.withEntity(Components.Meltable, (entity) => {
+                        if (roll(6) <= 2) {
+                            ecsContext.scheduleImmediateAction(
+                                new Melt(entity)
                             );
                         }
                     });
