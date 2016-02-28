@@ -1,6 +1,8 @@
 import {CellGrid, Cell} from './cell_grid.js';
 import {SearchPriorityQueue} from './search_priority_queue.js';
 import {Directions} from './direction.js';
+import {Tiles} from './tiles.js';
+import {BestSet} from './best_set.js';
 
 export class DijkstraCell extends Cell {
     constructor(x, y, grid) {
@@ -13,6 +15,31 @@ export class DijkstraCell extends Cell {
     isEnterable() {
         return true;
     }
+
+    getLowestNeighbours() {
+        let best = this.grid.bestNeighbour;
+        best.clear();
+        for (let direction of Directions) {
+            let neighbour = this.getNeighbour(direction);
+            neighbour.direction = direction;
+            neighbour.totalCost = neighbour.value + direction.multiplier;
+            best.insert(neighbour);
+        }
+        return best;
+    }
+}
+
+function compareMoveCost(a, b) {
+    if (a.visited && b.visited) {
+        return b.totalCost - a.totalCost;
+    }
+    if (a.visited) {
+        return 1;
+    }
+    if (b.visited) {
+        return -1;
+    }
+    return 0;
 }
 
 export function DijkstraMap(T) {
@@ -20,6 +47,16 @@ export function DijkstraMap(T) {
         constructor(width, height) {
             super(width, height);
             this.queue = new SearchPriorityQueue((a, b) => {return b.value - a.value});
+            this.bestNeighbour = new BestSet(compareMoveCost, 8); // 8 directions
+        }
+
+        debugDraw(drawer) {
+            for (let cell of this) {
+                if (cell.visited) {
+                    drawer.drawTileUnstored(Tiles.getDebug(
+                        Math.floor(cell.value)), cell.x, cell.y);
+                }
+            }
         }
 
         clear() {
@@ -37,7 +74,9 @@ export function DijkstraMap(T) {
 
         computeFromZeroCoords(coords) {
             this.queue.clear();
-            this.queue.populate(coords);
+            for (let coord of coords) {
+                this.queue.insert(this.get(coord));
+            }
             this.compute();
         }
 
@@ -64,7 +103,7 @@ export function DijkstraMap(T) {
                     if (neighbour.visited) {
                         continue;
                     }
-                    if (!neighbour.isEnterable()) {
+                    if (!neighbour.isEnterable(cell)) {
                         continue;
                     }
 

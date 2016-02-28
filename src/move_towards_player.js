@@ -7,10 +7,41 @@ import {Controller} from './controller.js';
 import {Components} from './components.js';
 import {Actions} from './actions.js';
 
-import {BestSet} from './best_set.js';
 import {Directions} from './direction.js';
 
 import {DijkstraMap, DijkstraCell} from './dijkstra_map.js';
+import {SafetyMap, SafetyCell} from './safety_map.js';
+import {assert} from './assert.js';
+
+function treatAsSolid(knowledgeCell) {
+    if (!knowledgeCell.known) {
+        return false;
+    }
+    if (knowledgeCell.is(Components.Door)) {
+        return true;
+    }
+    if (knowledgeCell.is(Components.Solid)) {
+        return false;
+    }
+    return true;
+}
+
+class FleeCell extends SafetyCell {
+    isEnterable(cell) {
+        return super.isEnterable(cell) && treatAsSolid(this.getKnowledgeCell());
+    }
+
+    getKnowledgeCell() {
+        return this.grid.controller.getKnowledgeGrid().get(this.coord);
+    }
+}
+
+class FleeMap extends SafetyMap(FleeCell) {
+    constructor(width, height, threshold, delay, controller) {
+        super(width, height, threshold, delay);
+        this.controller = controller;
+    }
+}
 
 class MoveCell extends DijkstraCell {
     constructor(x, y, grid) {
@@ -21,32 +52,11 @@ class MoveCell extends DijkstraCell {
 
     isEnterable() {
         let knowledgeCell = this.getKnowledgeCell();
-        if (!knowledgeCell.known) {
-            return false;
-        }
-        if (knowledgeCell.is(Components.Door)) {
-            return true;
-        }
-        if (knowledgeCell.is(Components.Solid)) {
-            return false;
-        }
-        return true;
+        return treatAsSolid(knowledgeCell);
     }
 
     getKnowledgeCell() {
         return this.grid.controller.getKnowledgeGrid().get(this.coord);
-    }
-
-    getLowestNeighbours() {
-        let best = this.grid.bestNeighbour;
-        best.clear();
-        for (let direction of Directions) {
-            let neighbour = this.getNeighbour(direction);
-            neighbour.direction = direction;
-            neighbour.totalCost = neighbour.value + direction.multiplier;
-            best.insert(neighbour);
-        }
-        return best;
     }
 
     debugDraw() {
@@ -55,30 +65,14 @@ class MoveCell extends DijkstraCell {
     }
 }
 
-function compareMoveCost(a, b) {
-    if (a.visited && b.visited) {
-        return b.totalCost - a.totalCost;
-    }
-    if (a.visited) {
-        return 1;
-    }
-    if (b.visited) {
-        return -1;
-    }
-    return 0;
-}
-
 class MoveMap extends DijkstraMap(MoveCell) {
     constructor(width, height, controller) {
         super(width, height);
         this.controller = controller;
-        this.bestNeighbour = new BestSet(compareMoveCost, 8); // 8 directions
     }
 
     debugDraw() {
-        for (let cell of this) {
-            cell.debugDraw();
-        }
+        super.debugDraw(this.controller.debugDrawer);
     }
 }
 
@@ -87,6 +81,7 @@ export class MoveTowardsPlayer extends Controller {
         super();
         this.debugDrawer = GlobalDrawer.Drawer;
         this.targetMap = new MoveMap(Config.GRID_WIDTH, Config.GRID_HEIGHT, this);
+        this.fleeMap = new FleeMap(Config.GRID_WIDTH, Config.GRID_HEIGHT, 20, 2, this);
         this.lastKnownPosition = null;
     }
 
@@ -100,13 +95,15 @@ export class MoveTowardsPlayer extends Controller {
 
     getPlayerCell() {
         let grid = this.getKnowledgeGrid();
+        let ret = null;
         for (let cell of grid) {
             if (cell.has(Components.PlayerCharacter)) {
-                return cell;
+                assert(ret === null);
+                ret = cell;
             }
         }
 
-        return null;
+        return ret;
     }
 
     getAction() {
@@ -121,14 +118,29 @@ export class MoveTowardsPlayer extends Controller {
         } else {
             this.lastKnownPosition = playerCell;
         }
-        this.targetMap.clear();
-        this.targetMap.computeFromZeroCoord(playerCell.coord);
 
-        this.targetMap.debugDraw();
-        throw 'a';
+        let health = this.entity.get(Components.Health).value;
+        let maxHealth = this.entity.get(Components.MaxHealth).value;
 
-        let candidates = this.targetMap.get(this.entity.cell.coord).getLowestNeighbours();
-        let direction = candidates.getRandom().direction;
+        let direction;
+
+        if (health / maxHealth < 0.5) {
+            this.fleeMap.computeFromCoord(playerCell.coord);
+
+            let candidates = this.fleeMap.get(this.entity.cell.coord).getLowestNeighbours();
+            direction = candidates.getRandom().direction;
+            console.debug(() => {
+                this.fleeMap.debugDraw(this.debugDrawer);
+            },() => {
+                this.fleeMap.shadow.debugDraw(this.debugDrawer);
+            }, playerCell.coord);
+        } else {
+
+            this.targetMap.computeFromZeroCoord(playerCell.coord);
+
+            let candidates = this.targetMap.get(this.entity.cell.coord).getLowestNeighbours();
+            direction = candidates.getRandom().direction;
+        }
 
         return new Actions.Walk(this.entity, direction);
     }
