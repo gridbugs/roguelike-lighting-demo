@@ -216,3 +216,20 @@ export class HealthRecovery extends PassiveComponent {
         dest.rate = this.rate;
     }
 }
+
+export class UpgradesOnDescent extends Component {
+    constructor(calculate, maxDepth) {
+        super();
+        this.calculate = calculate;
+        this.maxDepth = maxDepth;
+    }
+
+    clone() {
+        return new UpgradesOnDescent(this.calculate, this.maxDepth);
+    }
+
+    copyTo(dest) {
+        dest.calculate = this.calculate;
+        dest.maxDepth = this.maxDepth;
+    }
+}

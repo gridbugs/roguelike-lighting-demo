@@ -422,7 +422,7 @@ export class ConwayTerrainGenerator {
         }
     }
 
-    generateRooms(numTypes, numPerType, minSize, maxSize, randomDoors) {
+    generateRooms(numTypes, numPerType, minSize, maxSize, randomDoors = false) {
         for (let i = 0; i < numTypes; ++i) {
             let room = new Room(
                 getRandomIntInclusive(minSize, maxSize),
@@ -441,8 +441,8 @@ export class ConwayTerrainGenerator {
     }
 
     generateAllRooms() {
-        this.generateRooms(getRandomIntInclusive(2, 5), 1, 8, 14);
-        this.generateRooms(getRandomIntInclusive(2, 5), 1, 6, 10);
+        this.generateRooms(getRandomIntInclusive(2, 5), 1, 8, 14, true);
+        this.generateRooms(getRandomIntInclusive(2, 5), 1, 6, 10, true);
     }
 
     generateStairs() {
@@ -523,7 +523,7 @@ export class ConwayTerrainGenerator {
 
     placePlayerCharacter(ecs) {
         let startCell = this.getPlayerCharacterStart(this.downStairs.cell);
-        ecs.emplaceEntity(EntityPrototypes.PlayerCharacter(startCell.coord));
+        return ecs.emplaceEntity(EntityPrototypes.PlayerCharacter(startCell.coord));
     }
 
     generate(level, ecs) {
@@ -599,19 +599,25 @@ export class ConwayTerrainGenerator {
     }
 
     populate(ecs) {
+        let playerCharacter;
+        if (this.hasPlayer) {
+            playerCharacter = this.placePlayerCharacter(ecs);
+        }
+
         let candidates = [];
         for (let cell of this.grid) {
             if (cell.group === this.grid.biggestFloorGroup) {
+                if (this.hasPlayer &&
+                    playerCharacter.cell.coord.getDistance(cell.coord) < 10) {
+                    continue;
+                }
                 candidates.push(cell);
             }
         }
         shuffleInPlace(candidates);
 
-        if (this.hasPlayer) {
-            this.placePlayerCharacter(ecs);
-        }
 
-        for (let i = 0; i < 1; ++i) {
+        for (let i = 0; i < 5; ++i) {
             let cell = candidates.pop();
             ecs.emplaceEntity(EntityPrototypes.SpiderChild(cell.coord));
         }

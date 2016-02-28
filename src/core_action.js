@@ -324,3 +324,16 @@ export class Extinguish extends Action {
         this.entity.remove(Components.Burning);
     }
 }
+
+export class Upgrade extends Action {
+    constructor(entity, depth, amount) {
+        super();
+        this.entity = entity;
+        this.amount = amount;
+        this.depth = depth;
+    }
+    commit() {
+        this.entity.get(Components.Health).value += this.amount;
+        this.entity.get(Components.UpgradesOnDescent).maxDepth = this.depth;
+    }
+}

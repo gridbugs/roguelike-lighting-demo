@@ -19,6 +19,7 @@ import {KnowledgeRenderer} from './knowledge_renderer.js';
 import {PathPlanner} from './path_planner.js';
 import {Fire} from './fire.js';
 import {Healing} from './healing.js';
+import {UpgradeOnDescent} from './upgrade_on_descent.js';
 
 import {msDelay} from './time.js';
 
@@ -103,6 +104,7 @@ export class EcsContext {
         this.knowledgeRenderer = new KnowledgeRenderer(this, this.drawer);
         this.fire = new Fire(this);
         this.healing = new Healing(this);
+        this.upgradeOnDescent = new UpgradeOnDescent(this);
     }
 
     setPlayerCharacter(playerCharacter) {
@@ -167,6 +169,7 @@ export class EcsContext {
         this.collision.run(action);
         this.combat.run(action);
         this.fire.run(action);
+        this.upgradeOnDescent.run(action);
     }
 
     runContinuousSystems(timeDelta) {

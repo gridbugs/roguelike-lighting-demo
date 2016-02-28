@@ -26,6 +26,10 @@ export function PlayerCharacter(x, y) {
         observe = Shadowcast.detectVisibleArea;
     }
 
+    let computeUpgrade = (depth) => {
+        return depth * 10;
+    }
+
     return [
         new Components.Position(x, y),
         new Components.Tile(Tiles.PlayerCharacter, 3),
@@ -33,7 +37,7 @@ export function PlayerCharacter(x, y) {
         new Components.Collider(),
         new Components.PlayerCharacter(),
         new Components.Observer(observe, 15),
-        new Components.Health(20),
+        new Components.Health(10),
         new Components.Combatant(CombatGroups.Friendly),
         new Components.Attack(2),
         new Components.Defense(2),
@@ -41,6 +45,7 @@ export function PlayerCharacter(x, y) {
         new Components.Dodge(20),
         new Components.Unfamiliar(),
         new Components.CurrentAbility(Abilities.FireBall),
+        new Components.UpgradesOnDescent(computeUpgrade, 1)
     ];
 }
 
@@ -51,7 +56,7 @@ export function SpiderChild(x, y) {
         new Components.TurnTaker(new MoveTowardsPlayer()),
         new Components.Collider(),
         new Components.Observer(Shadowcast.detectVisibleArea, 20, true),
-        new Components.Health(2),
+        new Components.Health(5),
         new Components.MaxHealth(5),
         new Components.Combatant(CombatGroups.Hostile),
         new Components.Attack(4),

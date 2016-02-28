@@ -3,7 +3,8 @@ import {Components} from './components.js';
 import {Level} from './level.js';
 
 export class StringTerrainGenerator {
-    constructor(stringArray, nextStringArray = null) {
+    constructor(depth, stringArray, nextStringArray = null) {
+        this.depth = depth;
         this.stringArray = stringArray;
         this.nextStringArray = nextStringArray;
         this.stairsFromAbove = null;
@@ -17,7 +18,7 @@ export class StringTerrainGenerator {
     generate(level, ecsContext) {
 
         if (this.nextStringArray !== null) {
-            this.nextGenerator = new StringTerrainGenerator(this.nextStringArray)
+            this.nextGenerator = new StringTerrainGenerator(this.depth + 1, this.nextStringArray)
             this.nextGenerator.aboveLevel = level;
             this.nextLevel = new Level(this.nextGenerator);
         }
