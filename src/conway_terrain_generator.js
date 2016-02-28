@@ -329,7 +329,7 @@ export class ConwayTerrainGenerator {
         this.playerCharacterStartCell = null;
         this.level = null;
 
-        this.finalDepth = 5;
+        this.finalDepth = 4;
 
         this.numSteps = 2;
         this.liveMin = 4;
@@ -616,11 +616,28 @@ export class ConwayTerrainGenerator {
         }
         shuffleInPlace(candidates);
 
-
-        for (let i = 0; i < 5; ++i) {
-            let cell = candidates.pop();
-            ecs.emplaceEntity(EntityPrototypes.SpiderChild(cell.coord));
+        let add = (num, name) => {
+            for (let i = 0; i < num; ++i) {
+                let cell = candidates.pop();
+                ecs.emplaceEntity(EntityPrototypes[name](cell.coord));
+            }
         }
+
+        switch (this.depth) {
+            case 1:
+                add(5, 'SpiderChild');
+                add(1, 'Mouths');
+                break;
+            case 2:
+                add(4, 'SpiderChild');
+                add(2, 'Mouths');
+                break;
+            case 3:
+                add(5, 'SpiderChild');
+                add(3, 'Mouths');
+                break;
+        }
+
     }
 }
 

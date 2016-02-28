@@ -13,6 +13,7 @@ Tiles.init = async function() {
     this.PlayerCharacter = tileStore.allocateCharacterTile('@', '#ffffff');
     this.SpiderChild = tileStore.allocateCharacterTile('c', '#95b9c7');
     this.PyroGod = tileStore.allocateCharacterTile('G', '#ff2200');
+    this.Mouths = tileStore.allocateCharacterTile('m', '#880000');
 
 
     this.IceFloor = tileStore.allocateDotTile(4, '#224488', '#000022');

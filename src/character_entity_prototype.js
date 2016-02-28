@@ -70,7 +70,7 @@ export function SpiderChild(x, y) {
     return GenericCharacter(x, y, Tiles.SpiderChild, 5, 0.5).concat([
         new Components.Attack(1),
         new Components.Defense(1),
-        new Components.Accuracy(100),
+        new Components.Accuracy(80),
         new Components.Dodge(20),
     ]);
 }
@@ -82,5 +82,14 @@ export function PyroGod(x, y) {
         new Components.Accuracy(100),
         new Components.Dodge(10),
         new Components.WinOnDeath()
+    ]);
+}
+
+export function Mouths(x, y) {
+    return GenericCharacter(x, y, Tiles.Mouths, 2, 3).concat([
+        new Components.Attack(4),
+        new Components.Defense(1),
+        new Components.Accuracy(100),
+        new Components.Dodge(10),
     ]);
 }
