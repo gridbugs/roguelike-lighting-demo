@@ -109,13 +109,18 @@ export async function main() {
         while (true) {
             currentEcsContext = playerCharacter.ecsContext;
             if (playerCharacter.get(Components.Health).value <= 0) {
+                currentEcsContext.updatePlayer();
+                currentEcsContext.hud.message = "You Died (press any key to restart)"
+                break;
+            }
+            if (currentEcsContext.victory) {
+                currentEcsContext.updatePlayer();
+                currentEcsContext.hud.message = "The fallen Pyrogod was defeated";
                 break;
             }
             await currentEcsContext.progressSchedule();
         }
-        currentEcsContext.updatePlayer();
 
-        currentEcsContext.hud.message = "You Died (press any key to restart)"
 
         await getKey();
 

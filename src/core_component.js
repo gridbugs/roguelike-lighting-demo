@@ -233,3 +233,6 @@ export class UpgradesOnDescent extends Component {
         dest.maxDepth = this.maxDepth;
     }
 }
+
+export class WinOnDeath extends Component {
+}

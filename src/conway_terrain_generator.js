@@ -329,7 +329,7 @@ export class ConwayTerrainGenerator {
         this.playerCharacterStartCell = null;
         this.level = null;
 
-        this.finalDepth = 5;
+        this.finalDepth = 2;
 
         this.numSteps = 2;
         this.liveMin = 4;

@@ -20,6 +20,7 @@ import {PathPlanner} from './path_planner.js';
 import {Fire} from './fire.js';
 import {Healing} from './healing.js';
 import {UpgradeOnDescent} from './upgrade_on_descent.js';
+import {Winning} from './winning.js';
 
 import {msDelay} from './time.js';
 
@@ -90,6 +91,8 @@ export class EcsContext {
         ++instanceCount;
 
         this.playerCharacter = null;
+
+        this.victory = false;
     }
 
     initSystems() {
@@ -105,6 +108,7 @@ export class EcsContext {
         this.fire = new Fire(this);
         this.healing = new Healing(this);
         this.upgradeOnDescent = new UpgradeOnDescent(this);
+        this.winning = new Winning(this);
     }
 
     setPlayerCharacter(playerCharacter) {
@@ -170,6 +174,7 @@ export class EcsContext {
         this.combat.run(action);
         this.fire.run(action);
         this.upgradeOnDescent.run(action);
+        this.winning.run(action);
     }
 
     runContinuousSystems(timeDelta) {

@@ -38,6 +38,8 @@ Tiles.init = async function() {
             tileStore.allocateCharacterTile('~', '#2288cc', '#004488'),
             tileStore.allocateCharacterTile('≈', '#2288cc', '#004488'),
         ];
+        this.CollapsedUpStairs = tileStore.allocateCharacterTile('%', '#ffffff');
+        this.CathedralDownStairs = tileStore.allocateCharacterTile('>', '#ff8800');
     } else {
         this.BrickWallTop = tileStore.allocateImageTile(await loadImage('images/brick-wall-top.png'));
         this.BrickWallFront = tileStore.allocateImageTile(await loadImage('images/brick-wall-front.png'));
