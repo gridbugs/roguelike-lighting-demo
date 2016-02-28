@@ -51,7 +51,7 @@ export function SpiderChild(x, y) {
         new Components.TurnTaker(new MoveTowardsPlayer()),
         new Components.Collider(),
         new Components.Observer(Shadowcast.detectVisibleArea, 20, true),
-        new Components.Health(2),
+        new Components.Health(5),
         new Components.MaxHealth(5),
         new Components.Combatant(CombatGroups.Hostile),
         new Components.Attack(4),

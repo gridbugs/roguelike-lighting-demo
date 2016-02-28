@@ -95,15 +95,17 @@ export class MoveTowardsPlayer extends Controller {
 
     getPlayerCell() {
         let grid = this.getKnowledgeGrid();
-        let ret = null;
+        let remembered = null;
         for (let cell of grid) {
             if (cell.has(Components.PlayerCharacter)) {
-                assert(ret === null);
-                ret = cell;
+                if (cell.visible) {
+                    return cell;
+                }
+                remembered = cell;
             }
         }
 
-        return ret;
+        return remembered;
     }
 
     getAction() {
@@ -122,25 +124,15 @@ export class MoveTowardsPlayer extends Controller {
         let health = this.entity.get(Components.Health).value;
         let maxHealth = this.entity.get(Components.MaxHealth).value;
 
-        let direction;
-
+        let candidates;
         if (health / maxHealth < 0.5) {
             this.fleeMap.computeFromCoord(playerCell.coord);
-
-            let candidates = this.fleeMap.get(this.entity.cell.coord).getLowestNeighbours();
-            direction = candidates.getRandom().direction;
-            console.debug(() => {
-                this.fleeMap.debugDraw(this.debugDrawer);
-            },() => {
-                this.fleeMap.shadow.debugDraw(this.debugDrawer);
-            }, playerCell.coord);
+            candidates = this.fleeMap.get(this.entity.cell.coord).getLowestNeighbours();
         } else {
-
             this.targetMap.computeFromZeroCoord(playerCell.coord);
-
-            let candidates = this.targetMap.get(this.entity.cell.coord).getLowestNeighbours();
-            direction = candidates.getRandom().direction;
+            candidates = this.targetMap.get(this.entity.cell.coord).getLowestNeighbours();
         }
+        let direction = candidates.getRandom().direction;
 
         return new Actions.Walk(this.entity, direction);
     }
