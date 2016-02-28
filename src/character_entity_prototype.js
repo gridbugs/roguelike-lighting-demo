@@ -49,7 +49,7 @@ export function PlayerCharacter(x, y) {
     ];
 }
 
-function GenericCharacter(x, y, tile, health, burnTime = 5, healthRecovery = 0.1) {
+function GenericCharacter(x, y, tile, health, walkTime, burnTime = 5, healthRecovery = 0.1) {
     return [
         new Components.Position(x, y),
         new Components.Tile(tile, 3),
@@ -61,12 +61,13 @@ function GenericCharacter(x, y, tile, health, burnTime = 5, healthRecovery = 0.1
         new Components.Combatant(CombatGroups.Hostile),
         new Components.Unfamiliar(),
         new Components.Flamable(burnTime),
-        new Components.HealthRecovery(healthRecovery)
+        new Components.HealthRecovery(healthRecovery),
+        new Components.WalkTime(walkTime)
     ];
 }
 
 export function SpiderChild(x, y) {
-    return GenericCharacter(x, y, Tiles.SpiderChild, 5).concat([
+    return GenericCharacter(x, y, Tiles.SpiderChild, 5, 0.5).concat([
         new Components.Attack(1),
         new Components.Defense(1),
         new Components.Accuracy(100),
@@ -75,7 +76,7 @@ export function SpiderChild(x, y) {
 }
 
 export function PyroGod(x, y) {
-    return GenericCharacter(x, y, Tiles.PyroGod, 1, 2).concat([
+    return GenericCharacter(x, y, Tiles.PyroGod, 1, 2, 2).concat([
         new Components.Attack(4),
         new Components.Defense(1),
         new Components.Accuracy(100),

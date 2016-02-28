@@ -236,3 +236,5 @@ export class UpgradesOnDescent extends Component {
 
 export class WinOnDeath extends Component {
 }
+
+export class WalkTime extends ValueComponent {}

@@ -1,4 +1,5 @@
 import {Turn} from './turn.js';
+import {Components} from './components.js';
 
 export class Controller {
     constructor() {
@@ -6,6 +7,6 @@ export class Controller {
     }
 
     takeTurn() {
-        return new Turn(this.getAction());
+        return new Turn(this.getAction(), this.entity.get(Components.WalkTime).value);
     }
 }
