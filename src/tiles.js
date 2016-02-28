@@ -12,6 +12,7 @@ Tiles.init = async function() {
     // characters
     this.PlayerCharacter = tileStore.allocateCharacterTile('@', '#ffffff');
     this.SpiderChild = tileStore.allocateCharacterTile('c', '#95b9c7');
+    this.PyroGod = tileStore.allocateCharacterTile('G', '#ff2200');
 
 
     this.IceFloor = tileStore.allocateDotTile(4, '#224488', '#000022');
@@ -54,6 +55,8 @@ Tiles.init = async function() {
             tileStore.allocateImageTile(await loadImage('images/water-0.png')),
             tileStore.allocateImageTile(await loadImage('images/water-1.png')),
         ];
+        this.CollapsedUpStairs = tileStore.allocateImageTile(await loadImage('images/collapsed-up-stairs.png'), true);
+        this.CathedralDownStairs = tileStore.allocateImageTile(await loadImage('images/cathedral-down-stairs.png'), true);
     }
 
     this.HealthBarSize = 8;

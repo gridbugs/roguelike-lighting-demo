@@ -41,7 +41,8 @@ const CellType = makeEnum([
     'Floor',
     'Door',
     'DownStairs',
-    'UpStairs'
+    'UpStairs',
+    'CollapsedUpStairs'
 ]);
 
 function isWallType(type) {
@@ -263,7 +264,7 @@ class GeneratorGrid extends CellGrid(GeneratorCell) {
         }
     }
 
-    addRoom(room, offset) {
+    addRoom(room, offset, randomDoors = false) {
         let coord = new Vec2(0, 0);
         for (let roomCell of room) {
             roomCell.coord.addInPlace(offset, coord);
@@ -302,7 +303,7 @@ class GeneratorGrid extends CellGrid(GeneratorCell) {
                 }
             );
 
-            if (Math.random() > 0.2) {
+            if (Math.random() > 0.2 || !randomDoors) {
                 door.cell.type = CellType.Door;
             } else {
                 door.cell.type = CellType.Floor;
@@ -317,15 +318,24 @@ class GeneratorGrid extends CellGrid(GeneratorCell) {
 }
 
 export class ConwayTerrainGenerator {
-    constructor(hasPlayer = false, parent = null) {
+    constructor(depth = 0, hasPlayer = false, parent = null) {
         this.conwayGrid = new ConwayGrid(Config.GRID_WIDTH, Config.GRID_HEIGHT);
         this.grid = new GeneratorGrid(Config.GRID_WIDTH, Config.GRID_HEIGHT);
         this.randomize();
         this.nextLevel = null;
+        this.depth = depth;
         this.parent = parent;
         this.hasPlayer = hasPlayer;
         this.playerCharacterStartCell = null;
         this.level = null;
+
+        this.finalDepth = 5;
+
+        this.numSteps = 2;
+        this.liveMin = 4;
+        this.liveMax = 8;
+        this.resMin = 5;
+        this.resMax = 5;
     }
 
     randomize() {
@@ -382,7 +392,7 @@ export class ConwayTerrainGenerator {
     }
 
     generateNatural() {
-        this.runAutomata(2, 4, 8, 5, 5);
+        this.runAutomata(this.numSteps, this.liveMin, this.liveMax, this.resMin, this.resMax);
         this.fillGaps(4, 4);
         this.removeSingles();
 
@@ -412,7 +422,7 @@ export class ConwayTerrainGenerator {
         }
     }
 
-    generateRooms(numTypes, numPerType, minSize, maxSize) {
+    generateRooms(numTypes, numPerType, minSize, maxSize, randomDoors) {
         for (let i = 0; i < numTypes; ++i) {
             let room = new Room(
                 getRandomIntInclusive(minSize, maxSize),
@@ -424,7 +434,7 @@ export class ConwayTerrainGenerator {
                 if (count >= numPerType) {
                     break;
                 }
-                this.grid.addRoom(room, coord);
+                this.grid.addRoom(room, coord, randomDoors);
                 ++count;
             }
         }
@@ -495,7 +505,7 @@ export class ConwayTerrainGenerator {
         this.grid.biggestFloorGroup = this.grid.floorGroups[bestIndex];
     }
 
-    placePlayerCharacter(ecs) {
+    getPlayerCharacterStart(target) {
         let best = new BestTracker((a, b) => {
             return (a.stairsDistance + a.value * 2) -
                    (b.stairsDistance + b.value * 2);
@@ -504,18 +514,27 @@ export class ConwayTerrainGenerator {
         for (let cell of this.grid.distanceFromWallsMap) {
             let gridCell = this.grid.get(cell.coord);
             if (cell.value !== 0 && gridCell.group === this.grid.biggestFloorGroup) {
-                cell.stairsDistance = cell.coord.getDistance(this.downStairs.cell.coord);
+                cell.stairsDistance = cell.coord.getDistance(target.coord);
                 best.insert(cell);
             }
         }
-        let startCell = best.best;
+        return this.grid.get(best.best.coord);
+    }
+
+    placePlayerCharacter(ecs) {
+        let startCell = this.getPlayerCharacterStart(this.downStairs.cell);
         ecs.emplaceEntity(EntityPrototypes.PlayerCharacter(startCell.coord));
     }
 
     generate(level, ecs) {
 
         this.level = level;
-        this.nextLevel = new Level(new ConwayTerrainGenerator(false, this));
+        let nextDepth = this.depth + 1;
+        if (nextDepth === this.finalDepth) {
+            this.nextLevel = new Level(new FinalConwayTerrainGenerator(nextDepth, false, this));
+        } else {
+            this.nextLevel = new Level(new ConwayTerrainGenerator(nextDepth, false, this));
+        }
 
         this.generateNatural();
         this.generateAllRooms();
@@ -547,6 +566,12 @@ export class ConwayTerrainGenerator {
                     ecs.emplaceEntity(EntityPrototypes.StoneFloor(cell.x, cell.y));
                     break;
                 }
+                case CellType.CollapsedUpStairs: {
+                    ecs.emplaceEntity(EntityPrototypes.StoneFloor(cell.x, cell.y));
+                    let stairs = ecs.emplaceEntity(EntityPrototypes.CollapsedUpStairs(cell.x, cell.y));
+                    this.parent.downStairs.get(Components.DownStairs).upStairs = stairs;
+                    break;
+                }
                 case CellType.UpStairs: {
                     ecs.emplaceEntity(EntityPrototypes.StoneFloor(cell.x, cell.y));
                     let stairs = ecs.emplaceEntity(EntityPrototypes.UpStairs(cell.x, cell.y));
@@ -557,7 +582,12 @@ export class ConwayTerrainGenerator {
                 }
                 case CellType.DownStairs: {
                     ecs.emplaceEntity(EntityPrototypes.StoneFloor(cell.x, cell.y));
-                    let stairs = ecs.emplaceEntity(EntityPrototypes.DownStairs(cell.x, cell.y));
+                    let stairs;
+                    if (nextDepth === this.finalDepth) {
+                        stairs = ecs.emplaceEntity(EntityPrototypes.CathedralDownStairs(cell.x, cell.y));
+                    } else {
+                        stairs = ecs.emplaceEntity(EntityPrototypes.DownStairs(cell.x, cell.y));
+                    }
                     stairs.get(Components.DownStairs).level = this.nextLevel;
                     this.downStairs = stairs;
                     break;
@@ -565,8 +595,37 @@ export class ConwayTerrainGenerator {
             }
         }
 
+        this.populate(ecs);
+    }
+
+    populate(ecs) {
         if (this.hasPlayer) {
             this.placePlayerCharacter(ecs);
         }
+    }
+}
+
+export class FinalConwayTerrainGenerator extends ConwayTerrainGenerator {
+    constructor(depth = 0, hasPlayer = false, parent = null) {
+        super(depth, hasPlayer, parent);
+
+        this.numSteps = 10;
+        this.liveMin = 4;
+        this.liveMax = 8;
+        this.resMin = 5;
+        this.resMax = 5;
+    }
+
+    generateAllRooms() {
+        this.generateRooms(1, 1, 10, 20, false);
+    }
+
+    generateStairs() {
+        let cell = this.getPlayerCharacterStart(this.grid.stairsCandidates[0]);
+        cell.type = CellType.CollapsedUpStairs;
+    }
+
+    populate(ecs) {
+        ecs.emplaceEntity(EntityPrototypes.PyroGod(this.grid.stairsCandidates[0].coord));
     }
 }

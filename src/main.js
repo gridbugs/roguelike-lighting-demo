@@ -96,11 +96,11 @@ export async function main() {
 '%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%',
     ];
 
-    var generator = new StringTerrainGenerator(terrainStringArrayL1, terrainStringArrayL2);
-    if (!Config.DEMO) {
-        generator = new ConwayTerrainGenerator(true);
-    }
     while (true) {
+        var generator = new StringTerrainGenerator(terrainStringArrayL1, terrainStringArrayL2);
+        if (!Config.DEMO) {
+            generator = new ConwayTerrainGenerator(0, true);
+        }
         var firstLevel = new Level(generator);
         var playerCharacter = firstLevel.ecsContext.playerCharacter;
 

@@ -115,3 +115,18 @@ export function Water(x, y) {
         new Components.Water()
     ];
 }
+
+export function CollapsedUpStairs(x, y) {
+    return [
+        new Components.Position(x, y),
+        new Components.Tile(Tiles.CollapsedUpStairs, 1)
+    ];
+}
+
+export function CathedralDownStairs(x, y) {
+    return [
+        new Components.Position(x, y),
+        new Components.Tile(Tiles.CathedralDownStairs, 1),
+        new Components.DownStairs()
+    ];
+}

@@ -6,6 +6,6 @@ export const Config = {
     ASCII: false,
     DEBUG: false,
     RNG_SEED: null,
-    OMNISCIENT: false,
+    OMNISCIENT: true,
     DEMO: false
 };
