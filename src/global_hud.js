@@ -5,8 +5,8 @@ export const GlobalHud = {
         let hud = document.getElementById('hud');
         let ability = document.getElementById('ability');
         let message = document.getElementById('message');
-        let health = document.getElementById('health');
+        let stats = document.getElementById('stats');
         hud.style.display = 'block';
-        this.Hud = new Hud(hud, ability, message, health);
+        this.Hud = new Hud(hud, ability, message, stats);
     }
 };

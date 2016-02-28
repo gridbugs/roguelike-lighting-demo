@@ -76,7 +76,8 @@ class SpacialHash extends CellGrid(SpacialHashCell) {}
 var instanceCount = 0;
 
 export class EcsContext {
-    constructor() {
+    constructor(level) {
+        this.level = level;
         this.entities = new Set();
         this.width = Config.GRID_WIDTH;
         this.height = Config.GRID_HEIGHT;

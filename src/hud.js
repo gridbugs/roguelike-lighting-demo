@@ -1,15 +1,18 @@
 import {Components} from './components.js';
 
 export class Hud {
-    constructor(container, ability, message, health) {
+    constructor(container, ability, message, stats) {
         this.container = container;
         this._ability = ability;
         this._message = message;
-        this._health = health;
+        this._stats = stats;
+
+        this._healthValue = 0;
+        this._depthValue = 0
     }
 
-    set health(value) {
-        this._health.innerHTML = value;
+    set stats(value) {
+        this._stats.innerHTML = value;
     }
 
     set message(value) {
@@ -21,7 +24,10 @@ export class Hud {
     }
 
     update(entity) {
-        this.health = entity.get(Components.Health).value;
+        this._healthValue = entity.get(Components.Health).value;
+        this._depthValue = entity.ecsContext.level.depth;
+        this.stats = `DLVL:${this._depthValue} HP:${this._healthValue}`;
+
         this.ability = entity.get(Components.CurrentAbility).ability.name;
         this.message = "";
     }

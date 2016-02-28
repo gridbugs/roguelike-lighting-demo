@@ -99,7 +99,7 @@ export async function main() {
     while (true) {
         var generator = new StringTerrainGenerator(terrainStringArrayL1, terrainStringArrayL2);
         if (!Config.DEMO) {
-            generator = new ConwayTerrainGenerator(0, true);
+            generator = new ConwayTerrainGenerator(1, true);
         }
         var firstLevel = new Level(generator);
         var playerCharacter = firstLevel.ecsContext.playerCharacter;
