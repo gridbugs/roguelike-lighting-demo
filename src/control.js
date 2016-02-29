@@ -19,7 +19,8 @@ export const ControlTypes = makeEnum([
     'Fire',
     'Wait',
     'Up',
-    'Down'
+    'Down',
+    'Examine'
 ], true);
 
 export const ControlKeys = substituteValues(ControlTypes, {
@@ -35,7 +36,8 @@ export const ControlKeys = substituteValues(ControlTypes, {
     f: 'Fire',
     '.': 'Wait',
     '<': 'Up',
-    '>': 'Down'
+    '>': 'Down',
+    x: 'Examine'
 });
 
 function toggleDoor(entity) {
@@ -81,6 +83,10 @@ function maybeDown(entity) {
     return action;
 }
 
+async function examine(entity) {
+
+}
+
 export const ControlTable = makeTable(ControlTypes, {
     West:       (entity) => { return new Actions.Walk(entity, Direction.West) },
     South:      (entity) => { return new Actions.Walk(entity, Direction.South) },
@@ -94,7 +100,8 @@ export const ControlTable = makeTable(ControlTypes, {
     Fire:       useAbility,
     Wait:       (entity) => { return new Actions.Wait(entity) },
     Up:         maybeUp,
-    Down:       maybeDown
+    Down:       maybeDown,
+    Examine:    examine
 });
 
 export function controlFromChar(character) {

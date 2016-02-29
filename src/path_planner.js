@@ -1,9 +1,10 @@
 import * as Control from './control.js';
 import * as Input from './input.js';
 import {Line} from './line.js';
-import {makeTable} from './enum.js';
+import {makeEnum, makeTable} from './enum.js';
 import {Direction} from './direction.js';
 import {Tiles} from './tiles.js';
+import {Vec2} from './vec2.js';
 
 const DirectionTable = makeTable(Control.ControlTypes, {
     West:       Direction.West,
@@ -16,10 +17,17 @@ const DirectionTable = makeTable(Control.ControlTypes, {
     SouthEast:  Direction.SouthEast
 });
 
+const InputType = makeEnum([
+    'ACCEPT',
+    'CANCEL',
+    'CONTINUE'
+]);
+
 export class PathPlanner {
     constructor(ecsContext) {
         this.ecsContext = ecsContext;
         this.drawer = this.ecsContext.drawer;
+        this.coord = new Vec2(0, 0);
     }
 
     drawLine(line) {
@@ -31,55 +39,85 @@ export class PathPlanner {
             }
         }
         this.drawer.drawTileUnstored(Tiles.Target, line.endCoord.x, line.endCoord.y);
+    }
 
+    drawCoord(coord) {
+        this.drawer.redraw();
+        this.drawer.drawTileUnstored(Tiles.Target, coord.x, coord.y);
     }
 }
 
-PathPlanner.prototype.getLine = async function(entity) {
-    var start = entity.cell.coord;
-    var end = start.clone();
+PathPlanner.prototype.processInput = async function(accept) {
+    var key = await Input.getNonModifierKey();
+
+    switch (key.keyCode) {
+        case Input.KEYCODE_ENTER: {
+            return InputType.ACCEPT;
+        }
+        case Input.KEYCODE_ESCAPE: {
+            return InputType.CANCEL;
+        }
+        default: {
+            var controlType = Control.controlTypeFromKey(key);
+            if (controlType === accept) {
+                return InputType.ACCEPT;
+            }
+            if (controlType === null) {
+                return InputType.CONTINUE;
+            }
+
+            var direction = DirectionTable[controlType];
+            if (direction === undefined) {
+                return InputType.CONTINUE;
+            }
+
+            var next = this.coord.add(direction.vector);
+            if (this.drawer.grid.isValid(next)) {
+                this.coord = next;
+            }
+            return InputType.CONTINUE;
+        }
+    }
+
+}
+
+PathPlanner.prototype.getCoord = async function(start, accept) {
+    this.coord = start;
 
     while (true) {
 
-        var line = new Line(start, end);
-        this.drawLine(line);
+        this.drawCoord(coord);
 
-        var key = await Input.getNonModifierKey();
+        var input = await this.processInput(accept);
 
-        switch (key.keyCode) {
-            case Input.KEYCODE_ENTER: {
+        switch (input) {
+            case InputType.ACCEPT:
                 this.drawer.redraw();
-                return line;
-            }
-            case Input.KEYCODE_ESCAPE: {
+                return this.coord;
+            case InputType.CANCEL:
                 this.drawer.redraw();
                 return null;
-            }
-            default: {
-                var controlType = Control.controlTypeFromKey(key);
-                switch (controlType) {
-                    case Control.ControlTypes.Fire:
-                        this.drawer.redraw();
-                        return line;
-                    default: {
-                        if (controlType === null) {
-                            continue;
-                        }
+        }
+    }
+}
 
-                        var direction = DirectionTable[controlType];
-                        if (direction === undefined) {
-                            continue;
-                        }
+PathPlanner.prototype.getLine = async function(start, accept) {
+    this.coord = start;
 
-                        var next = end.add(direction.vector);
-                        if (this.drawer.grid.isValid(next)) {
-                            end = next;
-                        }
-                        break;
-                    }
-                }
+    while (true) {
 
-           }
+        var line = new Line(start, this.coord);
+        this.drawLine(line);
+
+        var input = await this.processInput(accept);
+
+        switch (input) {
+            case InputType.ACCEPT:
+                this.drawer.redraw();
+                return line;
+            case InputType.CANCEL:
+                this.drawer.redraw();
+                return null;
         }
     }
 }
