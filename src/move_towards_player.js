@@ -96,18 +96,13 @@ export class MoveTowardsPlayer extends Controller {
     }
 
     getPlayerCell() {
+        let actualPlayerCell = this.entity.ecsContext.playerCharacter.cell;
         let grid = this.getKnowledgeGrid();
-        let remembered = null;
-        for (let cell of grid) {
-            if (cell.has(Components.PlayerCharacter)) {
-                if (cell.visible) {
-                    return cell;
-                }
-                remembered = cell;
-            }
+        let knowledgeCell = grid.get(actualPlayerCell.coord);
+        if (knowledgeCell.visible) {
+            return knowledgeCell;
         }
-
-        return remembered;
+        return null;
     }
 
     getAction() {
