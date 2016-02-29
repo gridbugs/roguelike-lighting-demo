@@ -20,7 +20,8 @@ export const ControlTypes = makeEnum([
     'Wait',
     'Up',
     'Down',
-    'Examine'
+    'Examine',
+    'Help'
 ], true);
 
 export const ControlKeys = substituteValues(ControlTypes, {
@@ -37,7 +38,8 @@ export const ControlKeys = substituteValues(ControlTypes, {
     '.': 'Wait',
     '<': 'Up',
     '>': 'Down',
-    x: 'Examine'
+    x: 'Examine',
+    '?': 'Help'
 });
 
 function toggleDoor(entity) {
@@ -112,11 +114,37 @@ async function examine(entity) {
             if (text !== null) {
                 hud.overlay = text;
                 hud.showOverlay();
-                await Input.getKey();
+                await Input.getNonModifierKey();
                 hud.hideOverlay();
             }
         }
     }
+    return null;
+}
+
+export async function help(entity) {
+    var hud = entity.ecsContext.hud;
+    hud.overlay = [
+        '',
+        'Press any key to start!',
+        '',
+        '',
+        'Movement: hjklyubn',
+        'Wait: .',
+        'Ascend: <',
+        'Descend: >',
+        'Fire: f, movement keys to navigate, enter to fire',
+        'Open/Close: c',
+        'Examine: x, movement keys to nagivate, enter for more details',
+        'Show this screen: ?'
+    ]
+        .map((x) => {return `<p>${x}</p>`})
+        .join('<br/>');
+
+    hud.showOverlay();
+    await Input.getNonModifierKey();
+    hud.hideOverlay();
+
     return null;
 }
 
@@ -134,7 +162,8 @@ export const ControlTable = makeTable(ControlTypes, {
     Wait:       (entity) => { return new Actions.Wait(entity) },
     Up:         maybeUp,
     Down:       maybeDown,
-    Examine:    examine
+    Examine:    examine,
+    Help:       help
 });
 
 export function controlFromChar(character) {

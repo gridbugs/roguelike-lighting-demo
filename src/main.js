@@ -10,6 +10,7 @@ import {Level} from './level.js';
 
 import {Components} from './components.js';
 
+import {help} from './control.js';
 import {getKey} from './input.js';
 import {assert} from './assert.js';
 
@@ -96,6 +97,8 @@ export async function main() {
 '%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%',
     ];
 
+    var first = true;
+
     while (true) {
         var generator = new StringTerrainGenerator(1, terrainStringArrayL1, terrainStringArrayL2);
         if (!Config.DEMO) {
@@ -103,6 +106,11 @@ export async function main() {
         }
         var firstLevel = new Level(generator);
         var playerCharacter = firstLevel.ecsContext.playerCharacter;
+
+        if (first) {
+            first = false;
+            help(playerCharacter);
+        }
 
         var currentEcsContext;
 

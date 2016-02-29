@@ -14,9 +14,11 @@ const shiftCharTable = new Array(256);
 
 charTable[188] = ',';
 charTable[190] = '.';
+charTable[191] = '/';
 
 shiftCharTable[188] = '<';
 shiftCharTable[190] = '>';
+shiftCharTable[191] = '?';
 
 export async function getKey() {
     var ret;

@@ -129,6 +129,10 @@ export class EcsContext {
         if (entity.has(Components.PlayerCharacter)) {
             this.setPlayerCharacter(entity);
         }
+
+        entity.with(Components.Observer, (observer) => {
+            observer.knowledge.maybeAddEcsContext(this);
+        });
     }
 
     removeEntity(entity) {
