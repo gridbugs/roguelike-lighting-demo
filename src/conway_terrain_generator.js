@@ -631,10 +631,13 @@ export class ConwayTerrainGenerator {
             case 2:
                 add(4, 'SpiderChild');
                 add(2, 'Mouths');
+                add(2, 'Sprite');
                 break;
             case 3:
-                add(5, 'SpiderChild');
-                add(3, 'Mouths');
+                add(2, 'SpiderChild');
+                add(2, 'Mouths');
+                add(4, 'Sprite');
+                add(2, 'Guardian');
                 break;
         }
 

@@ -76,7 +76,7 @@ export function SpiderChild(x, y) {
 }
 
 export function PyroGod(x, y) {
-    return GenericCharacter(x, y, Tiles.PyroGod, 1, 2, 2).concat([
+    return GenericCharacter(x, y, Tiles.PyroGod, 30, 2, 2).concat([
         new Components.Attack(4),
         new Components.Defense(1),
         new Components.Accuracy(100),
@@ -91,5 +91,25 @@ export function Mouths(x, y) {
         new Components.Defense(1),
         new Components.Accuracy(100),
         new Components.Dodge(10),
+    ]);
+}
+
+export function Guardian(x, y) {
+    return GenericCharacter(x, y, Tiles.Guardian, 20, 1).concat([
+        new Components.Attack(3),
+        new Components.Defense(2),
+        new Components.Accuracy(80),
+        new Components.Dodge(10),
+    ]);
+}
+
+export function Sprite(x, y) {
+    return GenericCharacter(x, y, Tiles.Sprite, 2, 1).concat([
+        new Components.Attack(2),
+        new Components.Defense(1),
+        new Components.Accuracy(80),
+        new Components.Dodge(10),
+        new Components.Burning(1, true),
+        new Components.Fireproof(),
     ]);
 }

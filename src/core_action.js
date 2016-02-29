@@ -191,7 +191,11 @@ export class CatchFire extends Action {
 
     commit(ecsContext) {
         this.entity.with(Components.Flamable, (flamable) => {
-            this.entity.add(new Components.Burning(flamable.time));
+            if (this.entity.has(Components.Burning)) {
+                this.entity.get(Components.Burning).time = flamable.time;
+            } else {
+                this.entity.add(new Components.Burning(flamable.time));
+            }
         });
     }
 }
@@ -228,10 +232,12 @@ export class Burn extends Action {
                 }
             }
 
-            burning.time = nextBurningTime;
+            if (!burning.infinite) {
+                burning.time = nextBurningTime;
+            }
 
             /* Damage burning characters */
-            if (this.entity.has(Components.Health)) {
+            if (this.entity.has(Components.Health) && !this.entity.has(Components.Fireproof)) {
                 ecsContext.scheduleImmediateAction(
                     new TakeDamage(this.entity, this.time)
                 );

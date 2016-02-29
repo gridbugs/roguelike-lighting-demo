@@ -116,9 +116,10 @@ export class Flamable extends Component {
 }
 
 export class Burning extends PassiveComponent {
-    constructor(time) {
+    constructor(time, infinite = false) {
         super();
         this.time = time;
+        this.infinite = infinite;
     }
 
     get system() {
@@ -126,14 +127,17 @@ export class Burning extends PassiveComponent {
     }
 
     clone() {
-        return new Burning(this.time);
+        return new Burning(this.time, this.infinite);
     }
 
     copyTo(dest) {
         super.copyTo(dest);
         dest.time = this.time;
+        dest.infinite = this.infinite;
     }
+}
 
+export class Fireproof extends Component {
 }
 
 export class Unfamiliar extends Component {
