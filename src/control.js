@@ -84,7 +84,40 @@ function maybeDown(entity) {
 }
 
 async function examine(entity) {
-
+    var hud = entity.ecsContext.hud;
+    var grid = entity.get(Components.Observer).knowledge.getGrid(entity.ecsContext);
+    var result = await entity.ecsContext.pathPlanner.getCoord(entity.cell.coord, ControlTypes.Examine, (coord) => {
+        var cell = grid.get(coord);
+        hud.message = "";
+        if (!cell.topEntityMemory.empty) {
+            var topEntity = cell.topEntityMemory.best;
+            topEntity.with(Components.Name, (name) => {
+                hud.message = name.value;
+            });
+        }
+    });
+    hud.message = "";
+    if (result !== null) {
+        var cell = grid.get(result);
+        if (!cell.topEntityMemory.empty) {
+            var topEntity = cell.topEntityMemory.best;
+            var text = null;
+            var description = topEntity.get(Components.Description);
+            if (description === null) {
+                var name = topEntity.get(Components.Name);
+                text = name.value;
+            } else {
+                text = description.value;
+            }
+            if (text !== null) {
+                hud.overlay = text;
+                hud.showOverlay();
+                await Input.getKey();
+                hud.hideOverlay();
+            }
+        }
+    }
+    return null;
 }
 
 export const ControlTable = makeTable(ControlTypes, {

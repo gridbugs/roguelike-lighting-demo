@@ -81,12 +81,16 @@ PathPlanner.prototype.processInput = async function(accept) {
 
 }
 
-PathPlanner.prototype.getCoord = async function(start, accept) {
+PathPlanner.prototype.getCoord = async function(start, accept, fn = null) {
     this.coord = start;
 
     while (true) {
 
-        this.drawCoord(coord);
+        if (fn !== null) {
+            fn(this.coord);
+        }
+
+        this.drawCoord(this.coord);
 
         var input = await this.processInput(accept);
 
@@ -101,12 +105,17 @@ PathPlanner.prototype.getCoord = async function(start, accept) {
     }
 }
 
-PathPlanner.prototype.getLine = async function(start, accept) {
+PathPlanner.prototype.getLine = async function(start, accept, fn = null) {
     this.coord = start;
 
     while (true) {
 
         var line = new Line(start, this.coord);
+
+        if (fn !== null) {
+            fn(line);
+        }
+
         this.drawLine(line);
 
         var input = await this.processInput(accept);

@@ -1,14 +1,15 @@
 import {Components} from './components.js';
 
 export class Hud {
-    constructor(container, ability, message, stats) {
+    constructor(container, ability, message, stats, overlay) {
         this.container = container;
         this._ability = ability;
         this._message = message;
         this._stats = stats;
 
         this._healthValue = 0;
-        this._depthValue = 0
+        this._depthValue = 0;
+        this._overlay = overlay;
     }
 
     set stats(value) {
@@ -21,6 +22,18 @@ export class Hud {
 
     set ability(value) {
         this._ability.innerHTML = value;
+    }
+
+    showOverlay() {
+        this._overlay.style.display = 'block';
+    }
+
+    hideOverlay() {
+        this._overlay.style.display = 'none';
+    }
+
+    set overlay(value) {
+        this._overlay.innerHTML = value;
     }
 
     update(entity) {

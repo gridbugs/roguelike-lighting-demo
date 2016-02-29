@@ -115,7 +115,7 @@ export async function main() {
             }
             if (currentEcsContext.victory) {
                 currentEcsContext.updatePlayer();
-                currentEcsContext.hud.message = "The fallen Pyrogod was defeated";
+                currentEcsContext.hud.message = "The fallen Pyro God was defeated.";
                 break;
             }
             await currentEcsContext.progressSchedule();

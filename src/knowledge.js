@@ -23,7 +23,9 @@ class EntityMemory extends InvalidatingComponentTable {
                 Components.Burning,
                 Components.Health,
                 Components.MaxHealth,
-                Components.Door
+                Components.Door,
+                Components.Name,
+                Components.Description
             ];
         }
     }

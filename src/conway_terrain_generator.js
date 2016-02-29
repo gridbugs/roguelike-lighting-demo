@@ -611,6 +611,9 @@ export class ConwayTerrainGenerator {
                     playerCharacter.cell.coord.getDistance(cell.coord) < 10) {
                     continue;
                 }
+                if (cell.type === CellType.Door) {
+                    continue;
+                }
                 candidates.push(cell);
             }
         }

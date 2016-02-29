@@ -242,3 +242,6 @@ export class WinOnDeath extends Component {
 }
 
 export class WalkTime extends ValueComponent {}
+
+export class Name extends ValueComponent {}
+export class Description extends ValueComponent {}

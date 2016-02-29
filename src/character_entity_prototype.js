@@ -45,7 +45,9 @@ export function PlayerCharacter(x, y) {
         new Components.Dodge(10),
         new Components.Unfamiliar(),
         new Components.CurrentAbility(Abilities.FireBall),
-        new Components.UpgradesOnDescent(computeUpgrade, 1)
+        new Components.UpgradesOnDescent(computeUpgrade, 1),
+        new Components.Name("You"),
+        new Components.Description("You. A faithful servant of the Pyro God. You returned to the former home of your ancestors in search of his ancient cathedral, only to find the city in ruins.")
     ];
 }
 
@@ -72,6 +74,8 @@ export function SpiderChild(x, y) {
         new Components.Defense(1),
         new Components.Accuracy(80),
         new Components.Dodge(20),
+        new Components.Name("Spider Child"),
+        new Components.Description("A small human child, except it has eight legs, and twelve eyes. Small and fast, but not too tough.")
     ]);
 }
 
@@ -81,7 +85,9 @@ export function PyroGod(x, y) {
         new Components.Defense(1),
         new Components.Accuracy(100),
         new Components.Dodge(10),
-        new Components.WinOnDeath()
+        new Components.WinOnDeath(),
+        new Components.Name("Pyro God"),
+        new Components.Description("Finally you've found the one you seek. He looks...different from the statues. What's wrong with him?")
     ]);
 }
 
@@ -91,6 +97,8 @@ export function Mouths(x, y) {
         new Components.Defense(1),
         new Components.Accuracy(100),
         new Components.Dodge(10),
+        new Components.Name("Mouthpile"),
+        new Components.Description("This creature is mostly mouths. It looks like it could do some real damage if it got close enough.")
     ]);
 }
 
@@ -100,6 +108,8 @@ export function Guardian(x, y) {
         new Components.Defense(2),
         new Components.Accuracy(80),
         new Components.Dodge(10),
+        new Components.Name("Cathedral Guardian"),
+        new Components.Description("The most human-looking being you've encountered so far, despite its enormous size and glowing, red eyes.")
     ]);
 }
 
@@ -111,5 +121,7 @@ export function Sprite(x, y) {
         new Components.Dodge(10),
         new Components.Burning(1, true),
         new Components.Fireproof(),
+        new Components.Name("Sprite"),
+        new Components.Description("A creature made of fire. Or perhaps it's just on fire.")
     ]);
 }
