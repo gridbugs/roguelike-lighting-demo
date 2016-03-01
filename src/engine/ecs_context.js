@@ -6,40 +6,16 @@ import {ComponentCountingEntitySet} from 'engine/entity_set';
 import {Config} from 'config';
 import {assert} from 'utils/assert';
 
-import {GlobalDrawer} from 'global_drawer';
-import {GlobalHud} from 'global_hud';
-
-import {Components} from 'components';
+import {TurnTaker, PlayerCharacter} from 'engine/engine_components';
 
 import {Schedule} from 'engine/schedule';
-import {Collision} from 'systems/collision';
-import {Combat} from 'systems/combat';
-import {Observation} from 'systems/observation';
-import {KnowledgeRenderer} from 'systems/knowledge_renderer';
-import {PathPlanner} from 'path_planner';
-import {Fire} from 'systems/fire';
-import {Healing} from 'systems/healing';
-import {UpgradeOnDescent} from 'systems/upgrade_on_descent';
-import {Winning} from 'systems/winning';
 
 import {msDelay} from 'utils/time';
 
-class SpacialHashCell extends Cell {
+export class SpacialHashCell extends Cell {
     constructor(x, y, grid) {
         super(x, y, grid);
         this.entities = new ComponentCountingEntitySet();
-        this.opacity = 0;
-
-        this.recompute();
-    }
-
-    recompute() {
-        this.opacity = 0;
-        for (let entity of this) {
-            entity.with(Components.Opacity, (opacity) => {
-                this.opacity += opacity.value;
-            });
-        }
     }
 
     has(component) {
@@ -73,163 +49,128 @@ class SpacialHashCell extends Cell {
     }
 }
 
-class SpacialHash extends CellGrid(SpacialHashCell) {}
+export function EcsContext(CellType) {
+    class SpacialHash extends CellGrid(CellType) {}
 
-var instanceCount = 0;
+    let instanceCount = 0;
 
-export class EcsContext {
-    constructor(level) {
-        this.level = level;
-        this.entities = new Set();
-        this.width = Config.GRID_WIDTH;
-        this.height = Config.GRID_HEIGHT;
-        this.spacialHash = new SpacialHash(this.width, this.height);
+    class EcsContextInstance {
+        constructor(level) {
+            this.level = level;
+            this.entities = new Set();
+            this.width = Config.GRID_WIDTH;
+            this.height = Config.GRID_HEIGHT;
+            this.spacialHash = new SpacialHash(this.width, this.height);
 
-        this.initSystems();
+            this.initSystems();
 
-        this.id = instanceCount;
-        ++instanceCount;
+            this.id = instanceCount;
+            ++instanceCount;
 
-        this.playerCharacter = null;
-
-        this.victory = false;
-    }
-
-    initSystems() {
-        this.drawer = GlobalDrawer.Drawer;
-        this.hud = GlobalHud.Hud;
-
-        this.schedule = new Schedule();
-        this.pathPlanner = new PathPlanner(this);
-        this.collision = new Collision(this);
-        this.combat = new Combat(this);
-        this.observation = new Observation(this);
-        this.knowledgeRenderer = new KnowledgeRenderer(this, this.drawer);
-        this.fire = new Fire(this);
-        this.healing = new Healing(this);
-        this.upgradeOnDescent = new UpgradeOnDescent(this);
-        this.winning = new Winning(this);
-    }
-
-    setPlayerCharacter(playerCharacter) {
-        this.playerCharacter = playerCharacter;
-    }
-
-    emplaceEntity(components = []) {
-        let entity = new Entity(components);
-        this.addEntity(entity);
-        return entity;
-    }
-
-    addEntity(entity) {
-        assert(entity.ecsContext === null);
-        this.entities.add(entity);
-        entity.onAdd(this);
-
-        if (entity.has(Components.PlayerCharacter)) {
-            this.setPlayerCharacter(entity);
+            this.playerCharacter = null;
         }
 
-        entity.with(Components.Observer, (observer) => {
-            observer.knowledge.maybeAddEcsContext(this);
-        });
-    }
+        initSystems() {
+            this.schedule = new Schedule();
+        }
 
-    removeEntity(entity) {
-        assert(entity.ecsContext === this);
-        this.entities.delete(entity);
-        entity.onRemove(this);
-    }
+        emplaceEntity(components = []) {
+            let entity = new Entity(components);
+            this.addEntity(entity);
+            return entity;
+        }
 
-    get turn() {
-        return this.schedule.sequenceNumber;
-    }
+        addEntity(entity) {
+            assert(entity.ecsContext === null);
+            this.entities.add(entity);
+            entity.onAdd(this);
 
-    maybeApplyAction(action) {
+            if (entity.has(PlayerCharacter)) {
+                this.playerCharacter = entity;
+            }
+        }
 
-        this.runReactiveSystems(action);
+        removeEntity(entity) {
+            assert(entity.ecsContext === this);
+            this.entities.delete(entity);
+            entity.onRemove(this);
+        }
 
-        if (action.success) {
-            action.commit(this);
-            return true;
-        } else {
-            return false;
+        get turn() {
+            return this.schedule.sequenceNumber;
+        }
+
+        maybeApplyAction(action) {
+
+            this.runReactiveSystems(action);
+
+            if (action.success) {
+                action.commit(this);
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        updatePlayer() {}
+
+        scheduleImmediateAction(action, relativeTime = 0) {
+            this.schedule.scheduleTask(async () => {
+                if (relativeTime > 0) {
+                    this.updatePlayer();
+                    await msDelay(relativeTime);
+                }
+                this.maybeApplyAction(action);
+            }, relativeTime, /* immediate */ true);
+        }
+
+        runReactiveSystems(action) {}
+
+        runContinuousSystems(timeDelta) {}
+
+        beforeTurn(entity) {}
+
+        scheduleTurn(entity, relativeTime) {
+            assert(entity.is(TurnTaker));
+            let task = this.schedule.scheduleTask(async () => {
+                if (!entity.is(TurnTaker)) {
+                    return;
+                }
+
+                var turnTaker = entity.get(TurnTaker);
+
+                assert(turnTaker.nextTurn !== null);
+                turnTaker.nextTurn = null;
+
+                await this.takeTurn(entity);
+            }, relativeTime);
+
+            entity.get(TurnTaker).nextTurn = task;
         }
     }
 
-    updatePlayer() {
-        this.observation.run(this.playerCharacter);
-        this.knowledgeRenderer.run(this.playerCharacter);
-        this.hud.update(this.playerCharacter);
+    EcsContextInstance.prototype.takeTurn = async function(entity) {
+
+        this.beforeTurn(entity);
+
+        var turn = await entity.get(TurnTaker).takeTurn();
+
+        this.maybeApplyAction(turn.action);
+
+        if (entity.is(PlayerCharacter)) {
+            await msDelay(1);
+        }
+
+        if (turn.reschedule) {
+            this.scheduleTurn(entity, turn.time);
+        }
+
+        this.runContinuousSystems(this.schedule.timeDelta);
     }
 
-    scheduleImmediateAction(action, relativeTime = 0) {
-        this.schedule.scheduleTask(async () => {
-            if (relativeTime > 0) {
-                this.updatePlayer();
-                await msDelay(relativeTime);
-            }
-            this.maybeApplyAction(action);
-        }, relativeTime, /* immediate */ true);
+    EcsContextInstance.prototype.progressSchedule = async function() {
+        await this.schedule.pop().task();
     }
 
-    runReactiveSystems(action) {
-        this.collision.run(action);
-        this.combat.run(action);
-        this.fire.run(action);
-        this.upgradeOnDescent.run(action);
-        this.winning.run(action);
-    }
-
-    runContinuousSystems(timeDelta) {
-        this.fire.progress(timeDelta);
-        this.healing.progress(timeDelta);
-    }
-
-    scheduleTurn(entity, relativeTime) {
-        assert(entity.is(Components.TurnTaker));
-        let task = this.schedule.scheduleTask(async () => {
-            if (!entity.is(Components.TurnTaker)) {
-                return;
-            }
-
-            var turnTaker = entity.get(Components.TurnTaker);
-
-            assert(turnTaker.nextTurn !== null);
-            turnTaker.nextTurn = null;
-
-            await this.takeTurn(entity);
-        }, relativeTime);
-
-        entity.get(Components.TurnTaker).nextTurn = task;
-    }
-}
-
-EcsContext.prototype.takeTurn = async function(entity) {
-    if (entity.is(Components.Observer)) {
-        this.observation.run(entity);
-    }
-
-    if (entity.is(Components.PlayerCharacter)) {
-        this.knowledgeRenderer.run(entity);
-        this.hud.update(entity);
-    }
-
-    var turn = await entity.get(Components.TurnTaker).takeTurn();
-
-    this.maybeApplyAction(turn.action);
-
-    if (entity.is(Components.PlayerCharacter)) {
-        await msDelay(1);
-    }
-
-    if (turn.reschedule) {
-        this.scheduleTurn(entity, turn.time);
-    }
-
-    this.runContinuousSystems(this.schedule.timeDelta);
-}
-
-EcsContext.prototype.progressSchedule = async function() {
-    await this.schedule.pop().task();
+    return EcsContextInstance;
 }

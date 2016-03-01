@@ -1,9 +1,7 @@
-import {EcsContext} from 'engine/ecs_context';
-
 export class Level {
     constructor(generator) {
         this.generator = generator;
-        this._ecsContext = new EcsContext(this);
+        this._ecsContext = new Level.EcsContext(this);
         this.generated = false;
     }
 
@@ -25,3 +23,4 @@ export class Level {
         return this._ecsContext;
     }
 }
+Level.EcsContext = null;

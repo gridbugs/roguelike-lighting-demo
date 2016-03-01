@@ -68,9 +68,6 @@ export class Observer extends Component {
     }
 }
 
-export class PlayerCharacter extends Component {
-}
-
 export class Projectile extends Component {
 }
 

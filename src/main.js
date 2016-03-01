@@ -6,7 +6,9 @@ import {initGlobals} from 'globals';
 
 import {StringTerrainGenerator} from 'string_terrain_generator';
 import {ConwayTerrainGenerator} from 'conway_terrain_generator';
+
 import {Level} from 'engine/level';
+import {GameContext} from 'game_context';
 
 import {Components} from 'components';
 
@@ -98,6 +100,7 @@ export async function main() {
     ];
 
     var first = true;
+    Level.EcsContext = GameContext;
 
     while (true) {
         var generator = new StringTerrainGenerator(1, terrainStringArrayL1, terrainStringArrayL2);
@@ -113,7 +116,6 @@ export async function main() {
         }
 
         var currentEcsContext;
-
         while (true) {
             currentEcsContext = playerCharacter.ecsContext;
             if (playerCharacter.get(Components.Health).value <= 0) {
