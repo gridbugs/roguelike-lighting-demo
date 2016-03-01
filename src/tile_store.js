@@ -1,5 +1,5 @@
-import {Transparent} from './colour.js';
-import {Config} from './config.js';
+import {Transparent} from 'utils/colour.js';
+import {Config} from 'config.js';
 
 const CANVAS_WIDTH = 1000;
 const CANVAS_HEIGHT = 1000;

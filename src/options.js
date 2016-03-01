@@ -1,4 +1,4 @@
-import {Config} from './config.js';
+import {Config} from 'config.js';
 
 export function initConfigFromUrl() {
     let pairs = window.location.search.split(/[?&\/]/).filter((str) => {return str.length > 0});

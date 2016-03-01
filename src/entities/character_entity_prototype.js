@@ -1,17 +1,17 @@
-import {Config} from './config.js';
+import {Config} from 'config.js';
 
-import {Components} from './components.js';
-import {Tiles} from './tiles.js';
+import {Components} from 'components.js';
+import {Tiles} from 'tiles.js';
 
-import * as Shadowcast from './shadowcast.js';
-import * as Omniscient from './omniscient.js';
+import * as Shadowcast from 'shadowcast.js';
+import * as Omniscient from 'omniscient.js';
 
-import * as Abilities from './abilities.js';
+import * as Abilities from 'abilities.js';
 
-import {PlayerTurnTaker} from './player_control.js';
-import {MoveTowardsPlayer} from './move_towards_player.js';
+import {PlayerTurnTaker} from 'player_control.js';
+import {MoveTowardsPlayer} from 'move_towards_player.js';
 
-import {makeEnum} from './enum.js';
+import {makeEnum} from 'utils/enum.js';
 
 export const CombatGroups = makeEnum([
     'Friendly',

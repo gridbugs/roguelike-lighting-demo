@@ -1,5 +1,5 @@
-import {Component} from './component.js';
-import {Components} from './components.js';
+import {Component} from 'engine/component.js';
+import {Components} from 'components.js';
 
 export class Door extends Component {
     constructor(open, openTile, closedTile) {

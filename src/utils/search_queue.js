@@ -1,6 +1,6 @@
-import {DoublyLinkedList, Node} from './doubly_linked_list.js';
-import {ObjectPool} from './object_pool.js';
-import {assert} from './assert.js';
+import {DoublyLinkedList, Node} from 'utils/doubly_linked_list.js';
+import {ObjectPool} from 'utils/object_pool.js';
+import {assert} from 'utils/assert.js';
 
 export class SearchQueue {
     constructor() {

@@ -1,5 +1,5 @@
-import {DijkstraMap, DijkstraCell} from './dijkstra_map.js';
-import {Stack} from './stack.js';
+import {DijkstraMap, DijkstraCell} from 'utils/dijkstra_map.js';
+import {Stack} from 'utils/stack.js';
 
 const PADDING = 10;
 

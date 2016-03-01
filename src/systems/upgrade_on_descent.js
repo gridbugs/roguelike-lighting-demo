@@ -1,6 +1,6 @@
-import {ReactiveSystem} from './reactive_system.js';
-import {Actions} from './actions.js';
-import {Components} from './components.js';
+import {ReactiveSystem} from 'engine/reactive_system.js';
+import {Actions} from 'actions.js';
+import {Components} from 'components.js';
 
 export class UpgradeOnDescent extends ReactiveSystem {
     constructor(ecsContext) {

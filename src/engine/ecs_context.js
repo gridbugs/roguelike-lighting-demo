@@ -1,28 +1,28 @@
-import {Entity} from './entity.js';
+import {Entity} from 'engine/entity.js';
 
-import {CellGrid, Cell} from './cell_grid.js';
-import {ComponentCountingEntitySet} from './entity_set.js';
+import {CellGrid, Cell} from 'utils/cell_grid.js';
+import {ComponentCountingEntitySet} from 'engine/entity_set.js';
 
-import {Config} from './config.js';
-import {assert} from './assert.js';
+import {Config} from 'config.js';
+import {assert} from 'utils/assert.js';
 
-import {GlobalDrawer} from './global_drawer.js';
-import {GlobalHud} from './global_hud.js';
+import {GlobalDrawer} from 'global_drawer.js';
+import {GlobalHud} from 'global_hud.js';
 
-import {Components} from './components.js';
+import {Components} from 'components.js';
 
-import {Schedule} from './schedule.js';
-import {Collision} from './collision.js';
-import {Combat} from './combat.js';
-import {Observation} from './observation.js';
-import {KnowledgeRenderer} from './knowledge_renderer.js';
-import {PathPlanner} from './path_planner.js';
-import {Fire} from './fire.js';
-import {Healing} from './healing.js';
-import {UpgradeOnDescent} from './upgrade_on_descent.js';
-import {Winning} from './winning.js';
+import {Schedule} from 'engine/schedule.js';
+import {Collision} from 'systems/collision.js';
+import {Combat} from 'systems/combat.js';
+import {Observation} from 'systems/observation.js';
+import {KnowledgeRenderer} from 'systems/knowledge_renderer.js';
+import {PathPlanner} from 'path_planner.js';
+import {Fire} from 'systems/fire.js';
+import {Healing} from 'systems/healing.js';
+import {UpgradeOnDescent} from 'systems/upgrade_on_descent.js';
+import {Winning} from 'systems/winning.js';
 
-import {msDelay} from './time.js';
+import {msDelay} from 'utils/time.js';
 
 class SpacialHashCell extends Cell {
     constructor(x, y, grid) {

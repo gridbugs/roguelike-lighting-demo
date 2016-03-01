@@ -1,4 +1,4 @@
-import {Heap} from './heap.js';
+import {Heap} from 'utils/heap.js';
 
 export class SearchPriorityQueue {
     constructor(compare) {

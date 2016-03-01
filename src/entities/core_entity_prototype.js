@@ -1,5 +1,5 @@
-import {Components} from './components.js';
-import {Tiles} from './tiles.js';
+import {Components} from 'components.js';
+import {Tiles} from 'tiles.js';
 
 export function IceWall(x, y) {
     return [

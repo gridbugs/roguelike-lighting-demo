@@ -1,4 +1,4 @@
-import {Typed} from './typed.js';
+import {Typed} from 'engine/typed.js';
 
 export class Action extends Typed {
     constructor() {

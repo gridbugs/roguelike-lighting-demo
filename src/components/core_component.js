@@ -1,7 +1,7 @@
-import {Component} from './component.js';
-import {Knowledge} from './knowledge.js';
+import {Component} from 'engine/component.js';
+import {Knowledge} from 'knowledge.js';
 
-import {Components} from './components.js';
+import {Components} from 'components.js';
 
 class ValueComponent extends Component {
     constructor(value) {

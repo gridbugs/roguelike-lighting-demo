@@ -1,17 +1,17 @@
-import {Config} from './config.js';
-import {GlobalDrawer} from './global_drawer.js';
-import {Tiles} from './tiles.js';
+import {Config} from 'config.js';
+import {GlobalDrawer} from 'global_drawer.js';
+import {Tiles} from 'tiles.js';
 
-import {Controller} from './controller.js';
+import {Controller} from 'controller.js';
 
-import {Components} from './components.js';
-import {Actions} from './actions.js';
+import {Components} from 'components.js';
+import {Actions} from 'actions.js';
 
-import {Directions} from './direction.js';
+import {Directions} from 'utils/direction.js';
 
-import {DijkstraMap, DijkstraCell} from './dijkstra_map.js';
-import {SafetyMap, SafetyCell} from './safety_map.js';
-import {assert} from './assert.js';
+import {DijkstraMap, DijkstraCell} from 'utils/dijkstra_map.js';
+import {SafetyMap, SafetyCell} from 'utils/safety_map.js';
+import {assert} from 'utils/assert.js';
 
 function treatAsSolid(knowledgeCell) {
     if (!knowledgeCell.known) {

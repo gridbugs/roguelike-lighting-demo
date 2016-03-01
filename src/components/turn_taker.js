@@ -1,4 +1,4 @@
-import {Component} from './component.js';
+import {Component} from 'engine/component.js';
 
 export class TurnTaker extends Component {
     constructor(controller) {

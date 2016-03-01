@@ -1,12 +1,12 @@
-import {Turn} from './turn.js';
-import {Action} from './action.js';
+import {Turn} from 'engine/turn.js';
+import {Action} from 'engine/action.js';
 
-import {Actions} from './actions.js';
-import {Direction} from './direction.js';
+import {Actions} from 'actions.js';
+import {Direction} from 'utils/direction.js';
 
-import * as Input from './input.js';
-import {controlFromChar} from './control.js';
-import {Controller} from './controller.js';
+import * as Input from 'utils/input.js';
+import {controlFromChar} from 'control.js';
+import {Controller} from 'controller.js';
 
 async function getControlFunction() {
     var key = await Input.getNonModifierKey();

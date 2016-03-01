@@ -1,5 +1,5 @@
-import {Drawer} from './drawer.js';
-import {Config} from './config.js';
+import {Drawer} from 'drawer.js';
+import {Config} from 'config.js';
 
 export const GlobalDrawer = {
     init() {

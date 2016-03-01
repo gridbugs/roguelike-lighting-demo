@@ -1,4 +1,4 @@
-import {Heap} from './heap.js';
+import {Heap} from 'utils/heap.js';
 
 class Task {
     constructor(task, absoluteTime, sequenceNumber, immediate) {

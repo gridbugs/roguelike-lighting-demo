@@ -1,5 +1,5 @@
-import {ComponentTable} from './component_table.js';
-import {assert} from './assert.js';
+import {ComponentTable} from 'engine/component_table.js';
+import {assert} from 'utils/assert.js';
 
 export class Entity extends ComponentTable {
     constructor(components = []) {

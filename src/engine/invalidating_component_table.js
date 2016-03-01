@@ -1,4 +1,4 @@
-import {ComponentTable} from './component_table.js';
+import {ComponentTable} from 'engine/component_table.js';
 
 /* A table of components that clones/copies from added components
  * rather than storing a reference. Removed components are invalidated

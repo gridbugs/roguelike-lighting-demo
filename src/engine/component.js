@@ -1,5 +1,5 @@
-import {Typed} from './typed.js';
-import {assert} from './assert.js';
+import {Typed} from 'engine/typed.js';
+import {assert} from 'utils/assert.js';
 
 export class Component extends Typed {
     constructor(...args) {

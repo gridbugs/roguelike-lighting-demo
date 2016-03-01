@@ -1,4 +1,4 @@
-import {EcsContext} from './ecs_context.js';
+import {EcsContext} from 'engine/ecs_context.js';
 
 export class Level {
     constructor(generator) {

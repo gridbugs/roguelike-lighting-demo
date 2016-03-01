@@ -1,10 +1,10 @@
-import {CellGrid, Cell} from './cell_grid.js';
-import {Components} from './components.js';
-import {InvalidatingComponentTable} from './invalidating_component_table';
-import {ComponentTable} from './component_table.js';
-import {ObjectPool} from './object_pool.js';
-import {BestTracker} from './best_tracker.js';
-import {getTileComponentDepth} from './tile_component.js';
+import {CellGrid, Cell} from 'utils/cell_grid.js';
+import {Components} from 'components.js';
+import {InvalidatingComponentTable} from 'invalidating_component_table';
+import {ComponentTable} from 'engine/component_table.js';
+import {ObjectPool} from 'utils/object_pool.js';
+import {BestTracker} from 'utils/best_tracker.js';
+import {getTileComponentDepth} from 'components/tile_component.js';
 
 class EntityMemory extends InvalidatingComponentTable {
     constructor(cell) {
