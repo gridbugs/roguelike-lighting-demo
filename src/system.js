@@ -1,8 +1,5 @@
-import {Typed} from './type.js';
-
-export class System extends Typed {
+export class System {
     constructor(ecsContext) {
-        super();
         this.ecsContext = ecsContext;
         this.spacialHash = this.ecsContext.spacialHash;
     }

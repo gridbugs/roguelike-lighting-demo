@@ -1,6 +1,6 @@
 import {Vec2} from './vec2.js';
 import {Direction} from './direction.js';
-import {constrain} from './arith.js';
+import {constrain} from './math.js';
 
 class StackFrame {
     constructor(minSlope, maxSlope, depth, visibility) {

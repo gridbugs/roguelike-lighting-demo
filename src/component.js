@@ -1,4 +1,4 @@
-import {Typed} from './type.js';
+import {Typed} from './typed.js';
 import {assert} from './assert.js';
 
 export class Component extends Typed {
