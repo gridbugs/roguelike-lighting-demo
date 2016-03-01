@@ -1,5 +1,5 @@
-import {Components} from 'components.js';
-import {assert} from 'utils/assert.js';
+import {Components} from 'components';
+import {assert} from 'utils/assert';
 
 /* A data structure that can store at most 1 of each
  * type of component, and retrieve components by their

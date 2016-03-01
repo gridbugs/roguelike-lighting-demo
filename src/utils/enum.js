@@ -1,4 +1,4 @@
-import {isArray} from 'utils/array_utils.js';
+import {isArray} from 'utils/array_utils';
 
 class Enumeration {
     constructor(object) {

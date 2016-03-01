@@ -1,6 +1,6 @@
-import {System} from 'engine/system.js';
+import {System} from 'engine/system';
 
-import {Components} from 'components.js';
+import {Components} from 'components';
 
 export class Observation extends System {
     constructor(ecsContext) {

@@ -1,4 +1,4 @@
-import {swapElements} from 'utils/array_utils.js';
+import {swapElements} from 'utils/array_utils';
 
 /* A binary heap
  *

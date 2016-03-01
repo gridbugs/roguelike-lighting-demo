@@ -1,6 +1,6 @@
-import {ReactiveSystem} from 'engine/reactive_system.js';
-import {Actions} from 'actions.js';
-import {Components} from 'components.js';
+import {ReactiveSystem} from 'engine/reactive_system';
+import {Actions} from 'actions';
+import {Components} from 'components';
 
 export class Winning extends ReactiveSystem {
     constructor(ecsContext) {

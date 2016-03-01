@@ -1,7 +1,7 @@
-import {Stack} from 'utils/stack.js';
-import {CellGrid, Cell} from 'utils/cell_grid.js';
-import {ObjectPool} from 'utils/object_pool.js';
-import {Vec2} from 'utils/vec2.js';
+import {Stack} from 'utils/stack';
+import {CellGrid, Cell} from 'utils/cell_grid';
+import {ObjectPool} from 'utils/object_pool';
+import {Vec2} from 'utils/vec2';
 
 const INITIAL_STACK_SIZE = 4;
 

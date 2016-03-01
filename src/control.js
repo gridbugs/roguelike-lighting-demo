@@ -1,10 +1,10 @@
-import {Actions} from 'actions.js';
-import {Direction} from 'utils/direction.js';
-import {Components} from 'components.js';
-import {EntityPrototypes} from 'entity_prototypes.js';
-import {makeEnum, substituteValues, makeTable} from 'utils/enum.js';
-import * as Input from 'utils/input.js';
-import {Turn} from 'engine/turn.js';
+import {Actions} from 'actions';
+import {Direction} from 'utils/direction';
+import {Components} from 'components';
+import {EntityPrototypes} from 'entity_prototypes';
+import {makeEnum, substituteValues, makeTable} from 'utils/enum';
+import * as Input from 'utils/input';
+import {Turn} from 'engine/turn';
 
 export const ControlTypes = makeEnum([
     'West',

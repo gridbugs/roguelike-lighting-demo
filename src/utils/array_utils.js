@@ -1,4 +1,4 @@
-import * as Random from 'utils/random.js';
+import * as Random from 'utils/random';
 
 export function isArray(obj) {
     return Object.prototype.toString.call(obj) === '[object Array]';

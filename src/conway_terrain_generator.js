@@ -1,14 +1,14 @@
-import {Config} from 'config.js';
-import {EntityPrototypes} from 'entity_prototypes.js';
-import {Components} from 'components.js';
-import {Level} from 'engine/level.js';
-import {CellGrid, Cell} from 'utils/cell_grid.js';
-import {getRandomBool, getRandomInt, getRandomIntInclusive} from 'utils/random.js';
-import {getRandomElement, shuffleInPlace, getBestIndex} from 'utils/array_utils.js';
-import {makeEnum} from 'utils/enum.js';
-import {Vec2} from 'utils/vec2.js';
-import {DijkstraMap, DijkstraCell} from 'utils/dijkstra_map.js';
-import {BestTracker} from 'utils/best_tracker.js';
+import {Config} from 'config';
+import {EntityPrototypes} from 'entity_prototypes';
+import {Components} from 'components';
+import {Level} from 'engine/level';
+import {CellGrid, Cell} from 'utils/cell_grid';
+import {getRandomBool, getRandomInt, getRandomIntInclusive} from 'utils/random';
+import {getRandomElement, shuffleInPlace, getBestIndex} from 'utils/array_utils';
+import {makeEnum} from 'utils/enum';
+import {Vec2} from 'utils/vec2';
+import {DijkstraMap, DijkstraCell} from 'utils/dijkstra_map';
+import {BestTracker} from 'utils/best_tracker';
 
 class ConwayCell extends Cell {
     constructor(x, y, grid) {

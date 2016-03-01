@@ -8,5 +8,5 @@ import $ from 'jquery';
 window.$ = $;
 
 /* Run the main function */
-import {main} from 'main.js';
+import {main} from 'main';
 $(main)

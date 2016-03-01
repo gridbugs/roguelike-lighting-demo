@@ -1,4 +1,4 @@
-import {Hud} from 'hud.js';
+import {Hud} from 'hud';
 
 export const GlobalHud = {
     init() {

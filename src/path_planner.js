@@ -1,10 +1,10 @@
-import * as Control from 'control.js';
-import * as Input from 'utils/input.js';
-import {Line} from 'utils/line.js';
-import {makeEnum, makeTable} from 'utils/enum.js';
-import {Direction} from 'utils/direction.js';
-import {Tiles} from 'tiles.js';
-import {Vec2} from 'utils/vec2.js';
+import * as Control from 'control';
+import * as Input from 'utils/input';
+import {Line} from 'utils/line';
+import {makeEnum, makeTable} from 'utils/enum';
+import {Direction} from 'utils/direction';
+import {Tiles} from 'tiles';
+import {Vec2} from 'utils/vec2';
 
 const DirectionTable = makeTable(Control.ControlTypes, {
     West:       Direction.West,

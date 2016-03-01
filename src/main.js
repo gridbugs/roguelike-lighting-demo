@@ -1,18 +1,18 @@
-import 'populate_namespaces.js';
+import 'populate_namespaces';
 
-import {initConfigFromUrl} from 'options.js';
-import {Config} from 'config.js';
-import {initGlobals} from 'globals.js';
+import {initConfigFromUrl} from 'options';
+import {Config} from 'config';
+import {initGlobals} from 'globals';
 
-import {StringTerrainGenerator} from 'string_terrain_generator.js';
-import {ConwayTerrainGenerator} from 'conway_terrain_generator.js';
-import {Level} from 'engine/level.js';
+import {StringTerrainGenerator} from 'string_terrain_generator';
+import {ConwayTerrainGenerator} from 'conway_terrain_generator';
+import {Level} from 'engine/level';
 
-import {Components} from 'components.js';
+import {Components} from 'components';
 
-import {help} from 'control.js';
-import {getKey} from 'utils/input.js';
-import {assert} from 'utils/assert.js';
+import {help} from 'control';
+import {getKey} from 'utils/input';
+import {assert} from 'utils/assert';
 
 function initRng() {
     let seed;

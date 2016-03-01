@@ -1,6 +1,6 @@
-import {Component} from 'engine/component.js';
-import {Vec2} from 'utils/vec2.js';
-import {assert} from 'utils/assert.js';
+import {Component} from 'engine/component';
+import {Vec2} from 'utils/vec2';
+import {assert} from 'utils/assert';
 
 export class Position extends Component {
     constructor(x, y) {

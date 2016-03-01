@@ -1,6 +1,6 @@
-import {EntityPrototypes} from 'entity_prototypes.js';
-import {Actions} from 'actions.js';
-import {ControlTypes} from 'control.js';
+import {EntityPrototypes} from 'entity_prototypes';
+import {Actions} from 'actions';
+import {ControlTypes} from 'control';
 
 export const FireBall = {
     name: 'Fire Ball',

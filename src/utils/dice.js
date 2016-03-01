@@ -1,4 +1,4 @@
-import {getRandomIntInclusive} from 'utils/random.js';
+import {getRandomIntInclusive} from 'utils/random';
 
 export function roll(sides = 6, count = 1) {
     let total = 0;

@@ -1,8 +1,8 @@
-import {ReactiveSystem} from 'engine/reactive_system.js';
-import {Actions} from 'actions.js';
-import {Components} from 'components.js';
+import {ReactiveSystem} from 'engine/reactive_system';
+import {Actions} from 'actions';
+import {Components} from 'components';
 
-import {getRandomIntInclusive} from 'utils/random.js';
+import {getRandomIntInclusive} from 'utils/random';
 
 function rollD100() {
     return getRandomIntInclusive(1, 100);

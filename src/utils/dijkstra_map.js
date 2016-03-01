@@ -1,8 +1,8 @@
-import {CellGrid, Cell} from 'utils/cell_grid.js';
-import {SearchPriorityQueue} from 'utils/search_priority_queue.js';
-import {Directions} from 'utils/direction.js';
-import {Tiles} from 'tiles.js';
-import {BestSet} from 'utils/best_set.js';
+import {CellGrid, Cell} from 'utils/cell_grid';
+import {SearchPriorityQueue} from 'utils/search_priority_queue';
+import {Directions} from 'utils/direction';
+import {Tiles} from 'tiles';
+import {BestSet} from 'utils/best_set';
 
 export class DijkstraCell extends Cell {
     constructor(x, y, grid) {

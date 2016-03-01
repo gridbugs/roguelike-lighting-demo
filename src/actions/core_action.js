@@ -1,7 +1,7 @@
-import {Action} from 'engine/action.js';
-import {Components} from 'components.js';
-import {EntityPrototypes} from 'entity_prototypes.js';
-import {roll} from 'utils/dice.js';
+import {Action} from 'engine/action';
+import {Components} from 'components';
+import {EntityPrototypes} from 'entity_prototypes';
+import {roll} from 'utils/dice';
 
 export class Walk extends Action {
     constructor(entity, direction) {

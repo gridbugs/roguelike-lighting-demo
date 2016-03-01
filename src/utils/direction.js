@@ -1,6 +1,6 @@
-import {Vec2} from 'utils/vec2.js';
-import {makeEnum} from 'utils/enum.js';
-import {SQRT2} from 'utils/math.js';
+import {Vec2} from 'utils/vec2';
+import {makeEnum} from 'utils/enum';
+import {SQRT2} from 'utils/math';
 
 export const DirectionType = makeEnum([
     'Cardinal',

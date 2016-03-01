@@ -1,6 +1,6 @@
-import {EntityPrototypes} from 'entity_prototypes.js';
-import {Components} from 'components.js';
-import {Level} from 'engine/level.js';
+import {EntityPrototypes} from 'entity_prototypes';
+import {Components} from 'components';
+import {Level} from 'engine/level';
 
 export class StringTerrainGenerator {
     constructor(depth, stringArray, nextStringArray = null) {

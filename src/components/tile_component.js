@@ -1,6 +1,6 @@
-import {Component} from 'engine/component.js';
-import {Components} from 'components.js';
-import {getRandomInt, getRandomIntInclusive} from 'utils/random.js';
+import {Component} from 'engine/component';
+import {Components} from 'components';
+import {getRandomInt, getRandomIntInclusive} from 'utils/random';
 
 export function getTileComponent(entity) {
     let component;

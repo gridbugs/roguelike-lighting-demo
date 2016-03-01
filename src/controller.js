@@ -1,5 +1,5 @@
-import {Turn} from 'engine/turn.js';
-import {Components} from 'components.js';
+import {Turn} from 'engine/turn';
+import {Components} from 'components';
 
 export class Controller {
     constructor() {

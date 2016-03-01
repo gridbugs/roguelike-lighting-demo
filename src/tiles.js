@@ -1,7 +1,7 @@
-import {TileStore} from 'tile_store.js';
-import {loadImage} from 'utils/image_loader.js';
-import {Transparent} from 'utils/colour.js';
-import {Config} from 'config.js';
+import {TileStore} from 'tile_store';
+import {loadImage} from 'utils/image_loader';
+import {Transparent} from 'utils/colour';
+import {Config} from 'config';
 
 export const Tiles = {};
 

@@ -1,5 +1,5 @@
-import {ComponentTable} from 'engine/component_table.js';
-import {assert} from 'utils/assert.js';
+import {ComponentTable} from 'engine/component_table';
+import {assert} from 'utils/assert';
 
 export class EntitySet {
     constructor() {
