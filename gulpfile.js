@@ -9,7 +9,7 @@ const DEFAULT_SERVER_PORT = 8000
 
 const OUTPUT_DIR = 'build'
 const SOURCE_GLOB = 'src/**/*.js'
-const SERVER_PORT = argv.port == undefined ? DEFAULT_SERVER_PORT : parseInt(argv.port)
+const SERVER_PORT = argv.port === undefined ? DEFAULT_SERVER_PORT : parseInt(argv.port)
 
 const TRACEUR_OPTS = {
     asyncFunctions: true,
@@ -52,6 +52,6 @@ gulp.task('serve', () => {
 })
 
 gulp.task('clean', () => {
-    gulp.src('build')
+    gulp.src(OUTPUT_DIR)
     .pipe(clean())
 })
