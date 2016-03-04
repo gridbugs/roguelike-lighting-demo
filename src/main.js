@@ -18,7 +18,7 @@ import {assert} from 'utils/assert';
 
 function initRng() {
     let seed;
-    if (Config.RNG_SEED == null) {
+    if (Config.RNG_SEED === null) {
         seed = Date.now();
     } else {
         seed = Config.RNG_SEED;

@@ -38,7 +38,7 @@ export class Vec2 {
         }
     }
 
-    // this + v == result
+    // this + v === result
     addInPlace(v, result) {
         result.x = this.x + v.x;
         result.y = this.y + v.y;
@@ -48,7 +48,7 @@ export class Vec2 {
         return new Vec2(this.x + v.x, this.y + v.y);
     }
 
-    // this - v == result
+    // this - v === result
     subtractInPlace(v, result) {
         result.x = this.x - v.x;
         result.y = this.y - v.y;

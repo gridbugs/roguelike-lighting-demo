@@ -10,7 +10,7 @@ export class SignedArray {
             this.positive[index - 1] = value;
         } else if (index < 0) {
             this.negative[-index - 1] = value;
-        } else { /* index == 0 */
+        } else { /* index === 0 */
             this.zero = value;
         }
     }
@@ -20,7 +20,7 @@ export class SignedArray {
             return this.positive[index - 1];
         } else if (index < 0) {
             return this.negative[-index - 1];
-        } else { /* index == 0 */
+        } else { /* index === 0 */
             return this.zero;
         }
     }

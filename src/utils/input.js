@@ -43,7 +43,7 @@ export async function getNonModifierKey() {
         key = await getKey();
         var code = key.keyCode;
 
-        if (!(code == KEYCODE_SHIFT || code == KEYCODE_CONTROL || code == KEYCODE_ALT)) {
+        if (!(code === KEYCODE_SHIFT || code === KEYCODE_CONTROL || code === KEYCODE_ALT)) {
             break;
         }
     }

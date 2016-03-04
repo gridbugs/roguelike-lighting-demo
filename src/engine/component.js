@@ -25,7 +25,7 @@ export class Component extends Typed {
     }
 
     is(ctor) {
-        return this.type == ctor.type;
+        return this.type === ctor.type;
     }
 
     onAdd(entity) {

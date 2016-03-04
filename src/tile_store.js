@@ -109,7 +109,7 @@ export class TileStore {
     }
 
     getNextOffset() {
-        if (this.column == this.maxColumns) {
+        if (this.column === this.maxColumns) {
             this.column = 0;
             ++this.row;
         }

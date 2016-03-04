@@ -16,7 +16,7 @@ export class ObjectPool {
     }
 
     allocate() {
-        if (this.index == this.numObjects) {
+        if (this.index === this.numObjects) {
             this.array[this.numObjects] = new this.Type(...this.args);
             ++this.numObjects;
         }

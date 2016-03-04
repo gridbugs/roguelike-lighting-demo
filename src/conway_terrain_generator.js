@@ -96,7 +96,7 @@ class Room extends CellGrid(RoomCell) {
 class DoorDistanceCell extends DijkstraCell {
     isEnterable() {
         let cell = this.grid.grid.get(this.coord);
-        return cell.type == CellType.NaturalFloor;
+        return cell.type === CellType.NaturalFloor;
     }
 }
 
