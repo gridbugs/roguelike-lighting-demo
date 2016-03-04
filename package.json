@@ -1,7 +1,7 @@
 {
-  "name": "glacial",
+  "name": "skeleton-crew",
   "version": "0.0.1",
-  "description": "Turn-based dungeon crawler where the player explores a city under a glacier",
+  "description": "Roguelike where you fight undead things on a spaceship",
   "author": "Stephen Sherratt",
   "license": "MIT",
   "main": "index.html",
@@ -16,16 +16,16 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/stevebob/glacial.git"
+    "url": "git+https://github.com/stevebob/skeleton-crew.git"
   },
   "bugs": {
-    "url": "https://github.com/stevebob/glacial/issues"
+    "url": "https://github.com/stevebob/skeleton-crew/issues"
   },
-  "homepage": "https://github.com/stevebob/glacial#readme",
+  "homepage": "https://github.com/stevebob/skeleton-crew#readme",
   "window": {
     "toolbar": false,
     "resizable": false,
     "width": 1024,
-    "height": 496
+    "height": 640
   }
 }

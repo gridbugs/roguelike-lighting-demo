@@ -1,5 +1,4 @@
-Glacial
-=======
+Skeleton Crew
+=============
 
-A turn-based dungeon crawler for Feb16 of [One Game a Month](http://www.onegameamonth.com) "Home".
-Implemented in ES6 with some ES7 features. Build and serve with `gulp`.
+You awake from cryosleep deep in space. The ship's computer informs you that it woke you as the rest of the crew had mysteriously died. But what's that sound from outside your room?
