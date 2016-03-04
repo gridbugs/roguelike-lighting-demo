@@ -7,7 +7,6 @@ import {Actions} from 'actions';
 /* Import names with which to populate namespaces */
 import * as EngineComponents from 'engine/engine_components';
 import * as CoreComponent from 'components/core_component';
-import * as Position from 'components/position';
 import * as Door from 'components/door';
 import * as StatComponent from 'components/stat_component';
 import * as TileComponent from 'components/tile_component';
@@ -40,5 +39,5 @@ function populateNamespace(sources, dest) {
 
 populateNamespace([StringTerrainGenerator], TerrainGenerators);
 populateNamespace([CoreEntityPrototype, CharacterEntityPrototype], EntityPrototypes);
-populateNamespace([CoreComponent, Position, Door, EngineComponents, StatComponent, TileComponent], Components);
+populateNamespace([CoreComponent, Door, EngineComponents, StatComponent, TileComponent], Components);
 populateNamespace([CoreAction], Actions);

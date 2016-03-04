@@ -18,6 +18,12 @@ export class SpacialHashCell extends Cell {
         this.entities = new ComponentCountingEntitySet();
     }
 
+    /* Cells may store precomputed amalgamations such as the opacity
+     * of the entire cell (computed from the entity of individual
+     * components). Extend this to recompute amalgamated values.
+     */
+    recompute() {}
+
     has(component) {
         return this.entities.hasComponent(component);
     }
