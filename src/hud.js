@@ -1,9 +1,9 @@
 import {Components} from 'components';
 
 export class Hud {
-    constructor(container, ability, message, stats, overlay) {
+    constructor(container, weapon, message, stats, overlay) {
         this.container = container;
-        this._ability = ability;
+        this._weapon = weapon;
         this._message = message;
         this._stats = stats;
 
@@ -20,8 +20,8 @@ export class Hud {
         this._message.innerHTML = value;
     }
 
-    set ability(value) {
-        //this._ability.innerHTML = value;
+    set weapon(value) {
+        this._weapon.innerHTML = value;
     }
 
     showOverlay() {
@@ -41,7 +41,7 @@ export class Hud {
         this._depthValue = entity.ecsContext.level.depth;
         this.stats = `LVL:${this._depthValue} HP:${this._healthValue}`;
 
-        this.ability = entity.get(Components.CurrentAbility).ability.name;
+        this.weapon = entity.get(Components.CurrentWeapon).weapon.get(Components.Name).value;
         this.message = "";
     }
 }

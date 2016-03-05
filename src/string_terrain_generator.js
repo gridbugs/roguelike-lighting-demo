@@ -86,10 +86,14 @@ export class StringTerrainGenerator {
             add('Window');
             add('Floor');
             break;
-        case '@':
-            add('PlayerCharacter');
+        case '@': {
+            let pc = add('PlayerCharacter');
+            let pistol = add('Pistol');
+            pc.get(Components.CurrentWeapon).weapon = pistol;
+            pistol.remove(Components.Position);
             add('Floor');
             break;
+        }
         }
     }
 }

@@ -140,19 +140,19 @@ export class Fireproof extends Component {
 export class Unfamiliar extends Component {
 }
 
-export class CurrentAbility extends Component {
-    constructor(ability) {
+export class CurrentWeapon extends Component {
+    constructor(weapon) {
         super();
-        this.ability = ability;
+        this.weapon = weapon;
     }
 
     clone() {
-        return new CurrentAbility(this.ability);
+        return new CurrentWeapon(this.weapon);
     }
 
     copy(dest) {
         super.copyTo(dest);
-        dest.ability = this.ability;
+        dest.weapon = this.weapon;
     }
 }
 
@@ -242,3 +242,19 @@ export class WalkTime extends ValueComponent {}
 
 export class Name extends ValueComponent {}
 export class Description extends ValueComponent {}
+
+export class Weapon extends Component {
+    constructor(weapon) {
+        super();
+        this.weapon = weapon;
+    }
+
+    clone() {
+        return new Weapon(this.weapon);
+    }
+
+    copy(dest) {
+        super.copyTo(dest);
+        dest.weapon = this.weapon;
+    }
+}

@@ -58,14 +58,9 @@ function toggleDoor(entity) {
     return null;
 }
 
-async function useAbility(entity) {
-    var ability = entity.get(Components.CurrentAbility).ability;
-    var action = await ability.use(entity);
-    if (action !== null) {
-        entity.ecsContext.scheduleImmediateAction(
-            new Actions.TakeDamage(entity, ability.cost)
-        );
-    }
+async function useWeapon(entity) {
+    var weapon = entity.get(Components.CurrentWeapon).weapon.get(Components.Weapon).weapon;
+    var action = await weapon.use(entity);
     return action;
 }
 
@@ -158,7 +153,7 @@ export const ControlTable = makeTable(ControlTypes, {
     SouthWest:  (entity) => { return new Actions.Walk(entity, Direction.SouthWest) },
     SouthEast:  (entity) => { return new Actions.Walk(entity, Direction.SouthEast) },
     CloseDoor:  toggleDoor,
-    Fire:       useAbility,
+    Fire:       useWeapon,
     Wait:       (entity) => { return new Actions.Wait(entity) },
     Up:         maybeUp,
     Down:       maybeDown,

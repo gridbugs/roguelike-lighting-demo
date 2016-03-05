@@ -1,5 +1,6 @@
 import {Components} from 'components';
 import {Tiles} from 'tiles';
+import * as Weapons from 'weapons';
 
 export function Wall(x, y) {
     return [
@@ -88,5 +89,23 @@ export function Void(x, y) {
             Stars3: 1,
         }, 0),
         new Components.Name("Nothing")
+    ];
+}
+
+export function Bullet(x, y) {
+    return [
+        new Components.Position(x, y),
+        new Components.Tile(Tiles.Bullet, 3),
+        new Components.Projectile(),
+        new Components.Name("Bullet")
+    ];
+}
+
+export function Pistol(x, y) {
+    return [
+        new Components.Position(x, y),
+        new Components.Tile(Tiles.Pistol, 2),
+        new Components.Weapon(Weapons.Pistol),
+        new Components.Name("Pistol")
     ];
 }
