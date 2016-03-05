@@ -73,7 +73,7 @@ export async function main() {
 "                   ############################",
     ];
 
-    var first = true;
+    var first = false;              // XXX set this to true to enable help screen
     Level.EcsContext = GameContext;
 
     while (true) {
@@ -83,8 +83,10 @@ export async function main() {
 
         if (first) {
             first = false;
-            help(playerCharacter);
+            await help(playerCharacter);
         }
+
+        firstLevel.ecsContext.hud.hideOverlay();
 
         var currentEcsContext;
         while (true) {
