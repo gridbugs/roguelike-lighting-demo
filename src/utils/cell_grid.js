@@ -79,12 +79,12 @@ export class Cell {
     }
 
     floodFillCompare(cell) {
-        throw Error('unimplemented');
+        return 0;
     }
 
-    *floodFill(directions = Direction.Directions) {
+    *floodFill(directions = Direction.Directions, maxDepth = -1) {
         ++this.grid._floodFillCount;
-        yield* this._floodFill(directions);
+        yield* this._floodFill(directions, maxDepth);
     }
 
     _floodFillVisit() {
@@ -96,13 +96,15 @@ export class Cell {
     }
 
 
-    *_floodFill(directions) {
+    *_floodFill(directions, maxDepth) {
         let stack = this.grid._floodFillStack;
 
         stack.clear();
 
         this._floodFillVisit();
         stack.push(this);
+
+        let checkMaxDepth = maxDepth !== -1;
 
         while (!stack.empty) {
             let cell = stack.pop();
@@ -112,6 +114,10 @@ export class Cell {
                 if (neighbour !== null &&
                     !neighbour._floodFillVisited &&
                     cell.floodFillCompare(neighbour) === 0) {
+
+                    if (checkMaxDepth && this.coord.getDistance(neighbour.coord) > maxDepth) {
+                        continue;
+                    }
 
                     neighbour._floodFillVisit();
                     stack.push(neighbour);
@@ -157,14 +163,14 @@ export function CellGrid(T) {
             }
         }
 
-        *floodFill(directions = Direction.Directions) {
+        *floodFill(directions = Direction.Directions, maxDepth = -1) {
             ++this._floodFillCount;
 
             for (let cell of this) {
                 if (cell._floodFillCount !== this._floodFillCount) {
                     /* Yield the generator so the caller can seperate
                      * different flood-filled regions */
-                    yield cell._floodFill(directions);
+                    yield cell._floodFill(direction, maxDepths);
                 }
             }
         }

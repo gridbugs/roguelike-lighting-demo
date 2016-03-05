@@ -137,10 +137,12 @@ class KnowledgeGrid extends CellGrid(KnowledgeCell) {
         this.knowledge = knowledge;
         if (knowledge.familiar) {
             for (let entity of ecsContext.entities) {
-                let knowledgeCell = this.get(entity.cell.coord);
-                if (!entity.is(Components.Unfamiliar)) {
-                    knowledgeCell.see(entity);
-                    knowledgeCell.turn = -1;
+                if (entity.cell !== null) {
+                    let knowledgeCell = this.get(entity.cell.coord);
+                    if (!entity.is(Components.Unfamiliar)) {
+                        knowledgeCell.see(entity);
+                        knowledgeCell.turn = -1;
+                    }
                 }
             }
         }

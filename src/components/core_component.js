@@ -258,3 +258,5 @@ export class Weapon extends Component {
         dest.weapon = this.weapon;
     }
 }
+
+export class Bullet extends Component {}

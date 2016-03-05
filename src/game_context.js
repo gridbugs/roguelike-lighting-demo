@@ -14,6 +14,7 @@ import {Fire} from 'systems/fire';
 import {Healing} from 'systems/healing';
 import {UpgradeOnDescent} from 'systems/upgrade_on_descent';
 import {Winning} from 'systems/winning';
+import {Bullets} from 'systems/bullets';
 
 /* Components */
 import {Components} from 'components';
@@ -56,6 +57,7 @@ export class GameContext extends EcsContext(GameCell) {
         this.healing = new Healing(this);
         this.upgradeOnDescent = new UpgradeOnDescent(this);
         this.winning = new Winning(this);
+        this.bullets = new Bullets(this);
     }
 
     runReactiveSystems(action) {
@@ -66,6 +68,7 @@ export class GameContext extends EcsContext(GameCell) {
         this.fire.run(action);
         this.upgradeOnDescent.run(action);
         this.winning.run(action);
+        this.bullets.run(action);
     }
 
     runContinuousSystems(timeDelta) {

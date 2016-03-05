@@ -11,6 +11,7 @@ Tiles.init = async function() {
 
     // characters
     this.PlayerCharacter = tileStore.allocateCharacterTile('@', '#000000');
+    this.Zombie = tileStore.allocateCharacterTile('z', '#3f3e0b');
 
     this.Unseen = tileStore.allocateCharacterTile(' ', '#000000', '#000000');
     this.Target = tileStore.allocateImageTile(await loadImage('images/target.png'), true);
@@ -28,8 +29,11 @@ Tiles.init = async function() {
     this.Stars2 = tileStore.allocateImageTile(await loadImage('images/stars-2.png'));
     this.Stars3 = tileStore.allocateImageTile(await loadImage('images/stars-2.png'));
 
-    this.Bullet = tileStore.allocateImageTile(await loadImage('images/bullet.png'), true);
     this.Pistol = tileStore.allocateImageTile(await loadImage('images/pistol.png'), true);
+    this.Shotgun = tileStore.allocateImageTile(await loadImage('images/shotgun.png'), true);
+    this.MachineGun = tileStore.allocateImageTile(await loadImage('images/machinegun.png'), true);
+
+    this.Bullet = tileStore.allocateImageTile(await loadImage('images/bullet.png'), true);
     this.Door = tileStore.allocateImageTile(await loadImage('images/door.png'), true);
     this.OpenDoor = tileStore.allocateImageTile(await loadImage('images/door-open.png'), true);
     this.DownStairs = tileStore.allocateImageTile(await loadImage('images/down-stairs.png'));

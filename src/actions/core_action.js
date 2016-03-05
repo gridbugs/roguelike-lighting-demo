@@ -57,6 +57,20 @@ export class CloseDoor extends Action {
     }
 }
 
+/* As guns can fire a bust of bullets in a single turn, there
+ * needs to be a separation between the action of firing the gun
+ * and the start of the bullets on their path.
+ */
+export class FireGun extends Action {
+    constructor(entity) {
+        super();
+        this.entity = entity;
+    }
+    commit() {
+
+    }
+}
+
 export class FireProjectile extends Action {
     constructor(entity, projectile, trajectory) {
         super();
@@ -178,7 +192,9 @@ export class Die extends Action {
     }
 
     commit(ecsContext) {
-        this.entity.get(Components.TurnTaker).nextTurn.enabled = false;
+        this.entity.with(Components.TurnTaker, (turnTaker) => {
+            turnTaker.nextTurn.enabled = false;
+        });
         ecsContext.removeEntity(this.entity);
     }
 }
@@ -341,5 +357,19 @@ export class Upgrade extends Action {
     commit() {
         this.entity.get(Components.Health).value += this.amount;
         this.entity.get(Components.UpgradesOnDescent).maxDepth = this.depth;
+    }
+}
+
+export class GetShot extends Action {
+    constructor(entity, bullet) {
+        super();
+        this.entity = entity;
+        this.bullet = bullet;
+    }
+
+    commit(ecsContext) {
+        ecsContext.scheduleImmediateAction(
+            new TakeDamage(this.entity, 2)
+        );
     }
 }

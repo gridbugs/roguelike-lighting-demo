@@ -55,7 +55,7 @@ function GenericCharacter(x, y, tile, health, walkTime, burnTime = 5, healthReco
     return [
         new Components.Position(x, y),
         new Components.Tile(tile, 3),
-        new Components.TurnTaker(new MoveTowardsPlayer()),
+//        new Components.TurnTaker(new MoveTowardsPlayer()),
         new Components.Collider(),
         new Components.Observer(Shadowcast.detectVisibleArea, 20, true),
         new Components.Health(health),
@@ -66,4 +66,15 @@ function GenericCharacter(x, y, tile, health, walkTime, burnTime = 5, healthReco
         new Components.HealthRecovery(healthRecovery),
         new Components.WalkTime(walkTime)
     ];
+}
+
+export function Zombie(x, y) {
+    return GenericCharacter(x, y, Tiles.Zombie, 5, 0.5).concat([
+        new Components.Attack(1),
+        new Components.Defense(1),
+        new Components.Accuracy(80),
+        new Components.Dodge(20),
+        new Components.Name("Undead"),
+        new Components.Description("Former member of your crew. You recognize its face.")
+    ]);
 }

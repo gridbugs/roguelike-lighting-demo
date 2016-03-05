@@ -7,6 +7,7 @@ export class Line {
         this.endCoord = endCoord;
 
         this.setLineDirection();
+        this.length = startCoord.getDistance(endCoord);
     }
 
     setLineDirection() {

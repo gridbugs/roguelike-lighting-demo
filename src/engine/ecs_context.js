@@ -97,9 +97,10 @@ export function EcsContext(CellType) {
         }
 
         removeEntity(entity) {
-            assert(entity.ecsContext === this);
-            this.entities.delete(entity);
-            entity.onRemove(this);
+            if (entity.ecsContext === this) {
+                this.entities.delete(entity);
+                entity.onRemove(this);
+            }
         }
 
         get turn() {
@@ -122,9 +123,9 @@ export function EcsContext(CellType) {
 
         scheduleImmediateAction(action, relativeTime = 0) {
             this.schedule.scheduleTask(async () => {
-                if (relativeTime > 0) {
+                if (this.schedule.immediateTimeDelta > 0) {
                     this.updatePlayer();
-                    await msDelay(relativeTime);
+                    await msDelay(this.schedule.immediateTimeDelta);
                 }
                 this.maybeApplyAction(action);
             }, relativeTime, /* immediate */ true);

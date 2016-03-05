@@ -86,9 +86,25 @@ export class StringTerrainGenerator {
             add('Window');
             add('Floor');
             break;
+        case 'z':
+            add('Zombie');
+            add('Floor');
+            break;
+        case '1':
+            add('Pistol');
+            add('Floor');
+            break;
+        case '2':
+            add('Shotgun');
+            add('Floor');
+            break;
+        case '3':
+            add('MachineGun');
+            add('Floor');
+            break;
         case '@': {
             let pc = add('PlayerCharacter');
-            let pistol = add('Pistol');
+            let pistol = add('MachineGun');
             pc.get(Components.CurrentWeapon).weapon = pistol;
             pistol.remove(Components.Position);
             add('Floor');

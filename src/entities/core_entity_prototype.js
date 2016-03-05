@@ -97,7 +97,8 @@ export function Bullet(x, y) {
         new Components.Position(x, y),
         new Components.Tile(Tiles.Bullet, 3),
         new Components.Projectile(),
-        new Components.Name("Bullet")
+        new Components.Name("Bullet"),
+        new Components.Bullet()
     ];
 }
 
@@ -105,7 +106,25 @@ export function Pistol(x, y) {
     return [
         new Components.Position(x, y),
         new Components.Tile(Tiles.Pistol, 2),
-        new Components.Weapon(Weapons.Pistol),
+        new Components.Weapon(new Weapons.Pistol()),
         new Components.Name("Pistol")
+    ];
+}
+
+export function Shotgun(x, y) {
+    return [
+        new Components.Position(x, y),
+        new Components.Tile(Tiles.Shotgun, 2),
+        new Components.Weapon(new Weapons.Shotgun()),
+        new Components.Name("Shotgun")
+    ];
+}
+
+export function MachineGun(x, y) {
+    return [
+        new Components.Position(x, y),
+        new Components.Tile(Tiles.MachineGun, 2),
+        new Components.Weapon(new Weapons.MachineGun()),
+        new Components.Name("Machine Gun")
     ];
 }

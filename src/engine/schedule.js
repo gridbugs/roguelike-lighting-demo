@@ -25,6 +25,8 @@ export class Schedule {
     constructor() {
         this.absoluteTime = 0;
         this.timeDelta = 0;
+        this.immediateAbsoluteTime = 0;
+        this.immediateTimeDelta = 0;
         this.sequenceNumber = 0;
         this.heap = new Heap(compare);
     }
@@ -36,9 +38,15 @@ export class Schedule {
     }
 
     scheduleTask(f, relativeTime, immediate = false) {
+        let absoluteTime;
+        if (immediate) {
+            absoluteTime = this.immediateAbsoluteTime;
+        } else {
+            absoluteTime = this.absoluteTime;
+        }
         let task = new Task(
             f,
-            this.absoluteTime + relativeTime,
+            absoluteTime + relativeTime,
             this.sequenceNumber,
             immediate
         );
@@ -59,10 +67,17 @@ export class Schedule {
         this.flushDisabled();
 
         var entry = this.heap.pop();
-        if (!entry.immediate) {
+
+        if (entry.immediate) {
+            this.immediateTimeDelta = entry.absoluteTime - this.immediateAbsoluteTime;
+            this.immediateAbsoluteTime = entry.absoluteTime;
+        } else {
             this.timeDelta = entry.absoluteTime - this.absoluteTime;
             this.absoluteTime = entry.absoluteTime;
+            this.immediateTimeDelta = this.timeDelta;
+            this.immediateAbsoluteTime = this.absoluteTime;
         }
+
         return entry;
     }
 
