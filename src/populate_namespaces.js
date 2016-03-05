@@ -29,8 +29,12 @@ function populateNamespace(sources, dest) {
             let exported = src[name];
 
             if (typeof exported === 'function') {
-                exported.type = count;
-                ++count;
+                if (exported.type === undefined) {
+                    exported.type = count;
+                    ++count;
+                } else {
+                    count = Math.max(count, exported.type + 1);
+                }
 
                 dest[name] = exported;
             }

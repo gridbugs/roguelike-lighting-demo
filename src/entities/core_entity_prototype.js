@@ -102,12 +102,20 @@ export function Bullet(x, y) {
     ];
 }
 
+function getWeaponInfo(name) {
+    return function(entity) {
+        let weapon = entity.get(Components.Weapon).weapon;
+        return `${name} ${weapon.ammo}/${weapon.maxAmmo}`;
+    }
+}
+
 export function Pistol(x, y) {
     return [
         new Components.Position(x, y),
         new Components.Tile(Tiles.Pistol, 2),
         new Components.Weapon(new Weapons.Pistol()),
-        new Components.Name("Pistol"),
+        new Components.Getable(),
+        new Components.Name(getWeaponInfo("Pistol")),
         new Components.Description("A pistol. Basic small armament. Simple and reliable.")
     ];
 }
@@ -117,7 +125,8 @@ export function Shotgun(x, y) {
         new Components.Position(x, y),
         new Components.Tile(Tiles.Shotgun, 2),
         new Components.Weapon(new Weapons.Shotgun()),
-        new Components.Name("Shotgun"),
+        new Components.Getable(),
+        new Components.Name(getWeaponInfo("Shotgun")),
         new Components.Description("A shotgun. Keep it handy for close encounters.")
     ];
 }
@@ -127,7 +136,8 @@ export function MachineGun(x, y) {
         new Components.Position(x, y),
         new Components.Tile(Tiles.MachineGun, 2),
         new Components.Weapon(new Weapons.MachineGun()),
-        new Components.Name("Machine Gun"),
+        new Components.Getable(),
+        new Components.Name(getWeaponInfo("Machine Gun")),
         new Components.Description("A machine gun. Good for putting holes in things.")
     ];
 }

@@ -136,6 +136,7 @@ export function EcsContext(CellType) {
         runContinuousSystems(timeDelta) {}
 
         beforeTurn(entity) {}
+        afterTurn(entity) {}
 
         scheduleTurn(entity, relativeTime) {
             assert(entity.is(TurnTaker));
@@ -173,6 +174,8 @@ export function EcsContext(CellType) {
         }
 
         this.runContinuousSystems(this.schedule.timeDelta);
+
+        this.afterTurn(entity);
     }
 
     EcsContextInstance.prototype.progressSchedule = async function() {

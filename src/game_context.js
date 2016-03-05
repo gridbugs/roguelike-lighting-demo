@@ -88,6 +88,16 @@ export class GameContext extends EcsContext(GameCell) {
         if (entity.is(Components.PlayerCharacter)) {
             this.knowledgeRenderer.run(entity);
             this.hud.update(entity);
+            this.hud.messageChanged = false;
+        }
+    }
+
+    afterTurn(entity) {
+        super.afterTurn(entity);
+        if (entity.is(Components.PlayerCharacter)) {
+            if (!this.hud.messageChanged) {
+                this.hud.message = "";
+            }
         }
     }
 

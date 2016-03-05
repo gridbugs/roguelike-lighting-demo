@@ -10,6 +10,8 @@ export class Hud {
         this._healthValue = 0;
         this._depthValue = 0;
         this._overlay = overlay;
+
+        this.messageChanged = false;
     }
 
     set stats(value) {
@@ -17,6 +19,7 @@ export class Hud {
     }
 
     set message(value) {
+        this.messageChanged = true;
         this._message.innerHTML = value;
     }
 
@@ -41,7 +44,26 @@ export class Hud {
         this._depthValue = entity.ecsContext.level.depth;
         this.stats = `LVL:${this._depthValue} HP:${this._healthValue}`;
 
-        this.weapon = entity.get(Components.CurrentWeapon).weapon.get(Components.Name).value;
-        this.message = "";
+        let weaponEntity = entity.get(Components.WeaponInventory).currentWeapon;
+        if (weaponEntity !== null) {
+            let weapon = weaponEntity.get(Components.Weapon).weapon;
+            let name = weaponEntity.get(Components.Name).value;
+            if (typeof name === 'function') {
+                this.weapon = name(weaponEntity);
+            } else {
+                this.weapon = name;
+            }
+        }
+
+        entity.cell.withEntity(Components.Getable, (item) => {
+            let name = item.get(Components.Name).value;
+            let text;
+            if (typeof name === 'function') {
+                text = name(item);
+            } else {
+                text = name;
+            }
+            this.message = `Here: ${text}`;
+        });
     }
 }

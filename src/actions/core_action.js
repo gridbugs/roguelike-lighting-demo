@@ -2,6 +2,7 @@ import {Action} from 'engine/action';
 import {Components} from 'components';
 import {EntityPrototypes} from 'entity_prototypes';
 import {roll} from 'utils/dice';
+import {AmmoReductionType} from 'weapons/guns';
 
 export class Walk extends Action {
     constructor(entity, direction) {
@@ -62,12 +63,62 @@ export class CloseDoor extends Action {
  * and the start of the bullets on their path.
  */
 export class FireGun extends Action {
-    constructor(entity) {
+    constructor(entity, weapon) {
         super();
         this.entity = entity;
+        this.weapon = weapon;
     }
-    commit() {
+    commit(ecsContext) {
 
+    }
+}
+
+/* A wrapper around FireProjectile and ReduceAmmo */
+export class FireBullet extends Action {
+    constructor(entity, weapon, trajectory) {
+        super();
+        this.entity = entity;
+        this.weapon = weapon;
+        this.trajectory = trajectory;
+    }
+
+    commit(ecsContext) {
+        if (this.weapon.ammo > 0) {
+            let projectile = this.entity.ecsContext.emplaceEntity(
+                EntityPrototypes.Bullet(this.trajectory.startCoord.x, this.trajectory.startCoord.y)
+            );
+            ecsContext.scheduleImmediateAction(
+                new FireProjectile(this.entity, projectile, this.trajectory)
+            );
+        } else {
+            ecsContext.scheduleImmediateAction(
+                new FailFireBullet(this.entity, this.weapon)
+            );
+        }
+    }
+}
+
+export class ReduceAmmo extends Action {
+    constructor(entity, weapon) {
+        super();
+        this.entity = entity;
+        this.weapon = weapon;
+    }
+
+    commit(ecsContext) {
+        this.weapon.ammo = Math.max(this.weapon.ammo - 1, 0);
+    }
+}
+
+export class FailFireBullet extends Action {
+    constructor(entity, weapon) {
+        super();
+        this.entity = entity;
+        this.weapon = weapon;
+    }
+
+    commit(ecsContext) {
+        ecsContext.hud.message = "&lt;click&gt;";
     }
 }
 
@@ -371,5 +422,68 @@ export class GetShot extends Action {
         ecsContext.scheduleImmediateAction(
             new TakeDamage(this.entity, 2)
         );
+    }
+}
+
+export class Get extends Action {
+    constructor(entity, item) {
+        super();
+        this.entity = entity;
+        this.item = item;
+    }
+
+    commit(ecsContext) {
+        let alreadyPresent = this.entity.get(Components.WeaponInventory).addWeapon(this.item);
+        if (alreadyPresent) {
+            /* Remove the weapon if we just emptied it */
+            this.item.with(Components.Weapon, (weaponComponent) => {
+                if (weaponComponent.weapon.ammo === 0) {
+                    ecsContext.removeEntity(this.item);
+                }
+            });
+        } else {
+            /* Pick up the item */
+            this.item.remove(Components.Position);
+        }
+    }
+}
+
+export class NextWeapon extends Action {
+    constructor(entity) {
+        super();
+        this.entity = entity;
+    }
+
+    commit() {
+        this.entity.with(Components.WeaponInventory, (inventory) => {
+            inventory.switchForwards();
+        });
+    }
+}
+
+export class PreviousWeapon extends Action {
+    constructor(entity) {
+        super();
+        this.entity = entity;
+    }
+
+    commit() {
+        this.entity.with(Components.WeaponInventory, (inventory) => {
+            inventory.switchBackwards();
+        });
+    }
+}
+
+export class SpecificWeapon extends Action {
+    constructor(entity, slot) {
+        super();
+        this.entity = entity;
+        this.slot = slot;
+    }
+
+    commit() {
+        this.entity.with(Components.WeaponInventory, (inventory) => {
+            inventory.switchSpecific(this.slot);
+        });
     }
 }

@@ -44,7 +44,7 @@ export function PlayerCharacter(x, y) {
         new Components.Accuracy(80),
         new Components.Dodge(10),
         new Components.Unfamiliar(),
-        new Components.CurrentWeapon(null),
+        new Components.WeaponInventory(),
         new Components.UpgradesOnDescent(computeUpgrade, 1),
         new Components.Name("You"),
         new Components.Description("You. You awoke from cryosleep in deep space. The ship's computer told you that the rest of the crew is dead.")

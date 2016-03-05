@@ -1,3 +1,4 @@
+import 'manual_types';
 import 'populate_namespaces';
 
 import {initConfigFromUrl} from 'options';

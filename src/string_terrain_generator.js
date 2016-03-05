@@ -91,22 +91,23 @@ export class StringTerrainGenerator {
             add('Floor');
             break;
         case '1':
-            add('Pistol');
+            add('Pistol').get(Components.Weapon).weapon.ammo = 20;
             add('Floor');
             break;
         case '2':
-            add('Shotgun');
+            add('Shotgun').get(Components.Weapon).weapon.ammo = 20;
             add('Floor');
             break;
         case '3':
-            add('MachineGun');
+            add('MachineGun').get(Components.Weapon).weapon.ammo = 200;
             add('Floor');
             break;
         case '@': {
             let pc = add('PlayerCharacter');
-            let pistol = add('MachineGun');
-            pc.get(Components.CurrentWeapon).weapon = pistol;
-            pistol.remove(Components.Position);
+            let gun = add('MachineGun');
+            gun.get(Components.Weapon).weapon.ammo = 40;
+            pc.get(Components.WeaponInventory).addWeapon(gun);
+            gun.remove(Components.Position);
             add('Floor');
             break;
         }

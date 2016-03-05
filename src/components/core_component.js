@@ -2,6 +2,7 @@ import {Component} from 'engine/component';
 import {Knowledge} from 'knowledge';
 
 import {Components} from 'components';
+import {Weapons} from 'weapons';
 
 class ValueComponent extends Component {
     constructor(value) {
@@ -157,7 +158,57 @@ export class CurrentWeapon extends Component {
 }
 
 export class WeaponInventory extends Component {
+    constructor() {
+        super();
+        this.slots = new Array(Weapons.length);
+        for (let i = 0; i < this.slots.length; ++i) {
+            this.slots[i] = null;
+        }
+        this.index = -1;
+    }
 
+    get currentWeapon() {
+        if (this.index === -1) {
+            return null;
+        }
+        return this.slots[this.index];
+    }
+
+    addWeapon(weaponEntity) {
+        let alreadyPresent = true;
+        let weapon = weaponEntity.get(Components.Weapon).weapon;
+        let current = this.slots[weapon.type];
+        if (current === null) {
+            this.slots[weapon.type] = weaponEntity;
+            alreadyPresent = false;
+        } else {
+            current.get(Components.Weapon).weapon.addAmmoFromWeapon(weapon);
+        }
+
+        if (this.index === -1) {
+            this.index = weapon.type;
+        }
+
+        return alreadyPresent;
+    }
+
+    switchForwards() {
+        do {
+            this.index = (this.index + 1) % this.slots.length;
+        } while (this.slots[this.index] === null);
+    }
+
+    switchBackwards() {
+        do {
+            this.index = ((this.index - 1) + this.slots.length) % this.slots.length;
+        } while (this.slots[this.index] === null);
+    }
+
+    switchSpecific(index) {
+        if (index < this.slots.length && this.slots[index] !== null) {
+            this.index = index;
+        }
+    }
 }
 
 export class DownStairs extends Component {
@@ -264,3 +315,4 @@ export class Weapon extends Component {
 }
 
 export class Bullet extends Component {}
+export class Getable extends Component {}

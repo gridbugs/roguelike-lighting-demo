@@ -17,10 +17,16 @@ export const ControlTypes = makeEnum([
     'SouthEast',
     'CloseDoor',
     'Fire',
+    'Get',
     'Wait',
     'Up',
     'Down',
     'Examine',
+    'NextWeapon',
+    'PreviousWeapon',
+    'Pistol',
+    'Shotgun',
+    'MachineGun',
     'Help'
 ], true);
 
@@ -35,6 +41,12 @@ export const ControlKeys = substituteValues(ControlTypes, {
     n: 'SouthEast',
     c: 'CloseDoor',
     f: 'Fire',
+    g: 'Get',
+    w: 'PreviousWeapon',
+    e: 'NextWeapon',
+    1: 'Pistol',
+    2: 'Shotgun',
+    3: 'MachineGun',
     '.': 'Wait',
     '<': 'Up',
     '>': 'Down',
@@ -59,7 +71,7 @@ function toggleDoor(entity) {
 }
 
 async function useWeapon(entity) {
-    var weapon = entity.get(Components.CurrentWeapon).weapon.get(Components.Weapon).weapon;
+    var weapon = entity.get(Components.WeaponInventory).currentWeapon.get(Components.Weapon).weapon;
     var action = await weapon.use(entity);
     return action;
 }
@@ -80,6 +92,14 @@ function maybeDown(entity) {
     return action;
 }
 
+function maybeGet(entity) {
+    let action = null;
+    entity.cell.withEntity(Components.Getable, (item) => {
+        action = new Turn(new Actions.Get(entity, item), 1);
+    });
+    return action;
+}
+
 async function examine(entity) {
     var hud = entity.ecsContext.hud;
     var grid = entity.get(Components.Observer).knowledge.getGrid(entity.ecsContext);
@@ -89,7 +109,11 @@ async function examine(entity) {
         if (!cell.topEntityMemory.empty) {
             var topEntity = cell.topEntityMemory.best;
             topEntity.with(Components.Name, (name) => {
-                hud.message = name.value;
+                if (typeof name.value === 'function') {
+                    hud.message = name.value(topEntity);
+                } else {
+                    hud.message = name.value;
+                }
             });
         }
     });
@@ -102,7 +126,11 @@ async function examine(entity) {
             var description = topEntity.get(Components.Description);
             if (description === null) {
                 var name = topEntity.get(Components.Name);
-                text = name.value;
+                if (typeof name.value === 'function') {
+                    text = name.value(topEntity);
+                } else {
+                    text = name.value;
+                }
             } else {
                 text = description.value;
             }
@@ -130,6 +158,7 @@ export async function help(entity) {
         'Descend: >',
         'Fire: f, movement keys to navigate, enter to fire',
         'Open/Close: c',
+        'Get Item: g',
         'Examine: x, movement keys to nagivate, enter for more details',
         'Show this screen: ?'
     ]
@@ -154,10 +183,16 @@ export const ControlTable = makeTable(ControlTypes, {
     SouthEast:  (entity) => { return new Actions.Walk(entity, Direction.SouthEast) },
     CloseDoor:  toggleDoor,
     Fire:       useWeapon,
+    Get:        maybeGet,
     Wait:       (entity) => { return new Actions.Wait(entity) },
     Up:         maybeUp,
     Down:       maybeDown,
     Examine:    examine,
+    NextWeapon: (entity) => { return new Actions.NextWeapon(entity) },
+    PreviousWeapon: (entity) => { return new Actions.PreviousWeapon(entity) },
+    Pistol: (entity) => { return new Actions.SpecificWeapon(entity, 1) },
+    Shotgun: (entity) => { return new Actions.SpecificWeapon(entity, 2) },
+    MachineGun: (entity) => { return new Actions.SpecificWeapon(entity, 3) },
     Help:       help
 });
 

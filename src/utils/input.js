@@ -7,6 +7,8 @@ export const KEYCODE_ENTER      = 13;
 
 export const KEYCODE_A          = 65;
 export const KEYCODE_Z          = KEYCODE_A + 25;
+export const KEYCODE_0          = 48;
+export const KEYCODE_9          = KEYCODE_0 + 9;
 
 /* Character Table for Non Alpha Characters */
 const charTable = new Array(256);
@@ -54,12 +56,22 @@ export function keyIsAlpha(key) {
     return key.keyCode >= KEYCODE_A && key.keyCode <= KEYCODE_Z;
 }
 
+export function keyIsDigit(key) {
+    return key.keyCode >= KEYCODE_0 && key.keyCode <= KEYCODE_9;
+}
+
 export function getCharFromKey(key) {
     var character;
     if (keyIsAlpha(key)) {
         character = String.fromCharCode(key.keyCode);
         if (!key.shiftKey) {
             character = character.toLowerCase();
+        }
+    } else if (keyIsDigit(key)) {
+        if (key.shiftKey) {
+            // TODO
+        } else {
+            character = String.fromCharCode(key.keyCode);
         }
     } else {
         if (key.shiftKey) {
