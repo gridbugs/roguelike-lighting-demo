@@ -30,7 +30,9 @@ export class Vent extends Action {
     }
 
     commit() {
-        this.position.vector = this.destination;
+        if (this.position.entity !== null) {
+            this.position.vector = this.destination;
+        }
     }
 }
 
