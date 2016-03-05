@@ -141,3 +141,14 @@ export function MachineGun(x, y) {
         new Components.Description("A machine gun. Good for putting holes in things.")
     ];
 }
+
+export function Flamethrower(x, y) {
+    return [
+        new Components.Position(x, y),
+        new Components.Tile(Tiles.MachineGun, 2),
+        new Components.Weapon(new Weapons.Flamethrower()),
+        new Components.Getable(),
+        new Components.Name(getWeaponInfo("Flamethrower"), "Flamethrower"),
+        new Components.Description("A flamethrower. Considered a safe weapon for use on a ship as it can't damage the hull, but requires oxygen to function.")
+    ];
+}

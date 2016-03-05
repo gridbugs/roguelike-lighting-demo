@@ -58,6 +58,41 @@ export class CloseDoor extends Action {
     }
 }
 
+export class FireFlamethrower extends Action {
+    constructor(entity, weapon) {
+        super();
+        this.entity = entity;
+        this.weapon = weapon;
+    }
+    commit(ecsContext) {
+
+    }
+}
+
+export class FireFlame extends Action {
+    constructor(entity, weapon, trajectory) {
+        super();
+        this.entity = entity;
+        this.weapon = weapon;
+        this.trajectory = trajectory;
+    }
+
+    commit(ecsContext) {
+        if (this.weapon.ammo > 0) {
+            let projectile = this.entity.ecsContext.emplaceEntity(
+                EntityPrototypes.Fireball(this.trajectory.startCoord.x, this.trajectory.startCoord.y)
+            );
+            ecsContext.scheduleImmediateAction(
+                new FireProjectile(this.entity, projectile, this.trajectory)
+            );
+        } else {
+            ecsContext.scheduleImmediateAction(
+                new FailFire(this.entity, this.weapon)
+            );
+        }
+    }
+}
+
 /* As guns can fire a bust of bullets in a single turn, there
  * needs to be a separation between the action of firing the gun
  * and the start of the bullets on their path.
@@ -92,7 +127,7 @@ export class FireBullet extends Action {
             );
         } else {
             ecsContext.scheduleImmediateAction(
-                new FailFireBullet(this.entity, this.weapon)
+                new FailFire(this.entity, this.weapon)
             );
         }
     }
@@ -110,7 +145,7 @@ export class ReduceAmmo extends Action {
     }
 }
 
-export class FailFireBullet extends Action {
+export class FailFire extends Action {
     constructor(entity, weapon) {
         super();
         this.entity = entity;

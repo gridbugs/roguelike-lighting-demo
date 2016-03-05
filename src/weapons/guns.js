@@ -1,20 +1,12 @@
-import {EntityPrototypes} from 'entity_prototypes';
 import {Actions} from 'actions';
 
-import {ControlTypes} from 'control';
-
-import {CellGrid, Cell} from 'utils/cell_grid';
 import {Directions} from 'utils/direction';
-import {Stack} from 'utils/stack';
 import {getRandomInt} from 'utils/random';
 import {Line} from 'utils/line';
 import {makeEnum} from 'utils/enum';
 
-import {Config} from 'config';
 import {Weapon} from 'weapon';
 
-const spreadGrid = new (CellGrid(Cell))(Config.GRID_WIDTH, Config.GRID_HEIGHT);
-const spreadStack = new Stack();
 
 export const AmmoReductionType = makeEnum([
     'PerShot',
@@ -36,14 +28,14 @@ class Gun extends Weapon {
     }
 
     *trajectories(line) {
-        spreadStack.clear();
-        let startCell = spreadGrid.get(line.endCoord);
+        Weapon.SpreadStack.clear();
+        let startCell = Weapon.SpreadGrid.get(line.endCoord);
         let spreadWidth = this.bulletSpread * line.length;
         for (let cell of startCell.floodFill(Directions, spreadWidth)) {
-            spreadStack.push(cell);
+            Weapon.SpreadStack.push(cell);
         }
         for (let i = 0; i < this.burstSize; ++i) {
-            let endCoord = spreadStack.array[getRandomInt(0, spreadStack.length)];
+            let endCoord = Weapon.SpreadStack.array[getRandomInt(0, Weapon.SpreadStack.length)];
             let trajectory = new Line(line.startCoord, endCoord);
             yield trajectory;
         }
@@ -74,7 +66,8 @@ class Gun extends Weapon {
 }
 
 Gun.prototype.use = async function(entity) {
-    var line = await entity.ecsContext.pathPlanner.getLine(entity.cell.coord, ControlTypes.Fire);
+    var line = await this.getLine(entity);
+
     if (line === null) {
         return null;
     }
