@@ -4,7 +4,7 @@ export const Config = {
     GRID_WIDTH: 64,
     GRID_HEIGHT: 40,
     DEBUG: false,
-    RNG_SEED: null,
+    RNG_SEED: 1457192532778,
     OMNISCIENT: false,
     DEMO: false
 };

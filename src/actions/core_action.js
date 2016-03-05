@@ -590,6 +590,7 @@ export class OpenBreach extends Action {
     commit(ecsContext) {
         ecsContext.atmosphere.updateVenting();
         ecsContext.atmosphere.suckEntities(1);
+        ecsContext.hud.message = "HULL BREACH DETECTED!";
     }
 }
 

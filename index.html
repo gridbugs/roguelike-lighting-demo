@@ -38,18 +38,33 @@ p.font-loader {
 #canvas {
     position: absolute;
     left: 0px;
-    top: 0px;
+    top: 16px;
 }
 #hud {
     position: absolute;
     font-family: IBM-BIOS;
     width: 1024px;
-    height: 16px;
-    top: 640px;
+    height: 672px;
+    top: 0px;
     left: 0px;
-    background-color: #000000;
     color: #ffffff;
     display: none;
+}
+#top-hud {
+    position: absolute;
+    top: 0px;
+    height: 16px;
+    left: 0px;
+    right: 0px;
+    background-color: #000000;
+}
+#bottom-hud {
+    position: absolute;
+    top: 656px;
+    right: 0px;
+    left: 0px;
+    height: 16px;
+    background-color: #000000;
 }
 #stats {
     position: absolute;
@@ -63,7 +78,7 @@ p.font-loader {
 }
 #message {
     position: absolute;
-    left: 342px;
+    left: 0px;
     text-align: left;
 }
 #overlay {
@@ -83,9 +98,13 @@ p.font-loader {
     <p class='font-loader'>.</p>
     <canvas id="canvas" width=1024 height=640></canvas>
     <div id="hud">
-        <div id="weapon"></div>
-        <div id="message"></div>
-        <div id="stats"></div>
+        <div id="top-hud">
+            <div id="message"></div>
+        </div>
+        <div id="bottom-hud">
+            <div id="weapon"></div>
+            <div id="stats"></div>
+        </div>
     </div>
     <div id="overlay">
         Loading...

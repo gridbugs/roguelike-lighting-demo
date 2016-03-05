@@ -96,12 +96,12 @@ export async function main() {
             currentEcsContext = playerCharacter.ecsContext;
             if (playerCharacter.get(Components.Health).value <= 0) {
                 currentEcsContext.updatePlayer();
-                currentEcsContext.hud.message = "You died"
+                currentEcsContext.hud.message = "You died (press any key to restart)"
                 break;
             }
             if (playerCharacter.has(Components.StuckInSpace)) {
                 currentEcsContext.updatePlayer();
-                currentEcsContext.hud.message = "You drift in space forever"
+                currentEcsContext.hud.message = "You drift in space forever (press any key to restart)"
                 break;
             }
             await currentEcsContext.progressSchedule();
