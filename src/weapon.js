@@ -11,6 +11,22 @@ export class Weapon extends Typed {
         let ammoDiff = this.ammo - originalAmmo;
         weapon.ammo -= ammoDiff;
     }
+
+    getSpreadCentre(line) {
+        let cell;
+        for (let coord of line.infiniteAbsoluteCoords()) {
+            if (!Weapon.SpreadGrid.isValid(coord)) {
+                break;
+            }
+
+            cell = Weapon.SpreadGrid.get(coord);
+
+            if (coord.getDistance(line.startCoord) >= this.range) {
+                break;
+            }
+        }
+        return cell;
+    }
 }
 Weapon.prototype.getLine = async function(entity) {
     return await entity.ecsContext.pathPlanner.getLine(entity.cell.coord, ControlTypes.Fire);

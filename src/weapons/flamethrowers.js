@@ -17,18 +17,7 @@ export class Flamethrower extends Weapon {
 
     *trajectories(line) {
         Weapon.SpreadStack.clear();
-        let startCell;
-        for (let coord of line.infiniteAbsoluteCoords()) {
-            if (!Weapon.SpreadGrid.isValid(coord)) {
-                break;
-            }
-
-            startCell = Weapon.SpreadGrid.get(coord);
-
-            if (coord.getDistance(line.startCoord) >= this.range) {
-                break;
-            }
-        }
+        let startCell = this.getSpreadCentre(line);
 
         let spreadWidth = this.flameSpread * startCell.coord.getDistance(line.startCoord);
 

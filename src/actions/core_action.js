@@ -19,6 +19,20 @@ export class Walk extends Action {
     }
 }
 
+export class Knockback extends Action {
+    constructor(entity, destination) {
+        super();
+        this.entity = entity;
+        this.position = this.entity.get(Components.Position);
+        this.source = this.position.vector;
+        this.destination = destination;
+    }
+
+    commit() {
+        this.position.vector = this.destination;
+    }
+}
+
 export class Wait extends Action {
     constructor(entity) {
         super();
@@ -123,7 +137,7 @@ export class FireBullet extends Action {
                 EntityPrototypes.Bullet(this.trajectory.startCoord.x, this.trajectory.startCoord.y)
             );
             ecsContext.scheduleImmediateAction(
-                new FireProjectile(this.entity, projectile, this.trajectory)
+                new FireProjectile(this.entity, projectile, this.trajectory, false /* infinite */)
             );
         } else {
             ecsContext.scheduleImmediateAction(
@@ -158,11 +172,15 @@ export class FailFire extends Action {
 }
 
 export class FireProjectile extends Action {
-    constructor(entity, projectile, trajectory) {
+    constructor(entity, projectile, trajectory, infinite = false) {
         super();
         this.entity = entity;
         this.projectile = projectile;
-        this.trajectory = trajectory.absoluteCoords();
+        if (infinite) {
+            this.trajectory = trajectory.infiniteAbsoluteCoords();
+        } else {
+            this.trajectory = trajectory.absoluteCoords();
+        }
     }
 
     commit(ecsContext) {
@@ -216,10 +234,11 @@ export class ProjectileTerminate extends Action {
 }
 
 export class ProjectileCollide extends Action {
-    constructor(entity, contact) {
+    constructor(entity, contact, trajectory) {
         super();
         this.entity = entity;
         this.contact = contact;
+        this.trajectory = trajectory;
     }
 
     commit(ecsContext) {
@@ -447,16 +466,25 @@ export class Upgrade extends Action {
 }
 
 export class GetShot extends Action {
-    constructor(entity, bullet) {
+    constructor(entity, bullet, trajectory) {
         super();
         this.entity = entity;
         this.bullet = bullet;
+        this.trajectory = trajectory;
     }
 
     commit(ecsContext) {
         ecsContext.scheduleImmediateAction(
-            new TakeDamage(this.entity, 2)
+            new TakeDamage(this.entity, 1)
         );
+        if (this.entity.is(Components.Knockable) && roll(6) == 1) {
+            let next = this.trajectory.next();
+            if (!next.done) {
+                ecsContext.scheduleImmediateAction(
+                    new Knockback(this.entity, next.value)
+                );
+            }
+        }
     }
 }
 

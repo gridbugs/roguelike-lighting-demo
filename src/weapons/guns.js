@@ -18,12 +18,13 @@ class Gun extends Weapon {
     constructor() {
         super();
         this.ammo = 0;
+        this.range = 30;
     }
 
     *trajectories(line) {
         Weapon.SpreadStack.clear();
-        let startCell = Weapon.SpreadGrid.get(line.endCoord);
-        let spreadWidth = this.bulletSpread * line.length;
+        let startCell = this.getSpreadCentre(line);
+        let spreadWidth = this.bulletSpread * startCell.coord.getDistance(line.startCoord);
         for (let cell of startCell.floodFill(Directions, spreadWidth)) {
             Weapon.SpreadStack.push(cell);
         }

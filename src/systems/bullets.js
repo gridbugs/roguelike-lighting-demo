@@ -8,7 +8,7 @@ export class Bullets extends ReactiveSystem {
         this.on(Actions.ProjectileCollide, (action) => {
             if (action.entity.is(Components.Bullet)) {
                 this.ecsContext.scheduleImmediateAction(
-                        new Actions.GetShot(action.contact, action.entity));
+                        new Actions.GetShot(action.contact, action.entity, action.trajectory));
             }
         });
     }
