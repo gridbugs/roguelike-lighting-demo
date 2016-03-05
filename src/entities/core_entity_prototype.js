@@ -1,92 +1,40 @@
 import {Components} from 'components';
 import {Tiles} from 'tiles';
 
-export function IceWall(x, y) {
+export function Wall(x, y) {
     return [
         new Components.Position(x, y),
-        new Components.WallTile(Tiles.IceWallFront, Tiles.IceWallTop, 1),
-        new Components.Solid(),
-        new Components.Opacity(0.5),
-        new Components.Meltable(),
-        new Components.Name("Ice Wall")
-    ];
-}
-
-export function BrickWall(x, y) {
-    return [
-        new Components.Position(x, y),
-        new Components.WallTile(Tiles.BrickWallFront, Tiles.BrickWallTop, 1),
+        new Components.WallTile(Tiles.WallFront, Tiles.WallTop, 1),
         new Components.Solid(),
         new Components.Opacity(1),
-        new Components.Name("Brick Wall")
+        new Components.Name("Wall")
     ];
 }
 
-export function Tree(x, y) {
+export function Window(x, y) {
     return [
         new Components.Position(x, y),
-        new Components.Tile(Tiles.Tree, 1),
+        new Components.WallTile(Tiles.WindowFront, Tiles.WindowTop, 1),
         new Components.Solid(),
-        new Components.Opacity(0.5),
-        new Components.Flamable(5),
-        new Components.Name("Tree")
+        new Components.Name("Window")
     ];
 }
 
-export function DeadTree(x, y) {
-    return [
-        new Components.Position(x, y),
-        new Components.Tile(Tiles.DeadTree, 1),
-        new Components.Solid(),
-        new Components.Opacity(0.25),
-        new Components.Flamable(2),
-        new Components.Name("Dead Tree")
-    ];
-}
-
-export function WoodenDoor(x, y) {
+export function Door(x, y) {
     return [
         new Components.Position(x, y),
         new Components.Tile(Tiles.Door, 1),
         new Components.Door(false, Tiles.OpenDoor, Tiles.Door),
         new Components.Opacity(1),
         new Components.Solid(),
-        new Components.Flamable(4),
         new Components.Name("Door")
     ];
 }
 
-export function OpenWoodenDoor(x, y) {
+export function Floor(x, y) {
     return [
         new Components.Position(x, y),
-        new Components.Tile(Tiles.OpenDoor, 1),
-        new Components.Door(true, Tiles.OpenDoor, Tiles.Door),
-        new Components.Opacity(0),
-        new Components.Flamable(4),
-        new Components.Name("Door")
-    ];
-}
-
-export function IceFloor(x, y) {
-    return [
-        new Components.Position(x, y),
-        new Components.Tile(Tiles.IceFloor, 0),
-        new Components.Name("Floor")
-    ];
-}
-
-export function StoneFloor(x, y) {
-    return [
-        new Components.Position(x, y),
-        new Components.Tile(Tiles.StoneFloor, 0),
-        new Components.Name("Floor")
-    ];
-}
-
-export function Ground(x, y) {
-    return [
-        new Components.Position(x, y),
-        new Components.Tile(Tiles.IceFloor, 0),
+        new Components.Tile(Tiles.Floor, 0),
         new Components.Name("Floor")
     ];
 }
@@ -129,19 +77,16 @@ export function Water(x, y) {
     ];
 }
 
-export function CollapsedUpStairs(x, y) {
+export function Void(x, y) {
     return [
         new Components.Position(x, y),
-        new Components.Tile(Tiles.CollapsedUpStairs, 1),
-        new Components.Name("Collapsed Staircase")
-    ];
-}
-
-export function CathedralDownStairs(x, y) {
-    return [
-        new Components.Position(x, y),
-        new Components.Tile(Tiles.CathedralDownStairs, 1),
-        new Components.DownStairs(),
-        new Components.Name("Staircase to Cathedral")
+        new Components.RandomlyChosenTile({
+            Void: 20,
+            Stars0: 1,
+            Stars1: 1,
+            Stars2: 1,
+            Stars3: 1,
+        }, 0),
+        new Components.Name("Nothing")
     ];
 }

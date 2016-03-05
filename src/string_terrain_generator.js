@@ -1,6 +1,7 @@
 import {EntityPrototypes} from 'entity_prototypes';
 import {Components} from 'components';
 import {Level} from 'engine/level';
+import {Config} from 'config';
 
 export class StringTerrainGenerator {
     constructor(depth, stringArray, nextStringArray = null) {
@@ -23,11 +24,15 @@ export class StringTerrainGenerator {
             this.nextLevel = new Level(this.nextGenerator);
         }
 
-        for (let i = 0; i < this.stringArray.length; ++i) {
-            let string = this.stringArray[i];
-            for (let j = 0; j < string.length; ++j) {
-                let character = string[j];
-                this.addEntities(ecsContext, character, j, i);
+        for (let i = 0; i < Config.GRID_HEIGHT; ++i) {
+            for (let j = 0; j < Config.GRID_WIDTH; ++j) {
+                let ch = ' ';
+                if (this.stringArray[i]) {
+                    if (this.stringArray[i][j]) {
+                        ch = this.stringArray[i][j];
+                    }
+                }
+                this.addEntities(ecsContext, ch, j, i);
             }
         }
     }
@@ -39,19 +44,8 @@ export class StringTerrainGenerator {
         }
 
         switch (character) {
-        case '&':
-            if (Math.random() < 0.1) {
-                add('DeadTree');
-            } else {
-                add('Tree');
-            }
-            add('Ground');
-            break;
         case '.':
-            add('IceFloor');
-            break;
-        case ',':
-            add('StoneFloor');
+            add('Floor');
             break;
         case '>': {
             let stairs = add('DownStairs');
@@ -73,39 +67,28 @@ export class StringTerrainGenerator {
             break;
         }
         case '+':
-            add('WoodenDoor');
-            add('Ground');
-            break;
-        case '-':
-            add('OpenWoodenDoor');
-            add('Ground');
+            add('Door');
+            add('Floor');
             break;
         case ' ':
-            add('Ground');
-            break;
-        case '#':
-            add('IceWall');
-            add('IceFloor');
+            add('Void');
             break;
         case '~':
             add('Water');
-            add('IceFloor');
+            add('Floor');
             break;
+        case '#':
         case '%':
-            add('BrickWall');
-            add('IceFloor');
+            add('Wall');
+            add('Floor');
+            break;
+        case '=':
+            add('Window');
+            add('Floor');
             break;
         case '@':
             add('PlayerCharacter');
-            add('IceFloor');
-            break;
-        case 'c':
-            add('SpiderChild');
-            if (this.nextStringArray === null) {
-                add('StoneFloor');
-            } else {
-                add('IceFloor');
-            }
+            add('Floor');
             break;
         }
     }

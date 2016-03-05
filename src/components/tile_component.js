@@ -1,6 +1,7 @@
 import {Component} from 'engine/component';
 import {Components} from 'components';
 import {getRandomInt, getRandomIntInclusive} from 'utils/random';
+import {Tiles} from 'tiles';
 
 export function getTileComponent(entity) {
     let component;
@@ -13,6 +14,10 @@ export function getTileComponent(entity) {
         return component;
     }
     component = entity.get(Components.RandomlyAnimatedTile);
+    if (component !== null) {
+        return component;
+    }
+    component = entity.get(Components.RandomlyChosenTile);
     if (component !== null) {
         return component;
     }
@@ -61,6 +66,39 @@ export class WallTile extends Component {
         super.copyTo(dest);
         dest.frontTile = this.frontTile;
         dest.topTile = this.topTile;
+        dest.depth = this.depth;
+    }
+}
+
+export class RandomlyChosenTile extends Component {
+    constructor(probabilities, depth) {
+        super();
+        this.depth = depth;
+        if (probabilities.constructor === Object) {
+            let total = 0;
+            for (let tileName in probabilities) {
+                let probability = probabilities[tileName];
+                total += probability;
+                probabilities[tileName] = total;
+            }
+            let rand = Math.random() * total;
+            for (let tileName in probabilities) {
+                if (rand < probabilities[tileName]){
+                    this.tile = Tiles[tileName];
+                    break;
+                }
+            }
+        } else {
+            this.tile = probabilities;
+        }
+    }
+
+    clone() {
+        return new RandomlyChosenTile(this.tile, this.depth);
+    }
+
+    copypTo(dest) {
+        dest.tile = this.tile;
         dest.depth = this.depth;
     }
 }

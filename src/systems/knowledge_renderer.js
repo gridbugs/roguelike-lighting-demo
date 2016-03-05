@@ -40,6 +40,9 @@ export class KnowledgeRenderer extends System {
             }
             return tileComponent.tile;
         }
+        if (entity.has(Components.RandomlyChosenTile)) {
+            return entity.get(Components.RandomlyChosenTile).tile;
+        }
         throw Error('no entity with tile');
     }
 

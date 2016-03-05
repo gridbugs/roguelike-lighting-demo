@@ -21,7 +21,7 @@ export class Hud {
     }
 
     set ability(value) {
-        this._ability.innerHTML = value;
+        //this._ability.innerHTML = value;
     }
 
     showOverlay() {
@@ -39,7 +39,7 @@ export class Hud {
     update(entity) {
         this._healthValue = entity.get(Components.Health).value;
         this._depthValue = entity.ecsContext.level.depth;
-        this.stats = `DLVL:${this._depthValue} HP:${this._healthValue}`;
+        this.stats = `LVL:${this._depthValue} HP:${this._healthValue}`;
 
         this.ability = entity.get(Components.CurrentAbility).ability.name;
         this.message = "";

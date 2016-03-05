@@ -18,6 +18,7 @@ class EntityMemory extends InvalidatingComponentTable {
                 Components.Tile,
                 Components.WallTile,
                 Components.RandomlyAnimatedTile,
+                Components.RandomlyChosenTile,
                 Components.Solid,
                 Components.PlayerCharacter,
                 Components.Burning,

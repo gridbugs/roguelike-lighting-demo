@@ -10,7 +10,7 @@ Tiles.init = async function() {
     const tileStore = new TileStore(Config.TILE_WIDTH, Config.TILE_HEIGHT);
 
     // characters
-    this.PlayerCharacter = tileStore.allocateCharacterTile('@', '#ffffff');
+    this.PlayerCharacter = tileStore.allocateCharacterTile('@', '#000000');
     this.SpiderChild = tileStore.allocateCharacterTile('c', '#95b9c7');
     this.PyroGod = tileStore.allocateCharacterTile('G', '#ff2200');
     this.Mouths = tileStore.allocateCharacterTile('m', '#880000');
@@ -24,45 +24,27 @@ Tiles.init = async function() {
     this.Target = tileStore.allocateImageTile(await loadImage('images/target.png'), true);
     this.Path = tileStore.allocateImageTile(await loadImage('images/path.png'), true);
 
-    if (Config.ASCII) {
-        this.IceWallFront = tileStore.allocateCharacterTile('#', '#4491cd', '#000000');
-        this.IceWallTop = tileStore.allocateCharacterTile('#', '#4491cd', '#000000');
-        this.BrickWallFront = tileStore.allocateCharacterTile('#', '#888888', '#000000');
-        this.BrickWallTop = tileStore.allocateCharacterTile('#', '#888888', '#000000');
-        this.Tree = tileStore.allocateCharacterTile('&', 'green');
-        this.DeadTree = tileStore.allocateCharacterTile('&', '#774e16');
-        this.Door = tileStore.allocateCharacterTile('+', '#ffffff');
-        this.OpenDoor = tileStore.allocateCharacterTile('-', '#ffffff');
-        this.DownStairs = tileStore.allocateCharacterTile('>', '#ffffff');
-        this.UpStairs = tileStore.allocateCharacterTile('<', '#ffffff');
-        this.Fireball = tileStore.allocateCharacterTile('*', '#ff8800');
-        this.FireBackground = tileStore.allocateSquareTile('#ff8800');
-        this.WaterAnimationTiles = [
-            tileStore.allocateCharacterTile('~', '#2288cc', '#004488'),
-            tileStore.allocateCharacterTile('≈', '#2288cc', '#004488'),
-        ];
-        this.CollapsedUpStairs = tileStore.allocateCharacterTile('%', '#ffffff');
-        this.CathedralDownStairs = tileStore.allocateCharacterTile('>', '#ff8800');
-    } else {
-        this.BrickWallTop = tileStore.allocateImageTile(await loadImage('images/brick-wall-top.png'));
-        this.BrickWallFront = tileStore.allocateImageTile(await loadImage('images/brick-wall-front.png'));
-        this.IceWallTop = tileStore.allocateImageTile(await loadImage('images/ice-wall-top.png'));
-        this.IceWallFront = tileStore.allocateImageTile(await loadImage('images/ice-wall-front.png'));
-        this.Tree = tileStore.allocateImageTile(await loadImage('images/pine-tree.png'), true);
-        this.DeadTree = tileStore.allocateImageTile(await loadImage('images/dead-tree.png'), true);
-        this.Door = tileStore.allocateImageTile(await loadImage('images/door.png'), true);
-        this.OpenDoor = tileStore.allocateImageTile(await loadImage('images/door-open.png'), true);
-        this.DownStairs = tileStore.allocateImageTile(await loadImage('images/down-stairs.png'));
-        this.UpStairs = tileStore.allocateImageTile(await loadImage('images/up-stairs.png'), true);
-        this.Fireball = tileStore.allocateImageTile(await loadImage('images/fireball.png'), true);
-        this.FireBackground = tileStore.allocateImageTile(await loadImage('images/fire-background.png'), true);
-        this.WaterAnimationTiles = [
-            tileStore.allocateImageTile(await loadImage('images/water-0.png')),
-            tileStore.allocateImageTile(await loadImage('images/water-1.png')),
-        ];
-        this.CollapsedUpStairs = tileStore.allocateImageTile(await loadImage('images/collapsed-up-stairs.png'), true);
-        this.CathedralDownStairs = tileStore.allocateImageTile(await loadImage('images/cathedral-down-stairs.png'), true);
-    }
+    this.WallTop = tileStore.allocateImageTile(await loadImage('images/wall-top.png'));
+    this.WallFront = tileStore.allocateImageTile(await loadImage('images/wall-front.png'));
+    this.WindowTop = tileStore.allocateImageTile(await loadImage('images/window-top.png'));
+    this.WindowFront = tileStore.allocateImageTile(await loadImage('images/window-front.png'));
+    this.Floor = tileStore.allocateDotTile(4, '#b08c4c', '#d4b888');
+    this.Void = tileStore.allocateCharacterTile(' ', '#000000', '#000000');
+
+    this.Stars0 = tileStore.allocateImageTile(await loadImage('images/stars-0.png'));
+    this.Stars1 = tileStore.allocateImageTile(await loadImage('images/stars-1.png'));
+    this.Stars2 = tileStore.allocateImageTile(await loadImage('images/stars-2.png'));
+    this.Stars3 = tileStore.allocateImageTile(await loadImage('images/stars-2.png'));
+
+    this.Door = tileStore.allocateImageTile(await loadImage('images/door.png'), true);
+    this.OpenDoor = tileStore.allocateImageTile(await loadImage('images/door-open.png'), true);
+    this.DownStairs = tileStore.allocateImageTile(await loadImage('images/down-stairs.png'));
+    this.UpStairs = tileStore.allocateImageTile(await loadImage('images/up-stairs.png'), true);
+    this.FireBackground = tileStore.allocateImageTile(await loadImage('images/fire-background.png'), true);
+    this.WaterAnimationTiles = [
+        tileStore.allocateImageTile(await loadImage('images/water-0.png')),
+        tileStore.allocateImageTile(await loadImage('images/water-1.png')),
+    ];
 
     this.HealthBarSize = 8;
     this.HealthBars = [];

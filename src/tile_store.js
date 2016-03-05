@@ -164,7 +164,7 @@ export class TileStore {
             let total = data[i] + data[i+1] + data[i+2];
             let average = total / 3;
             // darken the result
-            average *= 0.75;
+            average *= 0.25;
             data[i] = average;
             data[i+1] = average;
             data[i+2] = average;
