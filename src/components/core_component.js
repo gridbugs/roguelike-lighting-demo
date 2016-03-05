@@ -156,6 +156,10 @@ export class CurrentWeapon extends Component {
     }
 }
 
+export class WeaponInventory extends Component {
+
+}
+
 export class DownStairs extends Component {
     constructor(level = null, upStairs = null) {
         super();

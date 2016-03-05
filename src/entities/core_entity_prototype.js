@@ -1,6 +1,6 @@
 import {Components} from 'components';
 import {Tiles} from 'tiles';
-import * as Weapons from 'weapons';
+import {Weapons} from 'weapons';
 
 export function Wall(x, y) {
     return [
