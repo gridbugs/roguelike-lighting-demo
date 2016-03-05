@@ -47,7 +47,7 @@ export function PlayerCharacter(x, y) {
         new Components.CurrentWeapon(null),
         new Components.UpgradesOnDescent(computeUpgrade, 1),
         new Components.Name("You"),
-        new Components.Description("You. A faithful servant of the Pyro God. You returned to the former home of your ancestors in search of his ancient cathedral, only to find the city in ruins.")
+        new Components.Description("You. You awoke from cryosleep in deep space. The ship's computer told you that the rest of the crew is dead.")
     ];
 }
 
