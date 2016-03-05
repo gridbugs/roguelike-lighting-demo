@@ -46,7 +46,7 @@ export function PlayerCharacter(x, y) {
         new Components.Unfamiliar(),
         new Components.WeaponInventory(),
         new Components.Knockable(),
-        new Components.UpgradesOnDescent(computeUpgrade, 1),
+        new Components.Ventable(),
         new Components.Name("You"),
         new Components.Description("You. You awoke from cryosleep in deep space. The ship's computer told you that the rest of the crew is dead.")
     ];
@@ -66,6 +66,7 @@ function GenericCharacter(x, y, tile, health, walkTime, burnTime = 5, healthReco
         new Components.Flamable(burnTime),
         new Components.HealthRecovery(healthRecovery),
         new Components.Knockable(),
+        new Components.Ventable(),
         new Components.WalkTime(walkTime)
     ];
 }

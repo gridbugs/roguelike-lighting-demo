@@ -7,11 +7,13 @@ export class AutoPickup extends ReactiveSystem {
         super(ecsContext);
         this.on(Actions.Walk, (action) => {
             let destination = this.getCell(action.destination);
-            destination.withEntity(Components.Getable, (item) => {
-                this.ecsContext.scheduleImmediateAction(
-                    new Actions.Get(action.entity, item)
-                );
-            });
+            for (let item of destination) {
+                if (item.is(Components.Getable)) {
+                    this.ecsContext.scheduleImmediateAction(
+                        new Actions.Get(action.entity, item)
+                    );
+                }
+            }
         });
     }
 }

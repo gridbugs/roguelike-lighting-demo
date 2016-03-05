@@ -20,6 +20,12 @@ export class Collision extends ReactiveSystem {
                 action.success = false;
             }
 
+            if (destination.is(Components.Void)) {
+                this.ecsContext.scheduleImmediateAction(
+                    new Actions.FallIntoSpace(action.entity)
+                );
+            }
+
             if (action.entity.is(Components.Collider) &&
                 destination.has(Components.Door)) {
                 for (let entity of destination) {
@@ -74,6 +80,31 @@ export class Collision extends ReactiveSystem {
             if (action.entity.is(Components.Collider) &&
                 destination.is(Components.Solid)) {
                 action.success = false;
+            }
+
+            if (destination.is(Components.Void)) {
+                this.ecsContext.scheduleImmediateAction(
+                    new Actions.FallIntoSpace(action.entity)
+                );
+            }
+        });
+
+        this.on(Actions.Vent, (action) => {
+            let destination = this.getCell(action.destination);
+            if (destination === null) {
+                action.success = false;
+                return;
+            }
+
+            if (action.entity.is(Components.Collider) &&
+                destination.is(Components.Solid)) {
+                action.success = false;
+            }
+
+            if (destination.is(Components.Void)) {
+                this.ecsContext.scheduleImmediateAction(
+                    new Actions.FallIntoSpace(action.entity)
+                );
             }
         });
     }

@@ -170,7 +170,7 @@ export function CellGrid(T) {
                 if (cell._floodFillCount !== this._floodFillCount) {
                     /* Yield the generator so the caller can seperate
                      * different flood-filled regions */
-                    yield cell._floodFill(direction, maxDepths);
+                    yield cell._floodFill(directions, maxDepth);
                 }
             }
         }

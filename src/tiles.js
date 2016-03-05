@@ -22,7 +22,7 @@ Tiles.init = async function() {
     this.WindowTop = tileStore.allocateImageTile(await loadImage('images/window-top.png'));
     this.WindowFront = tileStore.allocateImageTile(await loadImage('images/window-front.png'));
     this.Floor = tileStore.allocateDotTile(4, '#b08c4c', '#d4b888');
-    this.Void = tileStore.allocateCharacterTile(' ', '#000000', '#000000');
+    this.Void = tileStore.allocateCharacterTile(' ', '#000000', '#000022');
 
     this.Stars0 = tileStore.allocateImageTile(await loadImage('images/stars-0.png'));
     this.Stars1 = tileStore.allocateImageTile(await loadImage('images/stars-1.png'));
@@ -45,6 +45,10 @@ Tiles.init = async function() {
         tileStore.allocateImageTile(await loadImage('images/water-0.png')),
         tileStore.allocateImageTile(await loadImage('images/water-1.png')),
     ];
+
+    this.VacuumOverlay = tileStore.allocateSquareTile('rgba(0, 0, 255, 0.3');
+    this.PressureWallOverlay = tileStore.allocateSquareTile('rgba(0, 255, 0, 0.3');
+    this.VentingOverlay = tileStore.allocateSquareTile('rgba(255, 0, 0, 0.3');
 
     this.HealthBarSize = 8;
     this.HealthBars = [];

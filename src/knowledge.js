@@ -27,7 +27,8 @@ class EntityMemory extends InvalidatingComponentTable {
                 Components.Door,
                 Components.Name,
                 Components.Description,
-                Components.Weapon
+                Components.Weapon,
+                Components.Void
             ];
         }
     }
@@ -51,6 +52,9 @@ class EntityMemory extends InvalidatingComponentTable {
         }
         if (this.has(Components.RandomlyAnimatedTile)) {
             return !this.get(Components.RandomlyAnimatedTile).tile.transparentBackground;
+        }
+        if (this.has(Components.RandomlyChosenTile)) {
+            return !this.get(Components.RandomlyChosenTile).tile.transparentBackground;
         }
         return false;
     }

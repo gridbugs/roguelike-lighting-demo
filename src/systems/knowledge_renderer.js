@@ -79,6 +79,14 @@ export class KnowledgeRenderer extends System {
         if (entity !== null) {
             this.drawer.drawTile(this.getHealthBarTile(entity), cell.x, cell.y);
         }
+
+        let atmosphereCell = this.ecsContext.atmosphere.grid.get(cell.coord);
+        if (atmosphereCell.atmosphere === 0 && !cell.is(Components.Void)) {
+            this.drawer.drawTile(Tiles.VacuumOverlay, cell.x, cell.y);
+        }
+        if (atmosphereCell.venting) {
+            this.drawer.drawTile(Tiles.VentingOverlay, cell.x, cell.y);
+        }
     }
 
     drawGreyTile(cell) {

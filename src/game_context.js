@@ -16,6 +16,7 @@ import {UpgradeOnDescent} from 'systems/upgrade_on_descent';
 import {Winning} from 'systems/winning';
 import {Bullets} from 'systems/bullets';
 import {AutoPickup} from 'systems/auto_pickup';
+import {Atmosphere} from 'systems/atmosphere';
 
 /* Components */
 import {Components} from 'components';
@@ -60,6 +61,7 @@ export class GameContext extends EcsContext(GameCell) {
         this.winning = new Winning(this);
         this.bullets = new Bullets(this);
         this.autoPickup = new AutoPickup(this);
+        this.atmosphere = new Atmosphere(this);
     }
 
     runReactiveSystems(action) {
@@ -72,6 +74,12 @@ export class GameContext extends EcsContext(GameCell) {
         this.winning.run(action);
         this.bullets.run(action);
         this.autoPickup.run(action);
+        this.atmosphere.run(action);
+    }
+
+    finalize() {
+        super.finalize();
+        this.atmosphere.refresh();
     }
 
     runContinuousSystems(timeDelta) {
@@ -79,6 +87,7 @@ export class GameContext extends EcsContext(GameCell) {
 
         this.fire.progress(timeDelta);
         this.healing.progress(timeDelta);
+        this.atmosphere.progress(timeDelta);
     }
 
     beforeTurn(entity) {

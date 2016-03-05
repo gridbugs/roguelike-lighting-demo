@@ -19,6 +19,7 @@ export class Level {
     get ecsContext() {
         if (!this.generated) {
             this.generate();
+            this._ecsContext.finalize();
         }
         return this._ecsContext;
     }

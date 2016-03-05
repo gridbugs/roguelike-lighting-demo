@@ -80,6 +80,10 @@ export function EcsContext(CellType) {
             this.schedule = new Schedule();
         }
 
+        finalize() {
+
+        }
+
         emplaceEntity(components = []) {
             let entity = new Entity(components);
             this.addEntity(entity);

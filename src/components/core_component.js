@@ -351,3 +351,13 @@ export class Weapon extends Component {
 export class Bullet extends Component {}
 export class Getable extends Component {}
 export class Knockable extends Component {}
+export class Breakable extends Component {}
+export class Void extends Component {}
+
+export class Ventable extends PassiveComponent {
+    get system() {
+        return this.ecsContext.atmosphere;
+    }
+}
+
+export class StuckInSpace extends Component {}

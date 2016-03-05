@@ -19,6 +19,22 @@ export class Walk extends Action {
     }
 }
 
+export class Vent extends Action {
+    constructor(entity, direction) {
+        super();
+        this.entity = entity;
+        this.direction = direction;
+        this.position = this.entity.get(Components.Position);
+        this.source = this.position.vector;
+        this.destination = this.source.add(this.direction.vector);
+    }
+
+    commit() {
+        this.position.vector = this.destination;
+    }
+}
+
+
 export class Knockback extends Action {
     constructor(entity, destination) {
         super();
@@ -554,5 +570,44 @@ export class SpecificWeapon extends Action {
         this.entity.with(Components.WeaponInventory, (inventory) => {
             inventory.switchSpecific(this.slot);
         });
+    }
+}
+
+export class Destroy extends Action {
+    constructor(entity) {
+        super();
+        this.entity = entity;
+    }
+
+    commit(ecsContext) {
+        ecsContext.removeEntity(this.entity);
+    }
+}
+
+export class OpenBreach extends Action {
+    commit(ecsContext) {
+        ecsContext.atmosphere.updateVenting();
+        ecsContext.atmosphere.suckEntities(1);
+    }
+}
+
+export class CloseBreach extends Action {
+    commit(ecsContext) {
+        ecsContext.atmosphere.refresh();
+    }
+}
+
+export class FallIntoSpace extends Action {
+    constructor(entity) {
+        super();
+        this.entity = entity;
+    }
+
+    commit(ecsContext) {
+        if (this.entity.is(Components.PlayerCharacter)) {
+            this.entity.add(new Components.StuckInSpace());
+        } else {
+            ecsContext.removeEntity(this.entity);
+        }
     }
 }
