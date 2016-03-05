@@ -433,6 +433,7 @@ export class Get extends Action {
     }
 
     commit(ecsContext) {
+        let originalAmmo = this.item.get(Components.Weapon).weapon.ammo;
         let alreadyPresent = this.entity.get(Components.WeaponInventory).addWeapon(this.item);
         if (alreadyPresent) {
             /* Remove the weapon if we just emptied it */
@@ -441,7 +442,10 @@ export class Get extends Action {
                     ecsContext.removeEntity(this.item);
                 }
             });
-            ecsContext.hud.message = `You unload the ${this.item.get(Components.Name).simpleValue}`
+            let newAmmo = this.item.get(Components.Weapon).weapon.ammo;
+            if (originalAmmo !== newAmmo) {
+                ecsContext.hud.message = `You unload the ${this.item.get(Components.Name).simpleValue}`
+            }
         } else {
             /* Pick up the item */
             this.item.remove(Components.Position);
