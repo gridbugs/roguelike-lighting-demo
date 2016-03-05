@@ -4,7 +4,14 @@ import {CellGrid, Cell} from 'utils/cell_grid';
 import {Stack} from 'utils/stack';
 import {Config} from 'config';
 
-export class Weapon extends Typed {}
+export class Weapon extends Typed {
+    addAmmoFromWeapon(weapon) {
+        let originalAmmo = this.ammo;
+        this.ammo = Math.min(this.ammo + weapon.ammo, this.maxAmmo);
+        let ammoDiff = this.ammo - originalAmmo;
+        weapon.ammo -= ammoDiff;
+    }
+}
 Weapon.prototype.getLine = async function(entity) {
     return await entity.ecsContext.pathPlanner.getLine(entity.cell.coord, ControlTypes.Fire);
 }

@@ -102,6 +102,10 @@ export class StringTerrainGenerator {
             add('MachineGun').get(Components.Weapon).weapon.ammo = 200;
             add('Floor');
             break;
+        case '4':
+            add('Flamethrower').get(Components.Weapon).weapon.ammo = 20;
+            add('Floor');
+            break;
         case '@': {
             let pc = add('PlayerCharacter');
             let gun = add('Flamethrower');

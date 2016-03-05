@@ -20,13 +20,6 @@ class Gun extends Weapon {
         this.ammo = 0;
     }
 
-    addAmmoFromWeapon(weapon) {
-        let originalAmmo = this.ammo;
-        this.ammo = Math.min(this.ammo + weapon.ammo, this.maxAmmo);
-        let ammoDiff = this.ammo - originalAmmo;
-        weapon.ammo -= ammoDiff;
-    }
-
     *trajectories(line) {
         Weapon.SpreadStack.clear();
         let startCell = Weapon.SpreadGrid.get(line.endCoord);
@@ -69,6 +62,10 @@ Gun.prototype.use = async function(entity) {
     var line = await this.getLine(entity);
 
     if (line === null) {
+        return null;
+    }
+
+    if (line.point) {
         return null;
     }
 

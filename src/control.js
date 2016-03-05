@@ -27,6 +27,7 @@ export const ControlTypes = makeEnum([
     'Pistol',
     'Shotgun',
     'MachineGun',
+    'Flamethrower',
     'Help'
 ], true);
 
@@ -47,6 +48,7 @@ export const ControlKeys = substituteValues(ControlTypes, {
     1: 'Pistol',
     2: 'Shotgun',
     3: 'MachineGun',
+    4: 'Flamethrower',
     '.': 'Wait',
     '<': 'Up',
     '>': 'Down',
@@ -186,6 +188,7 @@ export const ControlTable = makeTable(ControlTypes, {
     Pistol: (entity) => { return new Actions.SpecificWeapon(entity, 1) },
     Shotgun: (entity) => { return new Actions.SpecificWeapon(entity, 2) },
     MachineGun: (entity) => { return new Actions.SpecificWeapon(entity, 3) },
+    Flamethrower: (entity) => { return new Actions.SpecificWeapon(entity, 4) },
     Help:       help
 });
 

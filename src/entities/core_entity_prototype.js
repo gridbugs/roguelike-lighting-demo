@@ -145,7 +145,7 @@ export function MachineGun(x, y) {
 export function Flamethrower(x, y) {
     return [
         new Components.Position(x, y),
-        new Components.Tile(Tiles.MachineGun, 2),
+        new Components.Tile(Tiles.Flamethrower, 2),
         new Components.Weapon(new Weapons.Flamethrower()),
         new Components.Getable(),
         new Components.Name(getWeaponInfo("Flamethrower"), "Flamethrower"),

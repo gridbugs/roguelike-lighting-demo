@@ -61,6 +61,10 @@ Flamethrower.prototype.use = async function(entity) {
         return null;
     }
 
+    if (line.point) {
+        return null;
+    }
+
     this.scheduleFlames(entity, line);
 
     return new Actions.FireFlamethrower(entity, this);

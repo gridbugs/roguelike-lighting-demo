@@ -8,6 +8,12 @@ export class Line {
 
         this.setLineDirection();
         this.length = startCoord.getDistance(endCoord);
+
+        if (this.startCoord.equals(this.endCoord)) {
+            this.point = true;
+        } else {
+            this.point = false;
+        }
     }
 
     setLineDirection() {

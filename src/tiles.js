@@ -32,6 +32,7 @@ Tiles.init = async function() {
     this.Pistol = tileStore.allocateImageTile(await loadImage('images/pistol.png'), true);
     this.Shotgun = tileStore.allocateImageTile(await loadImage('images/shotgun.png'), true);
     this.MachineGun = tileStore.allocateImageTile(await loadImage('images/machinegun.png'), true);
+    this.Flamethrower = tileStore.allocateImageTile(await loadImage('images/flamethrower.png'), true);
 
     this.Bullet = tileStore.allocateImageTile(await loadImage('images/bullet.png'), true);
     this.Fireball = tileStore.allocateImageTile(await loadImage('images/fireball.png'), true);
