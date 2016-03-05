@@ -55,15 +55,13 @@ export class Hud {
             }
         }
 
-        entity.cell.withEntity(Components.Getable, (item) => {
-            let name = item.get(Components.Name).value;
-            let text;
-            if (typeof name === 'function') {
-                text = name(item);
+        if (!this.messageChanged) {
+            let item = entity.cell.find(Components.Getable);
+            if (item === null) {
+                this.message = "";
             } else {
-                text = name;
+                this.message = `Here: ${item.get(Components.Name).value}`;
             }
-            this.message = `Here: ${text}`;
-        });
+        }
     }
 }

@@ -285,6 +285,7 @@ export class UpgradesOnDescent extends Component {
     }
 
     copyTo(dest) {
+        super.copyTo(dest);
         dest.calculate = this.calculate;
         dest.maxDepth = this.maxDepth;
     }
@@ -295,7 +296,40 @@ export class WinOnDeath extends Component {
 
 export class WalkTime extends ValueComponent {}
 
-export class Name extends ValueComponent {}
+export class Name extends Component {
+    constructor(textOrFn, simpleName = textOrFn) {
+        super();
+        this.textOrFn = textOrFn;
+        this.simpleName = simpleName;
+    }
+
+    clone() {
+        return new Name(this.textOrFn, this.simpleName);
+    }
+
+    copyTo(dest) {
+        super.copyTo(dest);
+        dest.textOrFn = this.textOrFn;
+        dest.simpleName = this.simpleName;
+    }
+
+    get simpleValue() {
+        if (typeof this.simpleName === 'function') {
+            return this.simpleName(this.entity);
+        } else {
+            return this.simpleName;
+        }
+    }
+
+    get value() {
+        if (typeof this.textOrFn === 'function') {
+            return this.textOrFn(this.entity);
+        } else {
+            return this.textOrFn;
+        }
+    }
+}
+
 export class Description extends ValueComponent {}
 
 export class Weapon extends Component {
@@ -308,7 +342,7 @@ export class Weapon extends Component {
         return new Weapon(this.weapon);
     }
 
-    copy(dest) {
+    copyTo(dest) {
         super.copyTo(dest);
         dest.weapon = this.weapon;
     }

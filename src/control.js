@@ -109,11 +109,7 @@ async function examine(entity) {
         if (!cell.topEntityMemory.empty) {
             var topEntity = cell.topEntityMemory.best;
             topEntity.with(Components.Name, (name) => {
-                if (typeof name.value === 'function') {
-                    hud.message = name.value(topEntity);
-                } else {
-                    hud.message = name.value;
-                }
+                hud.message = name.value;
             });
         }
     });
@@ -125,12 +121,9 @@ async function examine(entity) {
             var text = null;
             var description = topEntity.get(Components.Description);
             if (description === null) {
-                var name = topEntity.get(Components.Name);
-                if (typeof name.value === 'function') {
-                    text = name.value(topEntity);
-                } else {
-                    text = name.value;
-                }
+                console.debug(topEntity);
+                console.debug(topEntity.get(Components.Name));
+                text = topEntity.get(Components.Name).value;
             } else {
                 text = description.value;
             }

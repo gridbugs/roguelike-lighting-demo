@@ -54,6 +54,11 @@ class EntityMemory extends InvalidatingComponentTable {
         }
         return false;
     }
+
+    add(component) {
+        let c = super.add(component);
+        c.entity = this;
+    }
 }
 EntityMemory.RememberedComponents = null;
 

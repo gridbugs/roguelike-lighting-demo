@@ -19,10 +19,12 @@ export class InvalidatingComponentTable extends ComponentTable {
     add(component) {
         let c = this.components[component.type];
         if (c === null) {
-            this.components[component.type] = component.clone();
+            c = component.clone();
+            this.components[component.type] = c;
         } else {
             component.copyTo(c);
         }
+        return c;
     }
 
     has(component) {

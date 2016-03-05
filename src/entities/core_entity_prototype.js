@@ -115,7 +115,7 @@ export function Pistol(x, y) {
         new Components.Tile(Tiles.Pistol, 2),
         new Components.Weapon(new Weapons.Pistol()),
         new Components.Getable(),
-        new Components.Name(getWeaponInfo("Pistol")),
+        new Components.Name(getWeaponInfo("Pistol"), "Pistol"),
         new Components.Description("A pistol. Basic small armament. Simple and reliable.")
     ];
 }
@@ -126,7 +126,7 @@ export function Shotgun(x, y) {
         new Components.Tile(Tiles.Shotgun, 2),
         new Components.Weapon(new Weapons.Shotgun()),
         new Components.Getable(),
-        new Components.Name(getWeaponInfo("Shotgun")),
+        new Components.Name(getWeaponInfo("Shotgun"), "Shotgun"),
         new Components.Description("A shotgun. Keep it handy for close encounters.")
     ];
 }
@@ -137,7 +137,7 @@ export function MachineGun(x, y) {
         new Components.Tile(Tiles.MachineGun, 2),
         new Components.Weapon(new Weapons.MachineGun()),
         new Components.Getable(),
-        new Components.Name(getWeaponInfo("Machine Gun")),
+        new Components.Name(getWeaponInfo("Machine Gun"), "Machine Gun"),
         new Components.Description("A machine gun. Good for putting holes in things.")
     ];
 }

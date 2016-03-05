@@ -441,9 +441,11 @@ export class Get extends Action {
                     ecsContext.removeEntity(this.item);
                 }
             });
+            ecsContext.hud.message = `You unload the ${this.item.get(Components.Name).simpleValue}`
         } else {
             /* Pick up the item */
             this.item.remove(Components.Position);
+            ecsContext.hud.message = `You take the ${this.item.get(Components.Name).simpleValue}`
         }
     }
 }
