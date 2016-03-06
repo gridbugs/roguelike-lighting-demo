@@ -76,7 +76,7 @@ function GenericCharacter(x, y, tile, health, walkTime, burnTime = 5, healthReco
 }
 
 export function Zombie(x, y) {
-    return GenericCharacter(x, y, Tiles.Zombie, 100, 0.5).concat([
+    return GenericCharacter(x, y, Tiles.Zombie, 10, 0.5).concat([
         new Components.Attack(1),
         new Components.Defense(1),
         new Components.Accuracy(80),
@@ -87,33 +87,36 @@ export function Zombie(x, y) {
 }
 
 export function Skeleton(x, y) {
-    return GenericCharacter(x, y, Tiles.Skeleton, 100, 0.5).concat([
+    return GenericCharacter(x, y, Tiles.Skeleton, 5, 0.5).concat([
         new Components.Attack(1),
         new Components.Defense(1),
         new Components.Accuracy(80),
         new Components.Dodge(20),
         new Components.Name("Skeleton"),
-        new Components.Description("A Skeleton. The flesh has fallen from its bones, and yet it moves.")
+        new Components.Description("A Skeleton. The flesh has fallen from its bones, and yet it moves."),
+        new Components.Skeleton()
     ]);
 }
 
 export function PileOfBones(x, y) {
     return [
         new Components.Position(x, y),
-        new Components.Tile(Tiles.PileOfBones, 3),
+        new Components.Tile(Tiles.PileOfBones, 2),
         new Components.Ventable(),
         new Components.Name("Pile of Bones"),
-        new Components.Description("The remains of a skeleton.")
+        new Components.Description("The remains of a skeleton."),
+        new Components.TimedTransformation(10, Skeleton)
     ];
 }
 
 export function Bloat(x, y) {
-    return GenericCharacter(x, y, Tiles.Bloat, 100, 0.5).concat([
+    return GenericCharacter(x, y, Tiles.Bloat, 5, 0.5).concat([
         new Components.Attack(1),
         new Components.Defense(1),
         new Components.Accuracy(80),
         new Components.Dodge(20),
         new Components.Name("Bloat"),
-        new Components.Description("A Bloat. This corpse appears inflated, as if by some sort of gas.")
+        new Components.Description("A Bloat. This corpse appears inflated, as if by some sort of gas."),
+        new Components.Bloat()
     ]);
 }

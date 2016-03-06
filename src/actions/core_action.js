@@ -667,3 +667,32 @@ export class ReplenishOxygen extends Action {
         });
     }
 }
+
+export class CollapseSkeleton extends Action {
+    constructor(entity) {
+        super();
+        this.entity = entity;
+    }
+
+    commit(ecsContext) {
+        if (this.entity.cell !== null) {
+            this.entity.become(EntityPrototypes.PileOfBones(this.entity.cell.coord));
+        }
+    }
+}
+
+export class ProgressTransformation extends Action {
+    constructor(entity, time) {
+        super();
+        this.entity = entity;
+        this.time = time;
+    }
+
+    commit(ecsContext) {
+        let transformation = this.entity.get(Components.TimedTransformation);
+        transformation.time = Math.max(transformation.time - this.time, 0);
+        if (transformation.time === 0) {
+            this.entity.become(transformation.entityPrototype(this.entity.cell.coord));
+        }
+    }
+}

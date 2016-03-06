@@ -386,3 +386,28 @@ export class Breathing extends SetComponent {
 }
 
 export class HealthKit extends ValueComponent {}
+
+export class Skeleton extends Component {}
+export class Bloat extends Component {}
+
+export class TimedTransformation extends SetComponent {
+    constructor(time, entityPrototype) {
+        super();
+        this.time = time;
+        this.entityPrototype = entityPrototype;
+    }
+
+    get set() {
+        return this.ecsContext.timedTransformations.transformingEntities;
+    }
+
+    clone() {
+        return new TimedTransformation(this.time, this.entityPrototype);
+    }
+
+    copyTo(dest) {
+        super.copyTo(dest);
+        dest.time = this.time;
+        dest.entityPrototype = this.entityPrototype;
+    }
+}

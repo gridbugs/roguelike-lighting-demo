@@ -17,6 +17,8 @@ import {Winning} from 'systems/winning';
 import {Bullets} from 'systems/bullets';
 import {AutoPickup} from 'systems/auto_pickup';
 import {Atmosphere} from 'systems/atmosphere';
+import {DeathEvents} from 'systems/death_events';
+import {TimedTransformations} from 'systems/timed_transformations';
 
 /* Components */
 import {Components} from 'components';
@@ -62,6 +64,8 @@ export class GameContext extends EcsContext(GameCell) {
         this.bullets = new Bullets(this);
         this.autoPickup = new AutoPickup(this);
         this.atmosphere = new Atmosphere(this);
+        this.deathEvents = new DeathEvents(this);
+        this.timedTransformations = new TimedTransformations(this);
     }
 
     runReactiveSystems(action) {
@@ -75,6 +79,7 @@ export class GameContext extends EcsContext(GameCell) {
         this.bullets.run(action);
         this.autoPickup.run(action);
         this.atmosphere.run(action);
+        this.deathEvents.run(action);
     }
 
     finalize() {
@@ -88,6 +93,7 @@ export class GameContext extends EcsContext(GameCell) {
         this.fire.progress(timeDelta);
         this.healing.progress(timeDelta);
         this.atmosphere.progress(timeDelta);
+        this.timedTransformations.progress(timeDelta);
     }
 
     beforeTurn(entity) {
