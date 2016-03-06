@@ -1,11 +1,12 @@
 import {Components} from 'components';
 
 export class Hud {
-    constructor(container, weapon, message, stats, overlay) {
+    constructor(container, weapon, message, stats, atmosphere, overlay) {
         this.container = container;
         this._weapon = weapon;
         this._message = message;
         this._stats = stats;
+        this._atmosphere = atmosphere;
         this._overlay = overlay;
 
         this.messageChanged = false;
@@ -22,6 +23,10 @@ export class Hud {
 
     set weapon(value) {
         this._weapon.innerHTML = value;
+    }
+
+    set atmosphere(value) {
+        this._atmosphere.innerHTML = value;
     }
 
     showOverlay() {
@@ -41,6 +46,15 @@ export class Hud {
         let maxHealth = Math.floor(entity.get(Components.MaxHealth).value);
         let oxygen = Math.floor(entity.get(Components.Oxygen).value);
         let maxOxygen = Math.floor(entity.get(Components.MaxOxygen).value);
+        let atmosphereCell = entity.ecsContext.atmosphere.grid.get(entity.cell.coord);
+        if (atmosphereCell.venting) {
+            this.atmosphere = "<span style='color:#ff0000'>Venting</span>";
+        } else if (atmosphereCell.atmosphere === 0) {
+            this.atmosphere = "<span style='color:#8888ff'>Vacuum</span>";
+        } else {
+            this.atmosphere = "<span style='color:#ffffff'>Pressurized</span>";
+        }
+
         this.stats = `0₂:${oxygen}/${maxOxygen} HP:${health}/${maxHealth}`;
 
         let weaponEntity = entity.get(Components.WeaponInventory).currentWeapon;
