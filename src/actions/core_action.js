@@ -125,6 +125,18 @@ export class FireFlame extends Action {
     }
 }
 
+export class SprayFlamethrowerFuel extends Action {
+    constructor(entity, weapon) {
+        super();
+        this.entity = entity;
+        this.weapon = weapon;
+    }
+
+    commit(ecsContext) {
+        ecsContext.hud.message = "You spray some fuel which fails to ignite.";
+    }
+}
+
 /* As guns can fire a bust of bullets in a single turn, there
  * needs to be a separation between the action of firing the gun
  * and the start of the bullets on their path.

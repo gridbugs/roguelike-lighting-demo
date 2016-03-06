@@ -176,6 +176,17 @@ export class Atmosphere extends ReactiveSystem {
                 new Actions.CloseBreach()
             );
         });
+
+        this.on(Actions.FireFlame, (action) => {
+            if (this.grid.get(action.entity.cell.coord).atmosphere === 0) {
+                if (action.weapon.ammo > 0) {
+                    action.success = false;
+                    this.ecsContext.scheduleImmediateAction(
+                        new Actions.SprayFlamethrowerFuel(action.entity, action.weapon)
+                    );
+                }
+            }
+        });
     }
 
     add(entity) {
