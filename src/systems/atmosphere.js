@@ -324,10 +324,21 @@ export class Atmosphere extends ReactiveSystem {
         }
     }
 
+    processBurning(timeDelta) {
+        for (let entity of this.ecsContext.fire.entities) {
+            if (this.grid.get(entity.cell.coord).atmosphere === 0) {
+                this.ecsContext.scheduleImmediateAction(
+                    new Actions.Extinguish(entity)
+                );
+            }
+        }
+    }
+
     progress(timeDelta) {
 
         this.suckEntities(timeDelta);
         this.processBreathers(timeDelta);
+        this.processBurning(timeDelta);
 
         /* Reduce the atmosphere of venting cells */
         for (let cell of this.grid) {

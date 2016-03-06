@@ -1,6 +1,7 @@
 import {Components} from 'components';
 import {Tiles} from 'tiles';
 import {Weapons} from 'weapons';
+import {EntityPrototypes} from 'entity_prototypes';
 
 export function Wall(x, y) {
     return [
@@ -26,7 +27,7 @@ export function Window(x, y) {
 export function Door(x, y) {
     return [
         new Components.Position(x, y),
-        new Components.Tile(Tiles.Door, 1),
+        new Components.Tile(Tiles.Door, 3),
         new Components.Door(false, Tiles.OpenDoor, Tiles.Door),
         new Components.Opacity(1),
         new Components.Solid(),
@@ -182,4 +183,13 @@ export function HealthKit(x, y) {
     ];
 }
 
-
+export function PileOfBones(x, y) {
+    return [
+        new Components.Position(x, y),
+        new Components.Tile(Tiles.PileOfBones, 2),
+        new Components.Ventable(),
+        new Components.Name("Pile of Bones"),
+        new Components.Description("The remains of a skeleton."),
+        new Components.TimedTransformation(10, EntityPrototypes.Skeleton)
+    ];
+}

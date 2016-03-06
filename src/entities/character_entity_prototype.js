@@ -32,7 +32,7 @@ export function PlayerCharacter(x, y) {
 
     return [
         new Components.Position(x, y),
-        new Components.Tile(Tiles.PlayerCharacter, 3),
+        new Components.Tile(Tiles.PlayerCharacter, 4),
         new Components.TurnTaker(new PlayerTurnTaker()),
         new Components.Collider(),
         new Components.PlayerCharacter(),
@@ -59,7 +59,7 @@ export function PlayerCharacter(x, y) {
 function GenericCharacter(x, y, tile, health, walkTime, burnTime = 5, healthRecovery = 0.1) {
     return [
         new Components.Position(x, y),
-        new Components.Tile(tile, 3),
+        new Components.Tile(tile, 4),
 //        new Components.TurnTaker(new MoveTowardsPlayer()),
         new Components.Collider(),
         new Components.Observer(Shadowcast.detectVisibleArea, 20, true),
@@ -76,7 +76,7 @@ function GenericCharacter(x, y, tile, health, walkTime, burnTime = 5, healthReco
 }
 
 export function Zombie(x, y) {
-    return GenericCharacter(x, y, Tiles.Zombie, 10, 0.5).concat([
+    return GenericCharacter(x, y, Tiles.Zombie, 100, 0.5, 100).concat([
         new Components.Attack(1),
         new Components.Defense(1),
         new Components.Accuracy(80),
@@ -96,17 +96,6 @@ export function Skeleton(x, y) {
         new Components.Description("A Skeleton. The flesh has fallen from its bones, and yet it moves."),
         new Components.Skeleton()
     ]);
-}
-
-export function PileOfBones(x, y) {
-    return [
-        new Components.Position(x, y),
-        new Components.Tile(Tiles.PileOfBones, 2),
-        new Components.Ventable(),
-        new Components.Name("Pile of Bones"),
-        new Components.Description("The remains of a skeleton."),
-        new Components.TimedTransformation(10, Skeleton)
-    ];
 }
 
 export function Bloat(x, y) {

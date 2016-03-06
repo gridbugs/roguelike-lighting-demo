@@ -5,6 +5,7 @@ import {roll} from 'utils/dice';
 import {AmmoReductionType} from 'weapons/guns';
 import {Line} from 'utils/line';
 import {Directions} from 'utils/direction';
+import {Stack} from 'utils/stack';
 
 export class Walk extends Action {
     constructor(entity, direction) {
@@ -730,7 +731,8 @@ export class Explode extends Action {
 
     commit(ecsContext) {
         let centreCell = ecsContext.spacialHash.get(this.position);
-        let targets = [];
+        let targets = Explode.CellStack;
+        targets.clear();
         for (let cell of centreCell.floodFill(Directions, this.radius)) {
             if (cell.coord.getDistance(centreCell.coord) >= this.radius - 1 ||
                 cell.isBorder()) {
@@ -748,3 +750,4 @@ export class Explode extends Action {
         }
     }
 }
+Explode.CellStack = new Stack();
