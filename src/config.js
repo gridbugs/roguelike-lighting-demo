@@ -5,6 +5,6 @@ export const Config = {
     GRID_HEIGHT: 40,
     DEBUG: false,
     RNG_SEED: null,
-    OMNISCIENT: true,
+    OMNISCIENT: false,
     DEMO: false
 };
