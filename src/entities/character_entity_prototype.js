@@ -81,7 +81,39 @@ export function Zombie(x, y) {
         new Components.Defense(1),
         new Components.Accuracy(80),
         new Components.Dodge(20),
-        new Components.Name("Undead"),
-        new Components.Description("Former member of your crew. You recognize its face.")
+        new Components.Name("Zombie"),
+        new Components.Description("A zombie. A former member of your crew. You recognize its face.")
+    ]);
+}
+
+export function Skeleton(x, y) {
+    return GenericCharacter(x, y, Tiles.Skeleton, 100, 0.5).concat([
+        new Components.Attack(1),
+        new Components.Defense(1),
+        new Components.Accuracy(80),
+        new Components.Dodge(20),
+        new Components.Name("Skeleton"),
+        new Components.Description("A Skeleton. The flesh has fallen from its bones, and yet it moves.")
+    ]);
+}
+
+export function PileOfBones(x, y) {
+    return [
+        new Components.Position(x, y),
+        new Components.Tile(Tiles.PileOfBones, 3),
+        new Components.Ventable(),
+        new Components.Name("Pile of Bones"),
+        new Components.Description("The remains of a skeleton.")
+    ];
+}
+
+export function Bloat(x, y) {
+    return GenericCharacter(x, y, Tiles.Bloat, 100, 0.5).concat([
+        new Components.Attack(1),
+        new Components.Defense(1),
+        new Components.Accuracy(80),
+        new Components.Dodge(20),
+        new Components.Name("Bloat"),
+        new Components.Description("A Bloat. This corpse appears inflated, as if by some sort of gas.")
     ]);
 }

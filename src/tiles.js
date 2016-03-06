@@ -11,7 +11,11 @@ Tiles.init = async function() {
 
     // characters
     this.PlayerCharacter = tileStore.allocateCharacterTile('@', '#000000');
-    this.Zombie = tileStore.allocateCharacterTile('z', '#3f3e0b');
+    this.Zombie = tileStore.allocateCharacterTile('Z', '#3f3e0b');
+    this.Skeleton = tileStore.allocateCharacterTile('S', '#444444');
+    this.Bloat = tileStore.allocateCharacterTile('B', '#9a4500');
+
+    this.PileOfBones = tileStore.allocateImageTile(await loadImage('images/pile-of-bones.png'), true);
 
     this.Unseen = tileStore.allocateCharacterTile(' ', '#000000', '#000000');
     this.Target = tileStore.allocateImageTile(await loadImage('images/target.png'), true);

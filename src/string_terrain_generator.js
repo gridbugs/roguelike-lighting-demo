@@ -90,6 +90,18 @@ export class StringTerrainGenerator {
             add('Zombie');
             add('Floor');
             break;
+        case 's':
+            add('Skeleton');
+            add('Floor');
+            break;
+        case 'b':
+            add('Bloat');
+            add('Floor');
+            break;
+        case '&':
+            add('PileOfBones');
+            add('Floor');
+            break;
         case '1':
             add('Pistol').get(Components.Weapon).weapon.ammo = 20;
             add('Floor');
