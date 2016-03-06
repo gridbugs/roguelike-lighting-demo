@@ -21,14 +21,6 @@ export class Fire extends ReactiveSystem {
         });
     }
 
-    add(entity) {
-        this.entities.add(entity);
-    }
-
-    remove(entity) {
-        this.entities.delete(entity);
-    }
-
     progress(timeDelta) {
         for (let entity of this.entities) {
             if (entity.cell.has(Components.Water)) {

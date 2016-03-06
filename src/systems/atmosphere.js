@@ -130,6 +130,7 @@ export class Atmosphere extends ReactiveSystem {
         this.frontierMap = new FrontierMap(this.width, this.height);
         this.ventMap = new VentMap(this.width, this.height);
         this.ventableEntities = new Set();
+        this.breathingEntities = new Set();
 
         for (let cell of this.spacialHash) {
             let atmosphereCell = this.grid.get(cell.coord);
@@ -301,9 +302,31 @@ export class Atmosphere extends ReactiveSystem {
         }
     }
 
+    processBreathers(timeDelta) {
+        for (let entity of this.breathingEntities) {
+            let cell = this.grid.get(entity.cell.coord);
+            if (cell.atmosphere === 0) {
+                if (entity.get(Components.Oxygen).value > 0) {
+                    this.ecsContext.scheduleImmediateAction(
+                        new Actions.ConsumeOxygen(entity, timeDelta * entity.get(Components.Breathing).rate)
+                    );
+                } else {
+                    this.ecsContext.scheduleImmediateAction(
+                        new Actions.TakeDamage(entity, timeDelta * entity.get(Components.Breathing).rate)
+                    );
+                }
+            } else if (cell.atmosphere === 1) {
+                this.ecsContext.scheduleImmediateAction(
+                    new Actions.ReplenishOxygen(entity, timeDelta * entity.get(Components.Breathing).rate)
+                );
+            }
+        }
+    }
+
     progress(timeDelta) {
 
         this.suckEntities(timeDelta);
+        this.processBreathers(timeDelta);
 
         /* Reduce the atmosphere of venting cells */
         for (let cell of this.grid) {

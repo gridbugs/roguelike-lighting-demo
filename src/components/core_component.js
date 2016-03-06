@@ -21,14 +21,14 @@ class ValueComponent extends Component {
 
 }
 
-class PassiveComponent extends Component {
+class SetComponent extends Component {
     onAdd(entity) {
         super.onAdd(entity);
-        this.system.add(entity);
+        this.set.add(entity);
     }
 
     onRemove(entity) {
-        this.system.remove(entity);
+        this.set.delete(entity);
         super.onRemove(entity);
     }
 }
@@ -113,15 +113,15 @@ export class Flamable extends Component {
     }
 }
 
-export class Burning extends PassiveComponent {
+export class Burning extends SetComponent {
     constructor(time, infinite = false) {
         super();
         this.time = time;
         this.infinite = infinite;
     }
 
-    get system() {
-        return this.ecsContext.fire;
+    get set() {
+        return this.ecsContext.fire.entities;
     }
 
     clone() {
@@ -253,14 +253,14 @@ export class Meltable extends Component {
 export class Water extends Component {
 }
 
-export class HealthRecovery extends PassiveComponent {
+export class HealthRecovery extends SetComponent {
     constructor(rate) {
         super();
         this.rate = rate;
     }
 
-    get system() {
-        return this.ecsContext.healing;
+    get set() {
+        return this.ecsContext.healing.entities;
     }
 
     clone() {
@@ -354,10 +354,33 @@ export class Knockable extends Component {}
 export class Breakable extends Component {}
 export class Void extends Component {}
 
-export class Ventable extends PassiveComponent {
-    get system() {
-        return this.ecsContext.atmosphere;
+export class Ventable extends SetComponent {
+    get set() {
+        return this.ecsContext.atmosphere.ventableEntities;
     }
 }
 
 export class StuckInSpace extends Component {}
+
+export class Oxygen extends ValueComponent {}
+export class MaxOxygen extends ValueComponent {}
+
+export class Breathing extends SetComponent {
+    constructor(rate) {
+        super();
+        this.rate = rate;
+    }
+
+    get set() {
+        return this.ecsContext.atmosphere.breathingEntities;
+    }
+
+    clone() {
+        return new Breathing(this.rate);
+    }
+
+    copyTo(dest) {
+        super.copyTo(dest);
+        dest.rate = this.rate;
+    }
+}

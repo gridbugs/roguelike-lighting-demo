@@ -6,14 +6,6 @@ export class Healing {
         this.entities = new Set();
     }
 
-    add(entity) {
-        this.entities.add(entity);
-    }
-
-    remove(entity) {
-        this.entities.delete(entity);
-    }
-
     progress(timeDelta) {
         for (let entity of this.entities) {
             let health = entity.get(Components.Health).value;

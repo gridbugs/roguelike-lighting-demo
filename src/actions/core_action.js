@@ -626,3 +626,32 @@ export class FallIntoSpace extends Action {
         }
     }
 }
+
+export class ConsumeOxygen extends Action {
+    constructor(entity, amount) {
+        super();
+        this.entity = entity;
+        this.amount = amount;
+    }
+
+    commit(ecsContext) {
+        this.entity.with(Components.Oxygen, (oxygen) => {
+            oxygen.value = Math.max(oxygen.value - this.amount, 0);
+        });
+    }
+}
+
+export class ReplenishOxygen extends Action {
+    constructor(entity, amount) {
+        super();
+        this.entity = entity;
+        this.amount = amount;
+    }
+
+    commit(ecsContext) {
+        let maxOxygen = this.entity.get(Components.MaxOxygen).value;
+        this.entity.with(Components.Oxygen, (oxygen) => {
+            oxygen.value = Math.min(oxygen.value + this.amount, maxOxygen);
+        });
+    }
+}

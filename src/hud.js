@@ -6,9 +6,6 @@ export class Hud {
         this._weapon = weapon;
         this._message = message;
         this._stats = stats;
-
-        this._healthValue = 0;
-        this._depthValue = 0;
         this._overlay = overlay;
 
         this.messageChanged = false;
@@ -40,9 +37,11 @@ export class Hud {
     }
 
     update(entity) {
-        this._healthValue = entity.get(Components.Health).value;
-        this._depthValue = entity.ecsContext.level.depth;
-        this.stats = `LVL:${this._depthValue} HP:${this._healthValue}`;
+        let health = Math.floor(entity.get(Components.Health).value);
+        let maxHealth = Math.floor(entity.get(Components.MaxHealth).value);
+        let oxygen = Math.floor(entity.get(Components.Oxygen).value);
+        let maxOxygen = Math.floor(entity.get(Components.MaxOxygen).value);
+        this.stats = `0₂:${oxygen}/${maxOxygen} HP:${health}/${maxHealth}`;
 
         let weaponEntity = entity.get(Components.WeaponInventory).currentWeapon;
         if (weaponEntity !== null) {
