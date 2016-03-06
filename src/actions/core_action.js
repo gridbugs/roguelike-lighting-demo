@@ -3,6 +3,7 @@ import {Components} from 'components';
 import {EntityPrototypes} from 'entity_prototypes';
 import {roll} from 'utils/dice';
 import {AmmoReductionType} from 'weapons/guns';
+import {Line} from 'utils/line';
 
 export class Walk extends Action {
     constructor(entity, direction) {
@@ -154,20 +155,21 @@ export class FireGun extends Action {
 
 /* A wrapper around FireProjectile and ReduceAmmo */
 export class FireBullet extends Action {
-    constructor(entity, weapon, trajectory) {
+    constructor(entity, weapon, destination) {
         super();
         this.entity = entity;
         this.weapon = weapon;
-        this.trajectory = trajectory;
+        this.destination = destination;
     }
 
     commit(ecsContext) {
+        let trajectory = new Line(this.entity.cell.coord, this.destination);
         if (this.weapon.ammo > 0) {
             let projectile = this.entity.ecsContext.emplaceEntity(
-                EntityPrototypes.Bullet(this.trajectory.startCoord.x, this.trajectory.startCoord.y)
+                EntityPrototypes.Bullet(trajectory.startCoord.x, trajectory.startCoord.y)
             );
             ecsContext.scheduleImmediateAction(
-                new FireProjectile(this.entity, projectile, this.trajectory, false /* infinite */)
+                new FireProjectile(this.entity, projectile, trajectory, false /* infinite */)
             );
         } else {
             ecsContext.scheduleImmediateAction(

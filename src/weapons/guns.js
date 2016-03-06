@@ -30,16 +30,15 @@ class Gun extends Weapon {
         }
         for (let i = 0; i < this.burstSize; ++i) {
             let endCoord = Weapon.SpreadStack.array[getRandomInt(0, Weapon.SpreadStack.length)];
-            let trajectory = new Line(line.startCoord, endCoord);
-            yield trajectory;
+            yield endCoord;
         }
     }
 
     scheduleBullets(entity, line) {
         let delay = 0;
-        for (let trajectory of this.trajectories(line)) {
+        for (let destination of this.trajectories(line)) {
             entity.ecsContext.scheduleImmediateAction(
-                new Actions.FireBullet(entity, this, trajectory),
+                new Actions.FireBullet(entity, this, destination),
                 delay
             );
             if (this.ammoReduction === AmmoReductionType.PerShot) {
