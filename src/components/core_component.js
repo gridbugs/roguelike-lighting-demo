@@ -384,3 +384,5 @@ export class Breathing extends SetComponent {
         dest.rate = this.rate;
     }
 }
+
+export class HealthKit extends ValueComponent {}

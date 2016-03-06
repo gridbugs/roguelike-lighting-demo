@@ -526,23 +526,33 @@ export class Get extends Action {
     }
 
     commit(ecsContext) {
-        let originalAmmo = this.item.get(Components.Weapon).weapon.ammo;
-        let alreadyPresent = this.entity.get(Components.WeaponInventory).addWeapon(this.item);
-        if (alreadyPresent) {
-            /* Remove the weapon if we just emptied it */
-            this.item.with(Components.Weapon, (weaponComponent) => {
-                if (weaponComponent.weapon.ammo === 0) {
-                    ecsContext.removeEntity(this.item);
+        if (this.item.is(Components.Weapon)) {
+            let originalAmmo = this.item.get(Components.Weapon).weapon.ammo;
+            let alreadyPresent = this.entity.get(Components.WeaponInventory).addWeapon(this.item);
+            if (alreadyPresent) {
+                /* Remove the weapon if we just emptied it */
+                this.item.with(Components.Weapon, (weaponComponent) => {
+                    if (weaponComponent.weapon.ammo === 0) {
+                        ecsContext.removeEntity(this.item);
+                    }
+                });
+                let newAmmo = this.item.get(Components.Weapon).weapon.ammo;
+                if (originalAmmo !== newAmmo) {
+                    ecsContext.hud.message = `You unload the ${this.item.get(Components.Name).simpleValue}`
                 }
-            });
-            let newAmmo = this.item.get(Components.Weapon).weapon.ammo;
-            if (originalAmmo !== newAmmo) {
-                ecsContext.hud.message = `You unload the ${this.item.get(Components.Name).simpleValue}`
+            } else {
+                /* Pick up the item */
+                this.item.remove(Components.Position);
+                ecsContext.hud.message = `You take the ${this.item.get(Components.Name).simpleValue}`
             }
-        } else {
-            /* Pick up the item */
-            this.item.remove(Components.Position);
-            ecsContext.hud.message = `You take the ${this.item.get(Components.Name).simpleValue}`
+        } else if (this.item.is(Components.HealthKit)) {
+            let health = this.entity.get(Components.Health);
+            let maxHealth = this.entity.get(Components.MaxHealth);
+            if (health.value < maxHealth.value) {
+                health.value = Math.min(health.value + this.item.get(Components.HealthKit).value, maxHealth.value);
+                ecsContext.hud.message = "You use the health kit";
+                ecsContext.removeEntity(this.item);
+            }
         }
     }
 }

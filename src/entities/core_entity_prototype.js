@@ -159,3 +159,17 @@ export function Flamethrower(x, y) {
         new Components.Description("A flamethrower. Considered a safe weapon for use on a ship as it can't damage the hull, but requires oxygen to function.")
     ];
 }
+
+export function HealthKit(x, y) {
+    return [
+        new Components.Position(x, y),
+        new Components.Tile(Tiles.HealthKit, 2),
+        new Components.Getable(),
+        new Components.HealthKit(10),
+        new Components.Ventable(),
+        new Components.Name("Health Kit"),
+        new Components.Description("A Health Kit. A small box full of painkillers and adhesive medical strips.")
+    ];
+}
+
+
