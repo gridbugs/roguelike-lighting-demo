@@ -108,6 +108,11 @@ class FrontierMap extends DijkstraMap(FrontierCell) {
         super(width, height);
         this.frontier = new Stack();
     }
+
+    clear() {
+        super.clear();
+        this.frontier.clear();
+    }
 }
 
 class VentCell extends DijkstraCell {

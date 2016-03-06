@@ -48,6 +48,7 @@ export function DijkstraMap(T) {
             super(width, height);
             this.queue = new SearchPriorityQueue((a, b) => {return b.value - a.value});
             this.bestNeighbour = new BestSet(compareMoveCost, 8); // 8 directions
+            this.squareCircles = false;
         }
 
         debugDraw(drawer) {
@@ -107,7 +108,13 @@ export function DijkstraMap(T) {
                         continue;
                     }
 
-                    let value = cell.value + direction.multiplier;
+                    let value = cell.value;
+                    if (this.squareCircles) {
+                        value += 1;
+                    } else {
+                        value += direction.multiplier;
+                    }
+
                     if (!neighbour.seen || value < neighbour.value) {
                         neighbour.seen = true;
                         neighbour.value = value;
