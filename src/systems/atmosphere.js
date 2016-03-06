@@ -144,7 +144,8 @@ export class Atmosphere extends ReactiveSystem {
         }
 
         this.on(Actions.ProjectileCollide, (action) => {
-            if (action.entity.is(Components.Bullet) &&
+            if ((action.entity.is(Components.Bullet) ||
+                action.entity.is(Components.ShockWave)) &&
                 action.contact.is(Components.Breakable) &&
                 this.grid.get(action.contact.cell.coord).pressureWall) {
                 if (roll(3) === 1) {

@@ -4,6 +4,7 @@ import {EntityPrototypes} from 'entity_prototypes';
 import {roll} from 'utils/dice';
 import {AmmoReductionType} from 'weapons/guns';
 import {Line} from 'utils/line';
+import {Directions} from 'utils/direction';
 
 export class Walk extends Action {
     constructor(entity, direction) {
@@ -507,9 +508,32 @@ export class GetShot extends Action {
 
     commit(ecsContext) {
         ecsContext.scheduleImmediateAction(
+            new TakeDamage(this.entity, 2)
+        );
+        if (this.entity.is(Components.Knockable) && roll(4) == 1) {
+            let next = this.trajectory.next();
+            if (!next.done) {
+                ecsContext.scheduleImmediateAction(
+                    new Knockback(this.entity, next.value)
+                );
+            }
+        }
+    }
+}
+
+export class ShockWaveHit extends Action {
+    constructor(entity, shockWave, trajectory) {
+        super();
+        this.entity = entity;
+        this.shockWave = shockWave;
+        this.trajectory = trajectory;
+    }
+
+    commit(ecsContext) {
+        ecsContext.scheduleImmediateAction(
             new TakeDamage(this.entity, 1)
         );
-        if (this.entity.is(Components.Knockable) && roll(6) == 1) {
+        if (this.entity.is(Components.Knockable) && roll(2) == 1) {
             let next = this.trajectory.next();
             if (!next.done) {
                 ecsContext.scheduleImmediateAction(
@@ -693,6 +717,34 @@ export class ProgressTransformation extends Action {
         transformation.time = Math.max(transformation.time - this.time, 0);
         if (transformation.time === 0) {
             this.entity.become(transformation.entityPrototype(this.entity.cell.coord));
+        }
+    }
+}
+
+export class Explode extends Action {
+    constructor(position, radius) {
+        super();
+        this.position = position;
+        this.radius = radius;
+    }
+
+    commit(ecsContext) {
+        let centreCell = ecsContext.spacialHash.get(this.position);
+        let targets = [];
+        for (let cell of centreCell.floodFill(Directions, this.radius)) {
+            if (cell.coord.getDistance(centreCell.coord) >= this.radius - 1 ||
+                cell.isBorder()) {
+                targets.push(cell);
+            }
+        }
+        for (let target of targets) {
+            let shockWave = ecsContext.emplaceEntity(
+                EntityPrototypes.ShockWave(centreCell.x, centreCell.y)
+            );
+            let trajectory = new Line(centreCell.coord, target.coord);
+            ecsContext.scheduleImmediateAction(
+                new FireProjectile(null, shockWave, trajectory)
+            );
         }
     }
 }

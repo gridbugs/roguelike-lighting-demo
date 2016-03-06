@@ -349,6 +349,7 @@ export class Weapon extends Component {
 }
 
 export class Bullet extends Component {}
+export class ShockWave extends Component {}
 export class Getable extends Component {}
 export class Knockable extends Component {}
 export class Breakable extends Component {}

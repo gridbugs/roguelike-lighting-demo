@@ -13,6 +13,11 @@ export class DeathEvents extends ReactiveSystem {
                     new Actions.CollapseSkeleton(entity)
                 );
             }
+            if (entity.has(Components.Bloat)) {
+                this.ecsContext.scheduleImmediateAction(
+                    new Actions.Explode(entity.cell.coord, 5)
+                );
+            }
         });
     }
 }
