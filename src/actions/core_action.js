@@ -636,10 +636,17 @@ export class Destroy extends Action {
 }
 
 export class OpenBreach extends Action {
+    constructor(breached = true) {
+        super();
+        this.breached = breached;
+    }
+
     commit(ecsContext) {
         ecsContext.atmosphere.updateVenting();
-        ecsContext.atmosphere.suckEntities(1);
-        ecsContext.hud.message = "HULL BREACH DETECTED!";
+        if (this.breached) {
+            ecsContext.atmosphere.suckEntities(1);
+            ecsContext.hud.message = "HULL BREACH DETECTED!";
+        }
     }
 }
 

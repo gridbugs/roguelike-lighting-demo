@@ -14,9 +14,12 @@ export class DeathEvents extends ReactiveSystem {
                 );
             }
             if (entity.has(Components.Bloat)) {
-                this.ecsContext.scheduleImmediateAction(
-                    new Actions.Explode(entity.cell.coord, 5)
-                );
+                if (entity.cell !== null) {
+                    console.debug('exploding');
+                    this.ecsContext.scheduleImmediateAction(
+                        new Actions.Explode(entity.cell.coord, 5)
+                    );
+                }
             }
         });
     }
