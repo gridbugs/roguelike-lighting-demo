@@ -82,6 +82,11 @@ export class Collision extends ReactiveSystem {
                 action.success = false;
             }
 
+            if (action.entity.has(Components.Combatant) &&
+                destination.has(Components.Combatant)) {
+                action.success = false;
+            }
+
             if (destination.is(Components.Void)) {
                 this.ecsContext.scheduleImmediateAction(
                     new Actions.FallIntoSpace(action.entity)
@@ -98,6 +103,11 @@ export class Collision extends ReactiveSystem {
 
             if (action.entity.is(Components.Collider) &&
                 destination.is(Components.Solid)) {
+                action.success = false;
+            }
+
+            if (action.entity.has(Components.Combatant) &&
+                destination.has(Components.Combatant)) {
                 action.success = false;
             }
 
