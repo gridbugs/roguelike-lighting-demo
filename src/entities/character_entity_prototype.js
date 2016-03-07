@@ -6,8 +6,6 @@ import {Tiles} from 'tiles';
 import * as Shadowcast from 'shadowcast';
 import * as Omniscient from 'omniscient';
 
-import * as Abilities from 'abilities';
-
 import {PlayerTurnTaker} from 'player_control';
 import {MoveTowardsPlayer} from 'move_towards_player';
 
