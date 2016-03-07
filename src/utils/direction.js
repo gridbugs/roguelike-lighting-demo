@@ -15,6 +15,10 @@ class DirectionInfo {
         this.index = index;
         this.subIndex = subIndex;
         this.opposite = null;
+        this.left45 = null;
+        this.left90 = null;
+        this.right45 = null;
+        this.right90 = null;
         this.multiplier = multiplier;
     }
 
@@ -45,6 +49,7 @@ export const Direction = makeEnum({
     NorthWest:  d(-1, -1, 'NorthWest', O, 7, 3, SQRT2)
 });
 
+/* Opposite Directions */
 Direction.North.opposite = Direction.South;
 Direction.South.opposite = Direction.North;
 Direction.East.opposite = Direction.West;
@@ -53,6 +58,48 @@ Direction.NorthWest.opposite = Direction.SouthEast;
 Direction.SouthEast.opposite = Direction.NorthWest;
 Direction.SouthWest.opposite = Direction.NorthEast;
 Direction.NorthEast.opposite = Direction.SouthWest;
+
+/* Relative Directions */
+Direction.North.left45 = Direction.NorthWest;
+Direction.North.left90 = Direction.West;
+Direction.North.right45 = Direction.NorthEast;
+Direction.North.right90 = Direction.East;
+
+Direction.East.left45 = Direction.NorthEast;
+Direction.East.left90 = Direction.North;
+Direction.East.right45 = Direction.SouthEast;
+Direction.East.right90 = Direction.South;
+
+Direction.South.left45 = Direction.SouthEast;
+Direction.South.left90 = Direction.East;
+Direction.South.right45 = Direction.SouthWest;
+Direction.South.right90 = Direction.West;
+
+Direction.West.left45 = Direction.SouthWest;
+Direction.West.left90 = Direction.South;
+Direction.West.right45 = Direction.NorthWest;
+Direction.West.right90 = Direction.North;
+
+Direction.NorthEast.left45 = Direction.North;
+Direction.NorthEast.left90 = Direction.NorthWest;
+Direction.NorthEast.right45 = Direction.East;
+Direction.NorthEast.right90 = Direction.SouthEast;
+
+Direction.SouthEast.left45 = Direction.East;
+Direction.SouthEast.left90 = Direction.NorthEast;
+Direction.SouthEast.right45 = Direction.South;
+Direction.SouthEast.right90 = Direction.SouthWest;
+
+Direction.SouthWest.left45 = Direction.South;
+Direction.SouthWest.left90 = Direction.SouthEast;
+Direction.SouthWest.right45 = Direction.West;
+Direction.SouthWest.right90 = Direction.NorthWest;
+
+Direction.NorthWest.left45 = Direction.West;
+Direction.NorthWest.left90 = Direction.SouthWest;
+Direction.NorthWest.right45 = Direction.North;
+Direction.NorthWest.right90 = Direction.NorthEast;
+
 
 export const Directions = Direction.values;
 export const CardinalDirections = [for (dir of Directions) if (dir.cardinal) dir];

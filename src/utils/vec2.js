@@ -103,6 +103,10 @@ export class Vec2 {
         return Math.abs(this.x - v.x) + Math.abs(this.y - v.y);
     }
 
+    getSquareCircleDistance(v) {
+        return Math.max(Math.abs(this.x - v.x), Math.abs(this.y - v.y));
+    }
+
     equals(v) {
         return this.x === v.x && this.y === v.y;
     }
