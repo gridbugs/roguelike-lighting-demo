@@ -26,7 +26,7 @@ Tiles.init = async function() {
     this.WindowTop = tileStore.allocateImageTile(await loadImage('images/window-top.png'));
     this.WindowFront = tileStore.allocateImageTile(await loadImage('images/window-front.png'));
     this.Floor = tileStore.allocateDotTile(4, '#b08c4c', '#d4b888');
-    this.Void = tileStore.allocateCharacterTile(' ', '#000000', '#000022');
+    this.Void = tileStore.allocateCharacterTile(' ', '#000000', '#00003b');
 
     this.Stars0 = tileStore.allocateImageTile(await loadImage('images/stars-0.png'));
     this.Stars1 = tileStore.allocateImageTile(await loadImage('images/stars-1.png'));
