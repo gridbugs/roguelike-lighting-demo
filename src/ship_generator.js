@@ -16,7 +16,8 @@ const CellType = makeEnum([
     'Floor',
     'Wall',
     'Void',
-    'Door'
+    'Door',
+    'Window'
 ]);
 
 class GeneratorCell extends Cell {
@@ -48,10 +49,12 @@ class ConnectionCell extends Cell {
         this.connected = new Array(8); // 8 directions
         this.doors = new Array(8); // 8 directions
         this.neverConnected = new Array(8); // 8 directions
+        this.windows = new Array(8); // 8 directions
         for (let i = 0; i < 8; ++i) {
             this.connected[i] = false;
             this.doors[i] = false;
             this.neverConnected[i] = false;
+            this.windows[i] = false;
         }
         this.type = ConnectionCellType.Undefined;
         this.cellType = CellType.Floor;
@@ -72,6 +75,14 @@ class ConnectionCell extends Cell {
         assert(neighbour !== null);
         this.doors[direction.index] = true;
         neighbour.doors[direction.opposite.index] = true;
+    }
+
+    connectWithWindow(direction) {
+        let neighbour = this.getNeighbour(direction);
+        this.windows[direction.index] = true;
+        if (neighbour !== null) {
+            neighbour.windows[direction.opposite.index] = true;
+        }
     }
 
     neverConnect(direction) {
@@ -113,6 +124,13 @@ class HallwayCandidate {
 }
 
 class DoorCandidate {
+    constructor(cell, direction) {
+        this.cell = cell;
+        this.direction = direction;
+    }
+}
+
+class WindowCandidate {
     constructor(cell, direction) {
         this.cell = cell;
         this.direction = direction;
@@ -230,6 +248,9 @@ export class ShipGenerator {
                 }
                 if (connectionCell.doors[direction.index]) {
                     neighbourCell.type = CellType.Door;
+                }
+                if (connectionCell.windows[direction.index]) {
+                    neighbourCell.type = CellType.Window;
                 }
                 if (connectionCell.neverConnected[direction.index]) {
                     neighbourCell.type = CellType.Wall;
@@ -425,6 +446,28 @@ export class ShipGenerator {
         }
     }
 
+    generateWindows(minAmount, maxAmount) {
+        let candidates = [];
+        for (let cell of this.connectionGrid) {
+            if (cell.type === ConnectionCellType.Hallway ||
+                cell.type === ConnectionCellType.Room) {
+                for (let direction of CardinalDirections) {
+                    let neighbour = cell.getNeighbour(direction);
+                    if (neighbour === null || neighbour.type === ConnectionCellType.Undefined) {
+                        candidates.push(new WindowCandidate(cell, direction));
+                    }
+                }
+            }
+        }
+
+        ArrayUtils.shuffleInPlace(candidates);
+
+        let amount = Random.getRandomIntInclusive(minAmount, maxAmount);
+        for (let i = 0; i < amount; ++i) {
+            candidates[i].cell.connectWithWindow(candidates[i].direction);
+        }
+    }
+
     tryGenerate() {
         this.init();
 
@@ -432,6 +475,7 @@ export class ShipGenerator {
         this.generateHallways(2, 2, 7, 12);
         this.generateHallways(2, 2, 4, 8);
         this.generateRooms(12, 20);
+        this.generateWindows(30, 40);
         this.setGridFromConnectionGrid(1, 1);
 
         let count = 0;
