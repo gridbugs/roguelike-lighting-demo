@@ -153,6 +153,14 @@ class WindowCandidate {
     }
 }
 
+const RoomType = makeEnum([
+    'Left',
+    'Right',
+    'SpawnCandidate',
+    'Spawn',
+    'None'
+]);
+
 class Room {
     constructor(id) {
         this.id = id;
@@ -161,6 +169,7 @@ class Room {
         this.maxX = -1;
         this.minY = Config.GRID_HEIGHT;
         this.maxY = -1;
+        this.type = RoomType.None;
     }
 
     get width() {
@@ -203,6 +212,7 @@ export class ShipGenerator {
         this.doorCandidates = [];
 
         this.rooms = [];
+        this.spawnCandidateRooms = [];
 
         this.leftRoom = null;
         this.rightRoom = null;
@@ -591,8 +601,45 @@ export class ShipGenerator {
             }
         }
 
+        this.leftRoom.type = RoomType.Left;
+        this.rightRoom.type = RoomType.Right;
+
+        for (let room of this.rooms) {
+            if (room.type === RoomType.None &&
+                room.width > 2 && room.height > 2) {
+                room.type = RoomType.SpawnCandidate;
+                this.spawnCandidateRooms.push(room);
+            }
+        }
+
         this.left = this.pickRoomCell(this.leftRoom);
         this.right = this.pickRoomCell(this.rightRoom);
+    }
+
+    spawnNpcs(minSpawns, maxSpawns, minPerSpawn, maxPerSpawn, ecsContext) {
+        ArrayUtils.shuffleInPlace(this.spawnCandidateRooms);
+        let numSpawns =
+            Math.min(Random.getRandomIntInclusive(minSpawns, maxSpawns), this.spawnCandidateRooms.length);
+
+        for (let i = 0; i < numSpawns; ++i) {
+            let room = this.spawnCandidateRooms[i];
+            ArrayUtils.shuffleInPlace(room.cells);
+            let numNpcs = Math.min(room.cells.length, Random.getRandomIntInclusive(minPerSpawn, maxPerSpawn));
+            for (let j = 0; j < numNpcs; ++j) {
+                let cell = room.cells[j];
+                ecsContext.emplaceEntity(EntityPrototypes.Zombie(cell.x, cell.y));
+            }
+            if (numNpcs < room.cells.length) {
+                let cell = room.cells[numNpcs];
+                if (i === 0 || Math.random() < 0.1) {
+                    if (Math.random() < 0.5) {
+                        ecsContext.emplaceEntity(EntityPrototypes.Skeleton(cell.x, cell.y));
+                    } else {
+                        ecsContext.emplaceEntity(EntityPrototypes.Bloat(cell.x, cell.y));
+                    }
+                }
+            }
+        }
     }
 
     tryGenerate() {
@@ -604,7 +651,6 @@ export class ShipGenerator {
         this.generateRooms(12, 20);
         this.generateWindows(30, 40);
         this.setGridFromConnectionGrid(1, 1);
-        this.classifyRooms();
 
         let count = 0;
         for (let region of this.grid.floodFill()) {
@@ -625,6 +671,9 @@ export class ShipGenerator {
     generate(level, ecsContext) {
 
         while (!this.tryGenerate());
+
+        this.classifyRooms();
+        this.spawnNpcs(4, 6, 2, 4, ecsContext);
 
         for (let cell of this.grid) {
             switch (cell.type) {
