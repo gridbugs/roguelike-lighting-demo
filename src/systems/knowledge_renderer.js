@@ -59,7 +59,7 @@ export class KnowledgeRenderer extends System {
 
     getHealthBarTile(entity) {
         let maxHealth = entity.get(Components.MaxHealth).value;
-        let health = Math.min(entity.get(Components.Health).value, maxHealth);
+        let health = Math.max(Math.min(entity.get(Components.Health).value, maxHealth), 0);
         let barLength = Math.floor((Tiles.HealthBarSize * health) / maxHealth);
         return Tiles.HealthBars[barLength];
     }
