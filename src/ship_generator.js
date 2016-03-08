@@ -37,6 +37,22 @@ class GeneratorCell extends Cell {
 }
 class GeneratorGrid extends CellGrid(GeneratorCell) {}
 
+class RoomCell extends Cell {
+    constructor(x, y, grid) {
+        super(x, y, grid);
+        this.generatorCell = null;
+    }
+
+    floodFillCompare(cell) {
+        if ((this.generatorCell.type === CellType.Floor) ===
+               (cell.generatorCell.type === CellType.Floor)) {
+            return 0;
+        }
+        return 1;
+    }
+}
+class RoomGrid extends CellGrid(RoomCell) {}
+
 const ConnectionCellType = makeEnum([
     'Undefined',
     'Hallway',
@@ -137,18 +153,66 @@ class WindowCandidate {
     }
 }
 
+class Room {
+    constructor(id) {
+        this.id = id;
+        this.cells = [];
+        this.minX = Config.GRID_WIDTH;
+        this.maxX = -1;
+        this.minY = Config.GRID_HEIGHT;
+        this.maxY = -1;
+    }
+
+    get width() {
+        return Math.max(this.maxX - this.minX, 0);
+    }
+
+    get height() {
+        return Math.max(this.maxY - this.minY, 0);
+    }
+
+    get squareSize() {
+        return this.width * this.height;
+    }
+
+    get midX() {
+        return (this.minX + this.maxX) / 2;
+    }
+
+    addCell(cell) {
+        this.cells.push(cell);
+        this.minX = Math.min(this.minX, cell.x);
+        this.maxX = Math.max(this.maxX, cell.x);
+        this.minY = Math.min(this.minY, cell.y);
+        this.maxY = Math.max(this.maxY, cell.y);
+    }
+}
+
 export class ShipGenerator {
     constructor() {
     }
     init() {
         this.grid = new GeneratorGrid(Config.GRID_WIDTH, Config.GRID_HEIGHT);
+        this.roomGrid = new RoomGrid(Config.GRID_WIDTH, Config.GRID_HEIGHT);
         this.connectionGrid = new ConnectionGrid(CONNECTIONS_WIDTH, CONNECTIONS_HEIGHT);
 
         this.numRooms = 0;
 
         this.connectedRooms = [];
 
-        this.doorCandidates = []
+        this.doorCandidates = [];
+
+        this.rooms = [];
+
+        this.leftRoom = null;
+        this.rightRoom = null;
+        this.left = null;
+        this.right = null;
+
+        for (let cell of this.grid) {
+            let roomCell = this.roomGrid.get(cell.coord);
+            roomCell.generatorCell = cell;
+        }
     }
 
     addDoorCandidate(a, b, cell, direction) {
@@ -462,10 +526,73 @@ export class ShipGenerator {
 
         ArrayUtils.shuffleInPlace(candidates);
 
-        let amount = Random.getRandomIntInclusive(minAmount, maxAmount);
+        let amount = Math.min(Random.getRandomIntInclusive(minAmount, maxAmount), candidates.length);
         for (let i = 0; i < amount; ++i) {
             candidates[i].cell.connectWithWindow(candidates[i].direction);
         }
+    }
+
+    pickRoomCell(room) {
+        ArrayUtils.shuffleInPlace(room.cells);
+        for (let cell of room.cells) {
+            let wallNeighbour = false;
+            for (let neighbour of cell.neighbours) {
+                if (neighbour.type !== CellType.Floor) {
+                    wallNeighbour = true;
+                    break;
+                }
+            }
+            if (!wallNeighbour) {
+                return cell;
+            }
+        }
+
+        return room.cells[0];
+    }
+
+    classifyRooms() {
+        for (let region of this.roomGrid.floodFill()) {
+            let first = true;
+            let isRoom = false;
+            let room;
+            let count = 0;
+            for (let roomCell of region) {
+                let cell = roomCell.generatorCell;
+                if (first) {
+                    first = false;
+                    isRoom = cell.type === CellType.Floor;
+                    if (isRoom) {
+                        room = new Room(this.rooms.length);
+                        this.rooms.push(room);
+                    }
+                }
+                if (isRoom) {
+                    room.addCell(cell);
+                }
+            }
+        }
+
+        this.rooms.sort((a, b) => {
+            return a.midX - b.midX;
+        });
+
+        for (let i = 0; i < this.rooms.length; ++i) {
+            let room = this.rooms[i];
+            if (room.width > 2 && room.height > 2) {
+                this.leftRoom = room;
+                break;
+            }
+        }
+
+        for (let i = this.rooms.length - 1; i >= 0; --i) {
+            let room = this.rooms[i];
+            if (room.width > 2 && room.height > 2 && room !== this.startRoom) {
+                this.rightRoom = room;
+            }
+        }
+
+        this.left = this.pickRoomCell(this.leftRoom);
+        this.right = this.pickRoomCell(this.rightRoom);
     }
 
     tryGenerate() {
@@ -477,6 +604,7 @@ export class ShipGenerator {
         this.generateRooms(12, 20);
         this.generateWindows(30, 40);
         this.setGridFromConnectionGrid(1, 1);
+        this.classifyRooms();
 
         let count = 0;
         for (let region of this.grid.floodFill()) {
@@ -523,7 +651,7 @@ export class ShipGenerator {
                 }
             }
         }
-        ecsContext.emplaceEntity(EntityPrototypes.PlayerCharacter(0, 0));
+        ecsContext.emplaceEntity(EntityPrototypes.PlayerCharacter(this.left.x, this.left.y));
 
     }
 }
