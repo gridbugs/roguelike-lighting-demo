@@ -85,6 +85,11 @@ export class GameContext extends EcsContext(GameCell) {
     finalize() {
         super.finalize();
         this.atmosphere.refresh();
+        for (let entity of this.entities) {
+            entity.with(Components.Observer, (observer) => {
+                observer.knowledge.getGrid(this).familiarize();
+            });
+        }
     }
 
     runContinuousSystems(timeDelta) {

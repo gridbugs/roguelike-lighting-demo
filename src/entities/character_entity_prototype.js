@@ -44,11 +44,12 @@ export function PlayerCharacter(x, y) {
         new Components.Attack(2),
         new Components.Defense(1),
         new Components.Accuracy(80),
-        new Components.Dodge(10),
+        new Components.Dodge(1),
         new Components.Unfamiliar(),
         new Components.WeaponInventory(),
         new Components.Knockable(),
         new Components.Ventable(),
+        new Components.AutoPickup(),
         new Components.Name("You"),
         new Components.Description("You. You awoke from cryosleep in deep space. The ship's computer told you that the rest of the crew is dead.")
     ];
@@ -59,7 +60,7 @@ function GenericCharacter(x, y, tile, health, walkTime, burnTime = 5, healthReco
         new Components.Position(x, y),
         new Components.Tile(tile, 4),
         new Components.Collider(),
-        new Components.Observer(Shadowcast.detectVisibleArea, 20, true),
+        new Components.Observer(Shadowcast.detectVisibleArea, 20, true /* familiar */),
         new Components.Health(health),
         new Components.MaxHealth(health),
         new Components.Combatant(CombatGroups.Hostile),
@@ -77,11 +78,11 @@ function GenericCharacter(x, y, tile, health, walkTime, burnTime = 5, healthReco
 }
 
 export function Zombie(x, y) {
-    return GenericCharacter(x, y, Tiles.Zombie, 100, 0.5, 100).concat([
-        new Components.Attack(1),
+    return GenericCharacter(x, y, Tiles.Zombie, 20, 1.5, 100).concat([
+        new Components.Attack(2),
         new Components.Defense(1),
-        new Components.Accuracy(80),
-        new Components.Dodge(20),
+        new Components.Accuracy(100),
+        new Components.Dodge(2),
         new Components.Name("Zombie"),
         new Components.Description("A zombie. A former member of your crew. You recognize its face.")
     ]);
@@ -100,7 +101,7 @@ export function Skeleton(x, y) {
 }
 
 export function Bloat(x, y) {
-    return GenericCharacter(x, y, Tiles.Bloat, 5, 0.5).concat([
+    return GenericCharacter(x, y, Tiles.Bloat, 5, 1).concat([
         new Components.Attack(1),
         new Components.Defense(1),
         new Components.Accuracy(80),

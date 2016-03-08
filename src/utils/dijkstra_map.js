@@ -52,6 +52,7 @@ export function DijkstraMap(T) {
         }
 
         debugDraw(drawer) {
+            drawer.clear();
             for (let cell of this) {
                 if (cell.visited) {
                     drawer.drawTileUnstored(Tiles.getDebug(

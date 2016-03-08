@@ -8,5 +8,11 @@ export const GlobalDrawer = {
             Config.TILE_WIDTH,
             Config.TILE_HEIGHT
         );
+        this.DebugDrawer = new Drawer(
+            document.getElementById('debug-canvas'),
+            Config.TILE_WIDTH,
+            Config.TILE_HEIGHT
+        );
+
     }
 }

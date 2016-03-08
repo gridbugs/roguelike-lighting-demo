@@ -64,6 +64,8 @@ class EntityMemory extends InvalidatingComponentTable {
         let c = super.add(component);
         c.entity = this;
     }
+
+    updateCellTurn() {}
 }
 EntityMemory.RememberedComponents = null;
 
@@ -155,19 +157,22 @@ class KnowledgeGrid extends CellGrid(KnowledgeCell) {
         super(ecsContext.width, ecsContext.height);
         this.ecsContext = ecsContext;
         this.knowledge = knowledge;
-        if (knowledge.familiar) {
-            for (let entity of ecsContext.entities) {
-                if (entity.cell !== null) {
-                    let knowledgeCell = this.get(entity.cell.coord);
+        for (let cell of ecsContext.spacialHash) {
+            this.get(cell.coord).realCell = cell;
+        }
+    }
+
+    familiarize() {
+        if (this.knowledge.familiar) {
+            for (let cell of this.ecsContext.spacialHash) {
+                let knowledgeCell = this.get(cell.coord);
+                for (let entity of cell.entities.set) {
                     if (!entity.is(Components.Unfamiliar)) {
                         knowledgeCell.see(entity);
                         knowledgeCell.turn = -1;
                     }
                 }
             }
-        }
-        for (let cell of ecsContext.spacialHash) {
-            this.get(cell.coord).realCell = cell;
         }
     }
 }

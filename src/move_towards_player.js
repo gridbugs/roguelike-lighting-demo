@@ -15,12 +15,16 @@ import {assert} from 'utils/assert';
 
 function treatAsSolid(knowledgeCell) {
     if (!knowledgeCell.known) {
+        console.debug(knowledgeCell);
         return false;
     }
     if (knowledgeCell.is(Components.Door)) {
         return true;
     }
     if (knowledgeCell.is(Components.Solid)) {
+        return false;
+    }
+    if (knowledgeCell.is(Components.Void)) {
         return false;
     }
     return true;
@@ -81,7 +85,7 @@ MoveMap.instance = new MoveMap(Config.GRID_WIDTH, Config.GRID_HEIGHT, null);
 export class MoveTowardsPlayer extends Controller {
     constructor() {
         super();
-        this.debugDrawer = GlobalDrawer.Drawer;
+        this.debugDrawer = GlobalDrawer.DebugDrawer;
         this.targetMap = MoveMap.instance;
         this.fleeMap = FleeMap.instance;
         this.lastKnownPosition = null;

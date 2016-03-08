@@ -73,9 +73,14 @@ function toggleDoor(entity) {
 }
 
 async function useWeapon(entity) {
-    var weapon = entity.get(Components.WeaponInventory).currentWeapon.get(Components.Weapon).weapon;
-    var action = await weapon.use(entity);
-    return action;
+    if (entity.has(Components.WeaponInventory)) {
+        var weaponEntity = entity.get(Components.WeaponInventory).currentWeapon;
+        if (weaponEntity !== null) {
+            var weapon = weaponEntity.get(Components.Weapon).weapon;
+            return await weapon.use(entity);
+        }
+    }
+    return null;
 }
 
 function maybeUp(entity) {

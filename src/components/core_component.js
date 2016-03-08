@@ -7,7 +7,16 @@ import {Weapons} from 'weapons';
 class ValueComponent extends Component {
     constructor(value) {
         super();
-        this.value = value;
+        this._value = value;
+    }
+
+    get value() {
+        return this._value;
+    }
+
+    set value(value) {
+        this._value = value;
+        this.updateCellTurn();
     }
 
     clone() {
