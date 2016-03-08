@@ -15,6 +15,7 @@ import {Components} from 'components';
 
 import {help} from 'control';
 import {getKey} from 'utils/input';
+import {msDelay} from 'utils/time';
 import {assert} from 'utils/assert';
 
 function initRng() {
@@ -24,7 +25,7 @@ function initRng() {
     } else {
         seed = Config.RNG_SEED;
     }
-    console.debug(seed);
+    console.log(seed);
     Math.seedrandom(seed);
 }
 
@@ -114,8 +115,12 @@ export async function main() {
             await currentEcsContext.progressSchedule();
         }
 
-
         await getKey();
+        firstLevel.ecsContext.hud.showOverlay();
+
+        /* This delay is necessary to prevent the compute-intensive level generator
+         * delaying the displaying of the overlay. */
+        await msDelay(1);
 
         currentEcsContext.hud.message = "";
     }

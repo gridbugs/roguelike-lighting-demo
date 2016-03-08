@@ -15,7 +15,6 @@ import {assert} from 'utils/assert';
 
 function treatAsSolid(knowledgeCell) {
     if (!knowledgeCell.known) {
-        console.debug(knowledgeCell);
         return false;
     }
     if (knowledgeCell.is(Components.Door)) {
