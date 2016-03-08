@@ -20,7 +20,7 @@ export class Observation extends System {
 
                 knowledgeCell.clear();
 
-                for (let e of cell) {
+                for (let e of cell.entities.set) {
                     knowledgeCell.see(e);
                 }
             }

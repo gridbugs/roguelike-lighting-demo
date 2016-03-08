@@ -80,7 +80,7 @@ class KnowledgeCell extends Cell {
         super(x, y, grid);
         this.turn = -1;
         this.known = false;
-        this.entityMemoryPool = new ObjectPool(EntityMemory, this);
+        this.entityMemoryPool = new ObjectPool(EntityMemory, 10, this);
         this.topEntityMemory = new BestTracker(compare);
         this.topBackgroundEntityMemory = new BestTracker(compare);
         this.componentTable = new ComponentTable();

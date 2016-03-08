@@ -1,17 +1,19 @@
 import {Vec2} from 'utils/vec2';
 import {Direction} from 'utils/direction';
-import {constrain} from 'utils/math';
+import {SQRT2, constrain} from 'utils/math';
+import {ObjectStack} from 'utils/object_stack';
 
 class StackFrame {
-    constructor(minSlope, maxSlope, depth, visibility) {
-        this.minSlope = minSlope;
-        this.maxSlope = maxSlope;
-        this.depth = depth;
-        this.visibility = visibility;
+    constructor() {
+        this.minSlope = 0;
+        this.maxSlope = 0;
+        this.depth = 0;
+        this.visibility = 0;
     }
 }
 
-var COORD_IDX = new Vec2(0, 0);
+const COORD_IDX = new Vec2(0, 0);
+const STACK = new ObjectStack(StackFrame, 64);
 
 function computeSlope(fromVec, toVec, lateralIndex, depthIndex) {
     return  (toVec.arrayGet(lateralIndex) - fromVec.arrayGet(lateralIndex)) /
@@ -81,18 +83,23 @@ function* detectVisibleAreaOctant(
     depthMax
 ) {
 
-    var depthIndex = Vec2.getOtherIndex(lateralIndex);
-    var stack = [];
-    stack.push(new StackFrame(initialMinSlope, initialMaxSlope, 1, 1));
+    let depthIndex = Vec2.getOtherIndex(lateralIndex);
 
-    var viewDistanceSquared = viewDistance * viewDistance;
+    let frame = STACK.push();
+    frame.minSlope = initialMinSlope;
+    frame.maxSlope = initialMaxSlope;
+    frame.depth = 1;
+    frame.visibility = 1;
 
-    while (stack.length != 0) {
-        let currentFrame = stack.pop();
+    let viewDistanceSquared = viewDistance * viewDistance;
+
+    while (!STACK.empty) {
+        let currentFrame = STACK.pop();
         let minSlope = currentFrame.minSlope;
         let maxSlope = currentFrame.maxSlope;
         let depth = currentFrame.depth;
         let visibility = currentFrame.visibility;
+        /* last usage of currentFrame */
 
         let depthAbsoluteIndex = eyeCell.coord.arrayGet(depthIndex) + (depth * depthDirection);
         if (depthAbsoluteIndex < 0 || depthAbsoluteIndex > depthMax) {
@@ -125,16 +132,15 @@ function* detectVisibleAreaOctant(
         let previousOpaque = false;
         let previousVisibility = -1;
 
-        let coordIdx = COORD_IDX;
-        coordIdx.arraySet(depthIndex, depthAbsoluteIndex);
+        COORD_IDX.arraySet(depthIndex, depthAbsoluteIndex);
 
         for (let i = startIndex; i <= stopIndex; ++i) {
             let lastIteration = i === stopIndex;
 
-            coordIdx.arraySet(lateralIndex, i);
-            let cell = grid.get(coordIdx);
+            COORD_IDX.arraySet(lateralIndex, i);
+            let cell = grid.get(COORD_IDX);
 
-            if (coordIdx.getDistanceSquared(eyeCell.coord) < viewDistanceSquared) {
+            if (COORD_IDX.getDistanceSquared(eyeCell.coord) < viewDistanceSquared) {
                 yield cell;
             }
 
@@ -157,13 +163,21 @@ function* detectVisibleAreaOctant(
                 let newMaxSlope = computeSlope(eyeCell.centre, cell.corners[outerDirection],
                                             lateralIndex, depthIndex
                                     ) * depthDirection;
-                stack.push(new StackFrame(minSlope, newMaxSlope, depth + 1, previousVisibility));
+                let frame = STACK.push();
+                frame.minSlope = minSlope;
+                frame.maxSlope = newMaxSlope;
+                frame.depth = depth + 1;
+                frame.visibility = previousVisibility;
             }
 
             minSlope = nextMinSlope;
 
             if (!currentOpaque && lastIteration) {
-                stack.push(new StackFrame(minSlope, maxSlope, depth + 1, currentVisibility));
+                let frame = STACK.push();
+                frame.minSlope = minSlope;
+                frame.maxSlope = maxSlope;
+                frame.depth = depth + 1;
+                frame.visibility = currentVisibility;
             }
 
             previousVisibility = currentVisibility;

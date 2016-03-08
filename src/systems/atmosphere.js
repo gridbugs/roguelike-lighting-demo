@@ -346,7 +346,8 @@ export class Atmosphere extends ReactiveSystem {
         this.processBurning(timeDelta);
 
         /* Reduce the atmosphere of venting cells */
-        for (let cell of this.grid) {
+        for (let i = 0; i < this.grid.size; ++i) {
+            let cell = this.grid.array[i];
             if (cell.venting) {
                 cell.atmosphere = Math.max(0, cell.atmosphere - cell.ventRate * timeDelta);
                 if (cell.atmosphere === 0) {
@@ -354,6 +355,5 @@ export class Atmosphere extends ReactiveSystem {
                 }
             }
         }
-
     }
 }

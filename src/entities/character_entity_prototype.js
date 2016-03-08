@@ -58,7 +58,7 @@ function GenericCharacter(x, y, tile, health, walkTime, burnTime = 5, healthReco
     return [
         new Components.Position(x, y),
         new Components.Tile(tile, 4),
-//        new Components.TurnTaker(new MoveTowardsPlayer()),
+        new Components.TurnTaker(new MoveTowardsPlayer()),
         new Components.Collider(),
         new Components.Observer(Shadowcast.detectVisibleArea, 20, true),
         new Components.Health(health),

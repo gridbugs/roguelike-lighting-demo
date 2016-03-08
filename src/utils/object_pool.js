@@ -1,7 +1,7 @@
 export class ObjectPool {
-    constructor(Type, ...args) {
+    constructor(Type, n = 0, ...args) {
         this.Type = Type;
-        this.array = new Array();
+        this.array = new Array(n);
         this.index = 0;
         this.numObjects = 0;
 
