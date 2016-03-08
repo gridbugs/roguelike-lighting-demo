@@ -5,6 +5,7 @@ import {ComponentTable} from 'engine/component_table';
 import {ObjectPool} from 'utils/object_pool';
 import {BestTracker} from 'utils/best_tracker';
 import {getTileComponentDepth} from 'components/tile_component';
+import {Config} from 'config';
 
 class EntityMemory extends InvalidatingComponentTable {
     constructor(cell) {
@@ -84,6 +85,7 @@ class KnowledgeCell extends Cell {
         this.topEntityMemory = new BestTracker(compare);
         this.topBackgroundEntityMemory = new BestTracker(compare);
         this.componentTable = new ComponentTable();
+        this.realCell = null;
     }
 
     *[Symbol.iterator]() {
@@ -92,6 +94,14 @@ class KnowledgeCell extends Cell {
 
     get visible() {
         return this.turn === this.grid.ecsContext.turn;
+    }
+
+    get dirty() {
+        if (Config.LAZY_KNOWLEDGE) {
+            return this.turn <= this.realCell.turn;
+        } else {
+            return true;
+        }
     }
 
     see(entity) {
@@ -155,6 +165,9 @@ class KnowledgeGrid extends CellGrid(KnowledgeCell) {
                     }
                 }
             }
+        }
+        for (let cell of ecsContext.spacialHash) {
+            this.get(cell.coord).realCell = cell;
         }
     }
 }

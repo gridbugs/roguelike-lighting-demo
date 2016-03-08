@@ -33,11 +33,9 @@ class SetComponent extends Component {
     }
 }
 
-export class Solid extends Component {
-}
+export class Solid extends Component {}
 
-export class Collider extends Component {
-}
+export class Collider extends Component {}
 
 export class Opacity extends Component {
     constructor(value) {
@@ -69,14 +67,11 @@ export class Observer extends Component {
     }
 }
 
-export class Projectile extends Component {
-}
+export class Projectile extends Component {}
 
-export class Health extends ValueComponent {
-}
+export class Health extends ValueComponent {}
 
-export class MaxHealth extends ValueComponent {
-}
+export class MaxHealth extends ValueComponent {}
 
 export class Combatant extends Component {
     constructor(group) {
@@ -94,8 +89,7 @@ export class Combatant extends Component {
     }
 }
 
-export class FireStarter extends Component {
-}
+export class FireStarter extends Component {}
 
 export class Flamable extends Component {
     constructor(time) {
@@ -135,11 +129,9 @@ export class Burning extends SetComponent {
     }
 }
 
-export class Fireproof extends Component {
-}
+export class Fireproof extends Component {}
 
-export class Unfamiliar extends Component {
-}
+export class Unfamiliar extends Component {}
 
 export class CurrentWeapon extends Component {
     constructor(weapon) {
@@ -247,11 +239,9 @@ export class UpStairs extends Component {
     }
 }
 
-export class Meltable extends Component {
-}
+export class Meltable extends Component {}
 
-export class Water extends Component {
-}
+export class Water extends Component {}
 
 export class HealthRecovery extends SetComponent {
     constructor(rate) {
@@ -291,8 +281,7 @@ export class UpgradesOnDescent extends Component {
     }
 }
 
-export class WinOnDeath extends Component {
-}
+export class WinOnDeath extends Component {}
 
 export class WalkTime extends ValueComponent {}
 
@@ -412,3 +401,5 @@ export class TimedTransformation extends SetComponent {
         dest.entityPrototype = this.entityPrototype;
     }
 }
+
+export class AutoPickup extends Component {}

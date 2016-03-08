@@ -17,11 +17,13 @@ export class Observation extends System {
 
             for (let cell of observer.observe(eyePosition, viewDistance, grid)) {
                 let knowledgeCell = knowledgeGrid.get(cell.coord);
-
-                knowledgeCell.clear();
-
-                for (let e of cell.entities.set) {
-                    knowledgeCell.see(e);
+                if (knowledgeCell.dirty) {
+                    knowledgeCell.clear();
+                    for (let e of cell.entities.set) {
+                        knowledgeCell.see(e);
+                    }
+                } else {
+                    knowledgeCell.turn = this.ecsContext.turn;
                 }
             }
         });

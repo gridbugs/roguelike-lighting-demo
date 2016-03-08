@@ -95,6 +95,7 @@ export class Position extends Component {
         /* remove the entity from its cell */
         this.entity.cell.entities.delete(this.entity);
         this.entity.cell.recompute();
+        this.entity.cell.turn = this.ecsContext.turn;
         this.entity.cell = null;
 
     }
@@ -105,6 +106,7 @@ export class Position extends Component {
         cell.entities.add(this.entity);
         this.entity.cell = cell;
         cell.recompute();
+        cell.turn = this.ecsContext.turn;
     }
 
     onAdd(entity) {

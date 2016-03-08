@@ -123,8 +123,6 @@ async function examine(entity) {
             var text = null;
             var description = topEntity.get(Components.Description);
             if (description === null) {
-                console.debug(topEntity);
-                console.debug(topEntity.get(Components.Name));
                 text = topEntity.get(Components.Name).value;
             } else {
                 text = description.value;

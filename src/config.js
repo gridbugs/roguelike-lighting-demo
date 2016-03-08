@@ -6,5 +6,12 @@ export const Config = {
     DEBUG: false,
     RNG_SEED: null,
     OMNISCIENT: false,
-    DEMO: false
+    DEMO: true,
+    AI: true,
+
+    /* Optimization where cells track their last updated time, and this
+     * is used by the observation system to determine if it needs to
+     * update a character's knowledge of a cell.
+     */
+    LAZY_KNOWLEDGE: false
 };

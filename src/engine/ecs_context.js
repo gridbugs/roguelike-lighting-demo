@@ -16,6 +16,7 @@ export class SpacialHashCell extends Cell {
     constructor(x, y, grid) {
         super(x, y, grid);
         this.entities = new ComponentCountingEntitySet();
+        this.turn = 0;
     }
 
     /* Cells may store precomputed amalgamations such as the opacity

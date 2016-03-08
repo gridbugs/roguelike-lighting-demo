@@ -55,10 +55,9 @@ export function PlayerCharacter(x, y) {
 }
 
 function GenericCharacter(x, y, tile, health, walkTime, burnTime = 5, healthRecovery = 0.1) {
-    return [
+    let components = [
         new Components.Position(x, y),
         new Components.Tile(tile, 4),
-        new Components.TurnTaker(new MoveTowardsPlayer()),
         new Components.Collider(),
         new Components.Observer(Shadowcast.detectVisibleArea, 20, true),
         new Components.Health(health),
@@ -71,6 +70,10 @@ function GenericCharacter(x, y, tile, health, walkTime, burnTime = 5, healthReco
         new Components.Ventable(),
         new Components.WalkTime(walkTime)
     ];
+    if (Config.AI) {
+        components.push(new Components.TurnTaker(new MoveTowardsPlayer()));
+    }
+    return components;
 }
 
 export function Zombie(x, y) {

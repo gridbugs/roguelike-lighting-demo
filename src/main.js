@@ -80,8 +80,14 @@ export async function main() {
     Level.EcsContext = GameContext;
 
     while (true) {
-        var generator = new StringTerrainGenerator(1, terrainStringArrayL1, null);
-        generator = new ShipGenerator();
+
+        var generator;
+        if (Config.DEMO) {
+            generator = new StringTerrainGenerator(1, terrainStringArrayL1, null);
+        } else {
+            generator = new ShipGenerator();
+        }
+
         var firstLevel = new Level(generator);
         var playerCharacter = firstLevel.ecsContext.playerCharacter;
 
