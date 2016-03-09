@@ -55,7 +55,7 @@ export class Hud {
             this.atmosphere = "<span style='color:#ffffff'>Pressurized</span>";
         }
 
-        this.stats = `0₂:${oxygen}/${maxOxygen} HP:${health}/${maxHealth}`;
+        this.stats = `O₂:${oxygen}/${maxOxygen} HP:${health}/${maxHealth}`;
 
         let weaponEntity = entity.get(Components.WeaponInventory).currentWeapon;
         if (weaponEntity !== null) {
