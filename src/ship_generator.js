@@ -753,6 +753,7 @@ export class ShipGenerator {
                 }
                 case CellType.Window: {
                     ecsContext.emplaceEntity(EntityPrototypes.Window(cell.x, cell.y));
+                    ecsContext.emplaceEntity(EntityPrototypes.Floor(cell.x, cell.y));
                     break;
                 }
             }

@@ -6,7 +6,7 @@ export const Config = {
     DEBUG: false,
     RNG_SEED: null,
     OMNISCIENT: false,
-    DEMO: true,
+    DEMO: false,
     AI: true,
 
     /* Optimization where cells track their last updated time, and this

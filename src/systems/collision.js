@@ -118,5 +118,12 @@ export class Collision extends ReactiveSystem {
                 );
             }
         });
+
+        this.on(Actions.CloseDoor, (action) => {
+            let cell = action.door.cell;
+            if (cell.has(Components.Combatant)) {
+                action.success = false;
+            }
+        });
     }
 }
