@@ -101,25 +101,32 @@ p.font-loader {
     background-color: #000000;
     color: #ffffff;
 }
+#game {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+}
 </style>
 
 </head>
 <body>
     <p class='font-loader'>.</p>
-    <canvas id="canvas" width=1024 height=640></canvas>
-    <canvas id="debug-canvas" width=1024 height=640></canvas>
-    <div id="hud">
-        <div id="top-hud">
-            <div id="message"></div>
-            <div id="atmosphere"></div>
+    <div id="game">
+        <canvas id="canvas" width=1024 height=640></canvas>
+        <canvas id="debug-canvas" width=1024 height=640></canvas>
+        <div id="hud">
+            <div id="top-hud">
+                <div id="message"></div>
+                <div id="atmosphere"></div>
+            </div>
+            <div id="bottom-hud">
+                <div id="weapon"></div>
+                <div id="stats"></div>
+            </div>
         </div>
-        <div id="bottom-hud">
-            <div id="weapon"></div>
-            <div id="stats"></div>
+        <div id="overlay">
+            Loading...
         </div>
-    </div>
-    <div id="overlay">
-        Loading...
     </div>
 </body>
 </html>

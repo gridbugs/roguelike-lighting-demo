@@ -42,7 +42,7 @@ export class Hud {
     }
 
     update(entity) {
-        let health = Math.floor(entity.get(Components.Health).value);
+        let health = Math.ceil(entity.get(Components.Health).value); // ceil so 0.5 doesn't look like 0
         let maxHealth = Math.floor(entity.get(Components.MaxHealth).value);
         let oxygen = Math.floor(entity.get(Components.Oxygen).value);
         let maxOxygen = Math.floor(entity.get(Components.MaxOxygen).value);
@@ -77,4 +77,5 @@ export class Hud {
             }
         }
     }
+
 }

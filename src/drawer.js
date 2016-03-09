@@ -77,6 +77,13 @@ export class Drawer {
         }
     }
 
+    fill(colour) {
+        this.ctx.beginPath();
+        this.ctx.fillStyle = colour;
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        this.ctx.fill();
+    }
+
     redrawBackgroundTile(x, y) {
         let cell = this.grid.get(x, y);
         let stack = cell.stack;

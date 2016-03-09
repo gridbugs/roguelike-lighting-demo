@@ -5,6 +5,7 @@ import {EntityPrototypes} from 'entity_prototypes';
 import {makeEnum, substituteValues, makeTable} from 'utils/enum';
 import * as Input from 'utils/input';
 import {Turn} from 'engine/turn';
+import {HelpText} from 'help_text';
 
 export const ControlTypes = makeEnum([
     'West',
@@ -145,21 +146,15 @@ async function examine(entity) {
 
 export async function help(entity) {
     var hud = entity.ecsContext.hud;
-    hud.overlay = [
+    hud.overlay =  [
+        'CONTROLS',
         '',
-        'Press any key to start!',
+        ''
+    ].concat(HelpText).concat([
         '',
         '',
-        'Movement: hjklyubn',
-        'Wait: .',
-        'Ascend: <',
-        'Descend: >',
-        'Fire: f, movement keys to navigate, enter to fire',
-        'Open/Close: c',
-        'Get Item: g',
-        'Examine: x, movement keys to nagivate, enter for more details',
-        'Show this screen: ?'
-    ]
+        'Press any key to resume'
+        ])
         .map((x) => {return `<p>${x}</p>`})
         .join('<br/>');
 

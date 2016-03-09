@@ -4,6 +4,7 @@ import 'populate_namespaces';
 import {initConfigFromUrl} from 'options';
 import {Config} from 'config';
 import {initGlobals} from 'globals';
+import {GlobalHud} from 'global_hud';
 
 import {StringTerrainGenerator} from 'string_terrain_generator';
 import {ShipGenerator} from 'ship_generator';
@@ -18,6 +19,8 @@ import {getKey} from 'utils/input';
 import {msDelay} from 'utils/time';
 import {assert} from 'utils/assert';
 
+import {HelpText} from 'help_text';
+
 function initRng() {
     let seed;
     if (Config.RNG_SEED === null) {
@@ -28,6 +31,28 @@ function initRng() {
     console.log(seed);
     Math.seedrandom(seed);
 }
+
+const LOADING_SCREEN = [
+    'Loading...Generating...',
+    '',
+    ''
+]
+.concat(HelpText)
+.map((x) => {return `<p>${x}</p>`})
+.join('<br/>');
+
+const LOADED_SCREEN = [
+    'Loading...Generating...<span style="color:green">Done</span>',
+    '',
+    ''
+]
+.concat(HelpText).concat([
+    '',
+    '<span style="color:red">Press any key to start</start>'
+])
+.map((x) => {return `<p>${x}</p>`})
+.join('<br/>');
+
 
 export async function main() {
     initConfigFromUrl();
@@ -77,10 +102,14 @@ export async function main() {
 ""
     ];
 
-    var first = false;              // XXX set this to true to enable help screen
+    var first = true;
     Level.EcsContext = GameContext;
+    let hud = GlobalHud.Hud;
 
     while (true) {
+        hud.overlay = LOADING_SCREEN;
+        hud.showOverlay();
+        await msDelay(30);
 
         var generator;
         if (Config.DEMO) {
@@ -94,7 +123,8 @@ export async function main() {
 
         if (first) {
             first = false;
-            await help(playerCharacter);
+            hud.overlay = LOADED_SCREEN;
+            await getKey();
         }
 
         firstLevel.ecsContext.hud.hideOverlay();
@@ -102,13 +132,16 @@ export async function main() {
         var currentEcsContext;
         while (true) {
             currentEcsContext = playerCharacter.ecsContext;
+            console.debug(playerCharacter.get(Components.Health).value);
             if (playerCharacter.get(Components.Health).value <= 0) {
                 currentEcsContext.updatePlayer();
+                currentEcsContext.drawer.fill('rgba(255, 0, 0, 0.25)');
                 currentEcsContext.hud.message = "You died (press any key to restart)"
                 break;
             }
             if (playerCharacter.has(Components.StuckInSpace)) {
                 currentEcsContext.updatePlayer();
+                currentEcsContext.drawer.fill('rgba(255, 0, 0, 0.25)');
                 currentEcsContext.hud.message = "You drift in space forever (press any key to restart)"
                 break;
             }
@@ -116,12 +149,7 @@ export async function main() {
         }
 
         await getKey();
-        firstLevel.ecsContext.hud.showOverlay();
-
-        /* This delay is necessary to prevent the compute-intensive level generator
-         * delaying the displaying of the overlay. */
-        await msDelay(30);
 
         currentEcsContext.hud.message = "";
-    }
+   }
 }
