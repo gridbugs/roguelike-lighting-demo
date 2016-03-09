@@ -132,7 +132,6 @@ export async function main() {
         var currentEcsContext;
         while (true) {
             currentEcsContext = playerCharacter.ecsContext;
-            console.debug(playerCharacter.get(Components.Health).value);
             if (playerCharacter.get(Components.Health).value <= 0) {
                 currentEcsContext.updatePlayer();
                 currentEcsContext.drawer.fill('rgba(255, 0, 0, 0.25)');
