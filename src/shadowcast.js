@@ -24,48 +24,50 @@ export function* detectVisibleArea(eyePosition, viewDistance, grid) {
     let eyeCell = grid.get(eyePosition);
     let xMax = grid.width - 1;
     let yMax = grid.height - 1;
+    let squareViewDistance = SQRT2 * viewDistance;
+    let viewDistanceSquared = viewDistance * viewDistance;
 
     yield eyeCell;
 
     //  \|
     yield* detectVisibleAreaOctant( eyeCell, viewDistance, grid, -1, 0,
                                     Direction.NorthWest.subIndex, Direction.SouthWest.subIndex,
-                                    -1, Vec2.X_IDX, xMax, yMax
+                                    -1, Vec2.X_IDX, xMax, yMax, squareViewDistance, viewDistanceSquared
     );
     //  |/
     yield* detectVisibleAreaOctant( eyeCell, viewDistance, grid, 0, 1,
                                     Direction.SouthWest.subIndex, Direction.NorthWest.subIndex,
-                                    -1, Vec2.X_IDX, xMax, yMax
+                                    -1, Vec2.X_IDX, xMax, yMax, squareViewDistance, viewDistanceSquared
     );
     //  /|
     yield* detectVisibleAreaOctant( eyeCell, viewDistance, grid, -1, 0,
                                     Direction.SouthWest.subIndex, Direction.NorthWest.subIndex,
-                                    1, Vec2.X_IDX, xMax, yMax
+                                    1, Vec2.X_IDX, xMax, yMax, squareViewDistance, viewDistanceSquared
     );
     //  |\
     yield* detectVisibleAreaOctant( eyeCell, viewDistance, grid, 0, 1,
                                     Direction.NorthWest.subIndex, Direction.SouthWest.subIndex,
-                                    1, Vec2.X_IDX, xMax, yMax
+                                    1, Vec2.X_IDX, xMax, yMax, squareViewDistance, viewDistanceSquared
     );
     //  _\
     yield* detectVisibleAreaOctant( eyeCell, viewDistance, grid, -1, 0,
                                     Direction.NorthWest.subIndex, Direction.NorthEast.subIndex,
-                                    -1, Vec2.Y_IDX, yMax, xMax
+                                    -1, Vec2.Y_IDX, yMax, xMax, squareViewDistance, viewDistanceSquared
     );
     //  "/
     yield* detectVisibleAreaOctant( eyeCell, viewDistance, grid, 0, 1,
                                     Direction.NorthEast.subIndex, Direction.NorthWest.subIndex,
-                                    -1, Vec2.Y_IDX, yMax, xMax
+                                    -1, Vec2.Y_IDX, yMax, xMax, squareViewDistance, viewDistanceSquared
     );
     //  /_
     yield* detectVisibleAreaOctant( eyeCell, viewDistance, grid, -1, 0,
                                     Direction.NorthEast.subIndex, Direction.NorthWest.subIndex,
-                                    1, Vec2.Y_IDX, yMax, xMax
+                                    1, Vec2.Y_IDX, yMax, xMax, squareViewDistance, viewDistanceSquared
     );
     //  \"
     yield* detectVisibleAreaOctant( eyeCell, viewDistance, grid, 0, 1,
                                     Direction.NorthWest.subIndex, Direction.NorthEast.subIndex,
-                                    1, Vec2.Y_IDX, yMax, xMax
+                                    1, Vec2.Y_IDX, yMax, xMax, squareViewDistance, viewDistanceSquared
     );
 }
 
@@ -80,7 +82,9 @@ function* detectVisibleAreaOctant(
     depthDirection,
     lateralIndex,
     lateralMax,
-    depthMax
+    depthMax,
+    squareViewDistance,
+    viewDistanceSquared
 ) {
 
     let depthIndex = Vec2.getOtherIndex(lateralIndex);
@@ -91,8 +95,6 @@ function* detectVisibleAreaOctant(
     frame.depth = 1;
     frame.visibility = 1;
 
-    let viewDistanceSquared = viewDistance * viewDistance;
-
     while (!STACK.empty) {
         let currentFrame = STACK.pop();
         let minSlope = currentFrame.minSlope;
@@ -100,6 +102,11 @@ function* detectVisibleAreaOctant(
         let depth = currentFrame.depth;
         let visibility = currentFrame.visibility;
         /* last usage of currentFrame */
+
+        /* Don't scan further out than the observer's view distance */
+        if (depth > squareViewDistance) {
+            continue;
+        }
 
         let depthAbsoluteIndex = eyeCell.coord.arrayGet(depthIndex) + (depth * depthDirection);
         if (depthAbsoluteIndex < 0 || depthAbsoluteIndex > depthMax) {
@@ -118,12 +125,22 @@ function* detectVisibleAreaOctant(
         let partialStartIndex =
             Math.floor(Math.min(minInnerLateralPosition, minOuterLateralPosition));
 
+        /* Stop if we're off the edge of the grid */
+        if (partialStartIndex > lateralMax) {
+            continue;
+        }
+
         /* Find maximum indices for scanning */
         let maxInnerLateralPosition = eyeCellLateralPosition + (maxSlope * innerDepthOffset) - 1;
         let maxOuterLateralPosition = eyeCellLateralPosition + (maxSlope * outerDepthOffset) - 1;
 
         let partialStopIndex =
             Math.ceil(Math.max(maxInnerLateralPosition, maxOuterLateralPosition));
+
+        /* Stop if we're off the edge of the grid */
+        if (partialStopIndex < 0) {
+            continue;
+        }
 
         let startIndex = constrain(0, partialStartIndex, lateralMax);
         let stopIndex = constrain(0, partialStopIndex, lateralMax);
