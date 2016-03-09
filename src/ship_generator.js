@@ -8,6 +8,7 @@ import {Direction, Directions, CardinalDirections} from 'utils/direction';
 import {SearchQueue} from 'utils/search_queue';
 import * as Random from 'utils/random';
 import * as ArrayUtils from 'utils/array_utils';
+import {Components} from 'components';
 
 const CONNECTIONS_WIDTH = 30;
 const CONNECTIONS_HEIGHT = 18;
@@ -25,6 +26,7 @@ class GeneratorCell extends Cell {
         super(x, y, grid);
         this.type = CellType.Void;
         this.hard = false;
+        this.populated = false;
     }
 
     floodFillCompare(cell) {
@@ -631,7 +633,8 @@ export class ShipGenerator {
             }
             if (numNpcs < room.cells.length) {
                 let cell = room.cells[numNpcs];
-                if (i === 0 || Math.random() < 0.1) {
+                if (i === 0 || Math.random() < 0.5) {
+                    cell.populated = true;
                     if (Math.random() < 0.5) {
                         ecsContext.emplaceEntity(EntityPrototypes.Skeleton(cell.x, cell.y));
                     } else {
@@ -639,6 +642,52 @@ export class ShipGenerator {
                     }
                 }
             }
+        }
+    }
+
+    spawnWeapons(minWeapons, maxWeapons, numWeaponTypes, weapons, ecsContext) {
+        ArrayUtils.shuffleInPlace(weapons);
+        let chosenWeapons = weapons.slice(0, numWeaponTypes);
+
+        ArrayUtils.shuffleInPlace(this.spawnCandidateRooms);
+        let numWeapons =
+            Math.min(Random.getRandomIntInclusive(minWeapons, maxWeapons), this.spawnCandidateRooms.length);
+
+        for (let i = 0; i < numWeapons; ++i) {
+            let room = this.spawnCandidateRooms[i];
+            ArrayUtils.shuffleInPlace(room.cells);
+            let weaponCell = room.cells[0];
+            for (let cell of room.cells) {
+                if (!cell.populated) {
+                    weaponCell = cell;
+                    break;
+                }
+            }
+            weaponCell.populated = true;
+            let weaponEntity = ecsContext.emplaceEntity(
+                            ArrayUtils.getRandomElement(chosenWeapons)(weaponCell.x, weaponCell.y));
+            let weapon = weaponEntity.get(Components.Weapon).weapon;
+            weapon.ammo = Random.getRandomIntInclusive(Math.floor(weapon.maxAmmo/2), weapon.maxAmmo);
+        }
+
+        return chosenWeapons;
+    }
+
+    spawnHealthKits(minHealthKits, maxHealthKits, ecsContext) {
+        let numHealthKits =
+            Math.min(Random.getRandomIntInclusive(minHealthKits, maxHealthKits), this.spawnCandidateRooms.length);
+        for (let i = 0; i < numHealthKits; ++i) {
+            let room = this.spawnCandidateRooms[i];
+            ArrayUtils.shuffleInPlace(room.cells);
+            let healthKitCell = room.cells[0];
+            for (let cell of room.cells) {
+                if (!cell.populated) {
+                    healthKitCell = cell;
+                    break;
+                }
+            }
+            healthKitCell.populated = true;
+            ecsContext.emplaceEntity(EntityPrototypes.HealthKit(healthKitCell.x, healthKitCell.y));
         }
     }
 
@@ -674,6 +723,13 @@ export class ShipGenerator {
 
         this.classifyRooms();
         this.spawnNpcs(4, 6, 2, 4, ecsContext);
+        let chosenWeapons = this.spawnWeapons(4, 8, 4, [
+            EntityPrototypes.Pistol,
+            EntityPrototypes.Shotgun,
+            EntityPrototypes.MachineGun,
+            EntityPrototypes.Flamethrower
+        ], ecsContext);
+        this.spawnHealthKits(3, 6, ecsContext);
 
         for (let cell of this.grid) {
             switch (cell.type) {
@@ -688,6 +744,7 @@ export class ShipGenerator {
                 }
                 case CellType.Wall: {
                     ecsContext.emplaceEntity(EntityPrototypes.Wall(cell.x, cell.y));
+                    ecsContext.emplaceEntity(EntityPrototypes.Floor(cell.x, cell.y));
                     break;
                 }
                 case CellType.Floor: {
@@ -700,7 +757,13 @@ export class ShipGenerator {
                 }
             }
         }
-        ecsContext.emplaceEntity(EntityPrototypes.PlayerCharacter(this.left.x, this.left.y));
+        let pc = ecsContext.emplaceEntity(EntityPrototypes.PlayerCharacter(this.left.x, this.left.y));
+        let startWeaponEntity = ecsContext.emplaceEntity(
+                        ArrayUtils.getRandomElement(chosenWeapons)(this.left.x, this.left.y));
+        let startWeapon = startWeaponEntity.get(Components.Weapon).weapon;
+        startWeapon.ammo = Random.getRandomIntInclusive(Math.floor(startWeapon.maxAmmo/2), startWeapon.maxAmmo);
+        startWeaponEntity.remove(Components.Position);
+        pc.get(Components.WeaponInventory).addWeapon(startWeaponEntity);
 
     }
 }

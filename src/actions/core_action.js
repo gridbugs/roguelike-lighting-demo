@@ -509,7 +509,7 @@ export class GetShot extends Action {
 
     commit(ecsContext) {
         ecsContext.scheduleImmediateAction(
-            new TakeDamage(this.entity, 2)
+            new TakeDamage(this.entity, roll(3))
         );
         if (this.entity.is(Components.Knockable) && roll(4) == 1) {
             let next = this.trajectory.next();

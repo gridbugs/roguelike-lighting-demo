@@ -68,6 +68,7 @@ export class Entity extends ComponentTable {
     }
 
     become(components) {
+        this.updateCellTurn();
         for (let component of this) {
             this.remove(component);
         }

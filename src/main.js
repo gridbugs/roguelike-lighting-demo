@@ -120,7 +120,7 @@ export async function main() {
 
         /* This delay is necessary to prevent the compute-intensive level generator
          * delaying the displaying of the overlay. */
-        await msDelay(1);
+        await msDelay(30);
 
         currentEcsContext.hud.message = "";
     }
