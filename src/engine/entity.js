@@ -20,16 +20,16 @@ export class Entity extends ComponentTable {
     }
 
     add(component) {
-        assert(!this.has(component));
-
-        super.add(component);
-        if (this.ecsContext !== null) {
-            component.onAdd(this);
+        if (!this.has(component)) {
+            super.add(component);
+            if (this.ecsContext !== null) {
+                component.onAdd(this);
+            }
+            if (this.cell !== null) {
+                this.cell.entities.incrementSingleComponent(component);
+            }
+            this.updateCellTurn();
         }
-        if (this.cell !== null) {
-            this.cell.entities.incrementSingleComponent(component);
-        }
-        this.updateCellTurn();
     }
 
     remove(component) {

@@ -61,11 +61,12 @@ export class Collision extends ReactiveSystem {
                     this.ecsContext.scheduleImmediateAction(
                             new Actions.ProjectileCollide(action.entity, contact, action.trajectory));
                 } else if (destination.has(Components.Combatant)) {
-
-                    action.success = false;
-                    let contact = destination.find(Components.Combatant);
-                    this.ecsContext.scheduleImmediateAction(
-                            new Actions.ProjectileCollide(action.entity, contact, action.trajectory));
+                    if (!action.entity.has(Components.MoveThroughCombatant)) {
+                        action.success = false;
+                        let contact = destination.find(Components.Combatant);
+                        this.ecsContext.scheduleImmediateAction(
+                                new Actions.ProjectileCollide(action.entity, contact, action.trajectory));
+                    }
                 }
             }
         });

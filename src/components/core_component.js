@@ -46,6 +46,8 @@ export class Solid extends Component {}
 
 export class Collider extends Component {}
 
+export class MoveThroughCombatant extends Component {}
+
 export class Opacity extends Component {
     constructor(value) {
         super();

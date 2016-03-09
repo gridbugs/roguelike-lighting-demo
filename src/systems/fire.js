@@ -19,6 +19,17 @@ export class Fire extends ReactiveSystem {
                 }
             }
         });
+
+        this.on(Actions.ProjectileStep, (action) => {
+            if (action.entity.is(Components.FireStarter)) {
+                for (let entity of action.entity.cell) {
+                    if (entity.is(Components.Flamable)) {
+                        this.ecsContext.scheduleImmediateAction(
+                                new Actions.CatchFire(entity));
+                    }
+                }
+            }
+        });
     }
 
     progress(timeDelta) {

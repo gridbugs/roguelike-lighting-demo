@@ -49,7 +49,8 @@ export function Fireball(x, y) {
         new Components.Tile(Tiles.Fireball, 3),
         new Components.Projectile(),
         new Components.FireStarter(),
-        new Components.Name("FireBall")
+        new Components.Name("FireBall"),
+        new Components.MoveThroughCombatant()
     ];
 }
 export function ShockWave(x, y) {
