@@ -101,7 +101,7 @@ export function Skeleton(x, y) {
 }
 
 export function Bloat(x, y) {
-    return GenericCharacter(x, y, Tiles.Bloat, 5, 1).concat([
+    return GenericCharacter(x, y, Tiles.Bloat, 5, 2).concat([
         new Components.Attack(1),
         new Components.Defense(1),
         new Components.Accuracy(80),
