@@ -722,7 +722,7 @@ export class ShipGenerator {
         while (!this.tryGenerate());
 
         this.classifyRooms();
-        this.spawnNpcs(4, 6, 2, 4, ecsContext);
+        this.spawnNpcs(7, 10, 1, 3, ecsContext);
         let chosenWeapons = this.spawnWeapons(4, 8, 4, [
             EntityPrototypes.Pistol,
             EntityPrototypes.Shotgun,

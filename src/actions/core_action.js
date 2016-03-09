@@ -509,7 +509,7 @@ export class GetShot extends Action {
 
     commit(ecsContext) {
         ecsContext.scheduleImmediateAction(
-            new TakeDamage(this.entity, roll(3))
+            new TakeDamage(this.entity, 3 + roll(3))
         );
         if (this.entity.is(Components.Knockable) && roll(4) == 1) {
             let next = this.trajectory.next();
@@ -532,7 +532,7 @@ export class ShockWaveHit extends Action {
 
     commit(ecsContext) {
         ecsContext.scheduleImmediateAction(
-            new TakeDamage(this.entity, 1)
+            new TakeDamage(this.entity, 1 + roll(6))
         );
         if (this.entity.is(Components.Knockable) && roll(2) == 1) {
             let next = this.trajectory.next();

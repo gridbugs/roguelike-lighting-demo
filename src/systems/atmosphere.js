@@ -149,8 +149,7 @@ export class Atmosphere extends ReactiveSystem {
         }
 
         this.on(Actions.ProjectileCollide, (action) => {
-            if ((action.entity.is(Components.Bullet) ||
-                action.entity.is(Components.ShockWave)) &&
+            if (action.entity.is(Components.Bullet) &&
                 action.contact.is(Components.Breakable) &&
                 this.grid.get(action.contact.cell.coord).pressureWall) {
                 if (roll(3) === 1) {
@@ -159,6 +158,16 @@ export class Atmosphere extends ReactiveSystem {
                     );
                 }
             }
+
+            if (action.entity.is(Components.ShockWave) &&
+                action.contact.is(Components.Breakable)) {
+                if (roll(3) > 1) {
+                    this.ecsContext.scheduleImmediateAction(
+                        new Actions.Destroy(action.contact)
+                    );
+                }
+            }
+
         });
 
         this.on(Actions.Destroy, (action) => {
