@@ -598,8 +598,9 @@ export class ShipGenerator {
 
         for (let i = this.rooms.length - 1; i >= 0; --i) {
             let room = this.rooms[i];
-            if (room.width > 2 && room.height > 2 && room !== this.startRoom) {
+            if (room.width > 2 && room.height > 2 && room !== this.leftRoom) {
                 this.rightRoom = room;
+                break;
             }
         }
 
@@ -765,6 +766,8 @@ export class ShipGenerator {
         startWeapon.ammo = Random.getRandomIntInclusive(Math.floor(startWeapon.maxAmmo/2), startWeapon.maxAmmo);
         startWeaponEntity.remove(Components.Position);
         pc.get(Components.WeaponInventory).addWeapon(startWeaponEntity);
+
+        let teleport = ecsContext.emplaceEntity(EntityPrototypes.Teleport(this.right.x, this.right.y));
 
     }
 }

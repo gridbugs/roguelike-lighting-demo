@@ -5,7 +5,7 @@ import {EntityPrototypes} from 'entity_prototypes';
 import {makeEnum, substituteValues, makeTable} from 'utils/enum';
 import * as Input from 'utils/input';
 import {Turn} from 'engine/turn';
-import {HelpText} from 'help_text';
+import {renderText, HelpText} from 'text';
 
 export const ControlTypes = makeEnum([
     'West',
@@ -146,17 +146,14 @@ async function examine(entity) {
 
 export async function help(entity) {
     var hud = entity.ecsContext.hud;
-    hud.overlay =  [
-        'CONTROLS',
-        '',
-        ''
-    ].concat(HelpText).concat([
-        '',
-        '',
-        'Press any key to resume'
+    hud.overlay =  renderText([
+            'CONTROLS',
+            '',
+        ].concat(HelpText).concat([
+            '',
+            'Press any key to resume'
         ])
-        .map((x) => {return `<p>${x}</p>`})
-        .join('<br/>');
+    );
 
     hud.showOverlay();
     await Input.getNonModifierKey();

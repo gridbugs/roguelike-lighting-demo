@@ -31,7 +31,12 @@ Tiles.init = async function() {
     this.Stars0 = tileStore.allocateImageTile(await loadImage('images/stars-0.png'));
     this.Stars1 = tileStore.allocateImageTile(await loadImage('images/stars-1.png'));
     this.Stars2 = tileStore.allocateImageTile(await loadImage('images/stars-2.png'));
-    this.Stars3 = tileStore.allocateImageTile(await loadImage('images/stars-2.png'));
+    this.Stars3 = tileStore.allocateImageTile(await loadImage('images/stars-3.png'));
+
+    this.Teleport0 = tileStore.allocateImageTile(await loadImage('images/teleport-0.png'), true);
+    this.Teleport1 = tileStore.allocateImageTile(await loadImage('images/teleport-1.png'), true);
+    this.Teleport2 = tileStore.allocateImageTile(await loadImage('images/teleport-2.png'), true);
+    this.Teleport3 = tileStore.allocateImageTile(await loadImage('images/teleport-3.png'), true);
 
     this.HealthKit = tileStore.allocateImageTile(await loadImage('images/healthkit.png'), true);
 
@@ -47,9 +52,17 @@ Tiles.init = async function() {
     this.DownStairs = tileStore.allocateImageTile(await loadImage('images/down-stairs.png'));
     this.UpStairs = tileStore.allocateImageTile(await loadImage('images/up-stairs.png'), true);
     this.FireBackground = tileStore.allocateImageTile(await loadImage('images/fire-background.png'), true);
+
     this.WaterAnimationTiles = [
         tileStore.allocateImageTile(await loadImage('images/water-0.png')),
         tileStore.allocateImageTile(await loadImage('images/water-1.png')),
+    ];
+
+    this.TeleportAnimationTiles = [
+        this.Teleport0,
+        this.Teleport1,
+        this.Teleport2,
+        this.Teleport3
     ];
 
     this.VacuumOverlay = tileStore.allocateSquareTile('rgba(0, 0, 255, 0.3');

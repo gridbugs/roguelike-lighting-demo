@@ -758,3 +758,14 @@ export class Explode extends Action {
     }
 }
 Explode.CellStack = new Stack();
+
+export class Win extends Action {
+    constructor(entity) {
+        super();
+        this.entity = entity;
+    }
+
+    commit(ecsContext) {
+        this.entity.add(new Components.Won());
+    }
+}

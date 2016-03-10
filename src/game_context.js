@@ -19,6 +19,7 @@ import {AutoPickup} from 'systems/auto_pickup';
 import {Atmosphere} from 'systems/atmosphere';
 import {DeathEvents} from 'systems/death_events';
 import {TimedTransformations} from 'systems/timed_transformations';
+import {Teleport} from 'systems/teleport';
 
 /* Components */
 import {Components} from 'components';
@@ -66,6 +67,7 @@ export class GameContext extends EcsContext(GameCell) {
         this.atmosphere = new Atmosphere(this);
         this.deathEvents = new DeathEvents(this);
         this.timedTransformations = new TimedTransformations(this);
+        this.teleport = new Teleport(this);
     }
 
     runReactiveSystems(action) {
@@ -80,6 +82,7 @@ export class GameContext extends EcsContext(GameCell) {
         this.autoPickup.run(action);
         this.atmosphere.run(action);
         this.deathEvents.run(action);
+        this.teleport.run(action);
     }
 
     finalize() {

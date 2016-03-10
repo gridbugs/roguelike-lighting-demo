@@ -92,6 +92,18 @@ export function Water(x, y) {
     ];
 }
 
+export function Teleport(x, y) {
+    return [
+        new Components.Position(x, y),
+        new Components.RandomlyAnimatedTile(Tiles.TeleportAnimationTiles,
+                /* depth */ 2, /* min time */ 0, /* max time */ 0),
+        new Components.Teleport(),
+        new Components.Name("Teleport"),
+        new Components.Description("An emergency teleporter. Teleports you off the ship, but requires so much energy that the ship will be stranded. You hope it will take you back to Earth.")
+    ];
+
+}
+
 export function Void(x, y) {
     return [
         new Components.Position(x, y),

@@ -19,7 +19,7 @@ import {getKey} from 'utils/input';
 import {msDelay} from 'utils/time';
 import {assert} from 'utils/assert';
 
-import {HelpText} from 'help_text';
+import {renderText, HelpText, WinText} from 'text';
 
 function initRng() {
     let seed;
@@ -32,27 +32,20 @@ function initRng() {
     Math.seedrandom(seed);
 }
 
-const LOADING_SCREEN = [
-    'Loading...Generating...',
-    '',
-    ''
-]
-.concat(HelpText)
-.map((x) => {return `<p>${x}</p>`})
-.join('<br/>');
+const LOADING_SCREEN = renderText([
+        'Loading...Generating...',
+        ''
+    ].concat(HelpText)
+);
 
-const LOADED_SCREEN = [
-    'Loading...Generating...<span style="color:green">Ready</span>',
-    '',
-    ''
-]
-.concat(HelpText).concat([
-    '',
-    '<span style="color:red">Press any key to start</start>'
-])
-.map((x) => {return `<p>${x}</p>`})
-.join('<br/>');
-
+const LOADED_SCREEN = renderText([
+        'Loading...Generating...<span style="color:green">Ready</span>',
+        '',
+    ].concat(HelpText).concat([
+        '',
+        '<span style="color:red">Press any key to start</start>'
+    ])
+);
 
 export async function main() {
     initConfigFromUrl();
@@ -135,13 +128,18 @@ export async function main() {
             if (playerCharacter.get(Components.Health).value <= 0) {
                 currentEcsContext.updatePlayer();
                 currentEcsContext.drawer.fill('rgba(255, 0, 0, 0.25)');
-                currentEcsContext.hud.message = "You died (press any key to restart)"
+                hud.message = "You died (press any key to restart)"
                 break;
             }
             if (playerCharacter.has(Components.StuckInSpace)) {
                 currentEcsContext.updatePlayer();
                 currentEcsContext.drawer.fill('rgba(255, 0, 0, 0.25)');
-                currentEcsContext.hud.message = "You drift in space forever (press any key to restart)"
+                hud.message = "You drift in space forever (press any key to restart)"
+                break;
+            }
+            if (playerCharacter.has(Components.Won)) {
+                hud.overlay = renderText(WinText);
+                hud.showOverlay();
                 break;
             }
             await currentEcsContext.progressSchedule();
