@@ -9,6 +9,7 @@ import {SearchQueue} from 'utils/search_queue';
 import * as Random from 'utils/random';
 import * as ArrayUtils from 'utils/array_utils';
 import {Components} from 'components';
+import {Level} from 'engine/level';
 
 const CONNECTIONS_WIDTH = 30;
 const CONNECTIONS_HEIGHT = 18;
@@ -200,7 +201,9 @@ class Room {
 }
 
 export class ShipGenerator {
-    constructor() {
+    constructor(depth = 0, parent = null) {
+        this.depth = depth;
+        this.parent = parent;
     }
     init() {
         this.grid = new GeneratorGrid(Config.GRID_WIDTH, Config.GRID_HEIGHT);
@@ -600,7 +603,7 @@ export class ShipGenerator {
             let room = this.rooms[i];
             if (room.width > 2 && room.height > 2 && room !== this.leftRoom) {
                 this.rightRoom = room;
-                break;
+           //     break;
             }
         }
 
@@ -720,6 +723,26 @@ export class ShipGenerator {
 
     generate(level, ecsContext) {
 
+        this.level = level;
+
+        if (this.depth === Config.DEPTH) {
+            this.finalLevel = true;
+        } else {
+            this.finalLevel = false;
+        }
+
+        if (this.depth === 1) {
+            this.firstLevel = true;
+        } else {
+            this.firstLevel = false;
+        }
+
+        if (this.finalLevel) {
+            this.nextLevel = null;
+        } else {
+            this.nextLevel = new Level(new ShipGenerator(this.depth + 1, this));
+        }
+
         while (!this.tryGenerate());
 
         this.classifyRooms();
@@ -759,15 +782,38 @@ export class ShipGenerator {
                 }
             }
         }
-        let pc = ecsContext.emplaceEntity(EntityPrototypes.PlayerCharacter(this.left.x, this.left.y));
-        let startWeaponEntity = ecsContext.emplaceEntity(
-                        ArrayUtils.getRandomElement(chosenWeapons)(this.left.x, this.left.y));
-        let startWeapon = startWeaponEntity.get(Components.Weapon).weapon;
-        startWeapon.ammo = Random.getRandomIntInclusive(Math.floor(startWeapon.maxAmmo/2), startWeapon.maxAmmo);
-        startWeaponEntity.remove(Components.Position);
-        pc.get(Components.WeaponInventory).addWeapon(startWeaponEntity);
 
-        let teleport = ecsContext.emplaceEntity(EntityPrototypes.Teleport(this.right.x, this.right.y));
+        let source, destination;
+        if (this.depth % 2 == 1) {
+            source = this.left;
+            destination = this.right;
+        } else {
+            source = this.right;
+            destination = this.left;
+        }
+
+        if (this.firstLevel) {
+            let pc = ecsContext.emplaceEntity(EntityPrototypes.PlayerCharacter(source.x, source.y));
+            let startWeaponEntity = ecsContext.emplaceEntity(
+                            ArrayUtils.getRandomElement(chosenWeapons)(source.x, source.y));
+            let startWeapon = startWeaponEntity.get(Components.Weapon).weapon;
+            startWeapon.ammo = Random.getRandomIntInclusive(Math.floor(startWeapon.maxAmmo/2), startWeapon.maxAmmo);
+            startWeaponEntity.remove(Components.Position);
+            pc.get(Components.WeaponInventory).addWeapon(startWeaponEntity);
+        } else {
+            let stairs = ecsContext.emplaceEntity(EntityPrototypes.UpStairs(source.x, source.y));
+            this.parent.downStairs.get(Components.DownStairs).upStairs = stairs;
+            stairs.get(Components.UpStairs).downStairs = this.parent.downStairs;
+            stairs.get(Components.UpStairs).level = this.parent.level;
+        }
+
+        if (this.finalLevel) {
+            let teleport = ecsContext.emplaceEntity(EntityPrototypes.Teleport(destination.x, destination.y));
+        } else {
+            let stairs = ecsContext.emplaceEntity(EntityPrototypes.DownStairs(destination.x, destination.y));
+            stairs.get(Components.DownStairs).level = this.nextLevel;
+            this.downStairs = stairs;
+        }
 
     }
 }

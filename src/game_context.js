@@ -20,6 +20,7 @@ import {Atmosphere} from 'systems/atmosphere';
 import {DeathEvents} from 'systems/death_events';
 import {TimedTransformations} from 'systems/timed_transformations';
 import {Teleport} from 'systems/teleport';
+import {DescendMessage} from 'systems/descend_message';
 
 /* Components */
 import {Components} from 'components';
@@ -68,6 +69,7 @@ export class GameContext extends EcsContext(GameCell) {
         this.deathEvents = new DeathEvents(this);
         this.timedTransformations = new TimedTransformations(this);
         this.teleport = new Teleport(this);
+        this.descendMessage = new DescendMessage(this);
     }
 
     runReactiveSystems(action) {
@@ -83,6 +85,7 @@ export class GameContext extends EcsContext(GameCell) {
         this.atmosphere.run(action);
         this.deathEvents.run(action);
         this.teleport.run(action);
+        this.descendMessage.run(action);
     }
 
     finalize() {

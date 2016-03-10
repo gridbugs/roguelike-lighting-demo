@@ -411,10 +411,16 @@ export class Burn extends Action {
 }
 
 export class Descend extends Action {
-    constructor(entity, stairs) {
+    constructor(entity, stairs, force = false) {
         super();
         this.entity = entity;
         this.stairs = stairs;
+
+        /* A system traps Descends if they will cause the generator
+         * to run and prints a loading message. This tells the system
+         * to ignore Descends even if they will cause the generator
+         * to run. */
+        this.force = force;
     }
 
     commit(ecsContext) {
@@ -434,6 +440,9 @@ export class Descend extends Action {
         let upStairs = this.stairs.get(Components.DownStairs).upStairs;
         let position = this.entity.get(Components.Position);
         position.vector = upStairs.get(Components.Position).vector;
+
+        /* Clear any loading message printed as the level was generated */
+        ecsContext.hud.message = "";
     }
 }
 

@@ -13,13 +13,13 @@ export class Level {
         if (!this.generated) {
             this.generator.generate(this, this._ecsContext);
             this.generated = true;
+            this._ecsContext.finalize();
         }
     }
 
     get ecsContext() {
         if (!this.generated) {
             this.generate();
-            this._ecsContext.finalize();
         }
         return this._ecsContext;
     }

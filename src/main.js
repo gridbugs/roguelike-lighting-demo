@@ -108,7 +108,7 @@ export async function main() {
         if (Config.DEMO) {
             generator = new StringTerrainGenerator(1, terrainStringArrayL1, null);
         } else {
-            generator = new ShipGenerator();
+            generator = new ShipGenerator(1);
         }
 
         var firstLevel = new Level(generator);

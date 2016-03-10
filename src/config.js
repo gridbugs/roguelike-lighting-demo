@@ -3,9 +3,10 @@ export const Config = {
     TILE_HEIGHT: 16,
     GRID_WIDTH: 64,
     GRID_HEIGHT: 40,
+    DEPTH: 3,
     DEBUG: false,
     RNG_SEED: null,
-    OMNISCIENT: false,
+    OMNISCIENT: true,
     DEMO: false,
     AI: true,
 
@@ -13,5 +14,5 @@ export const Config = {
      * is used by the observation system to determine if it needs to
      * update a character's knowledge of a cell.
      */
-    LAZY_KNOWLEDGE: true
+    LAZY_KNOWLEDGE: true,
 };
