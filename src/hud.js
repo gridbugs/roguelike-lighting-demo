@@ -38,10 +38,12 @@ export class Hud {
     }
 
     showOverlay() {
+        this.hide();
         this._overlay.style.display = 'block';
     }
 
     hideOverlay() {
+        this.show();
         this._overlay.style.display = 'none';
     }
 

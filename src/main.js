@@ -101,7 +101,6 @@ export async function main() {
 
     while (true) {
         hud.overlay = LOADING_SCREEN;
-        hud.hide();
         hud.showOverlay();
         await msDelay(30);
 
@@ -122,7 +121,6 @@ export async function main() {
         }
 
         hud.hideOverlay();
-        hud.show();
 
         hud.message = 'SHIP COMPUTER: "Get to the teleporter on Floor 3"';
 
