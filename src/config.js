@@ -6,7 +6,7 @@ export const Config = {
     DEPTH: 3,
     DEBUG: false,
     RNG_SEED: null,
-    OMNISCIENT: true,
+    OMNISCIENT: false,
     DEMO: false,
     AI: true,
 

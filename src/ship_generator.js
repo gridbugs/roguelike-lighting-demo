@@ -603,7 +603,7 @@ export class ShipGenerator {
             let room = this.rooms[i];
             if (room.width > 2 && room.height > 2 && room !== this.leftRoom) {
                 this.rightRoom = room;
-           //     break;
+                break;
             }
         }
 

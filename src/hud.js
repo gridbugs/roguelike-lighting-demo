@@ -12,6 +12,14 @@ export class Hud {
         this.messageChanged = false;
     }
 
+    show() {
+        this.container.style.display = 'block';
+    }
+
+    hide() {
+        this.container.style.display = 'none';
+    }
+
     set stats(value) {
         this._stats.innerHTML = value;
     }
