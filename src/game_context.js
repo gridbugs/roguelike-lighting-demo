@@ -21,6 +21,7 @@ import {DeathEvents} from 'systems/death_events';
 import {TimedTransformations} from 'systems/timed_transformations';
 import {Teleport} from 'systems/teleport';
 import {DescendMessage} from 'systems/descend_message';
+import {AutoClimb} from 'systems/auto_climb';
 
 /* Components */
 import {Components} from 'components';
@@ -70,6 +71,7 @@ export class GameContext extends EcsContext(GameCell) {
         this.timedTransformations = new TimedTransformations(this);
         this.teleport = new Teleport(this);
         this.descendMessage = new DescendMessage(this);
+        this.autoClimb = new AutoClimb(this);
     }
 
     runReactiveSystems(action) {
@@ -86,6 +88,7 @@ export class GameContext extends EcsContext(GameCell) {
         this.deathEvents.run(action);
         this.teleport.run(action);
         this.descendMessage.run(action);
+        this.autoClimb.run(action);
     }
 
     finalize() {

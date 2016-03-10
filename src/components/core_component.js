@@ -418,3 +418,5 @@ export class AutoPickup extends Component {}
 export class Teleport extends Component {}
 
 export class Won extends Component {}
+
+export class AutoClimb extends Component {}

@@ -82,8 +82,9 @@ class MoveMap extends DijkstraMap(MoveCell) {
 MoveMap.instance = new MoveMap(Config.GRID_WIDTH, Config.GRID_HEIGHT, null);
 
 export class MoveTowardsPlayer extends Controller {
-    constructor() {
+    constructor(fleeHealth = 0.5) {
         super();
+        this.fleeHealth = fleeHealth;
         this.debugDrawer = GlobalDrawer.DebugDrawer;
         this.targetMap = MoveMap.instance;
         this.fleeMap = FleeMap.instance;
@@ -125,7 +126,7 @@ export class MoveTowardsPlayer extends Controller {
         let maxHealth = this.entity.get(Components.MaxHealth).value;
 
         let candidates;
-        if (health / maxHealth < 0.5) {
+        if (health / maxHealth < this.fleeHealth) {
             this.fleeMap.controller = this;
             this.fleeMap.computeFromCoord(playerCell.coord);
             candidates = this.fleeMap.get(this.entity.cell.coord).getLowestNeighbours();

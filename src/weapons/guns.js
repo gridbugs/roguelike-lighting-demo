@@ -78,7 +78,7 @@ export class Pistol extends Gun {
     constructor() {
         super();
         this.maxAmmo = 100;
-        this.bulletSpread = 1 / 8;
+        this.bulletSpread = 1 / 16;
         this.burstSize = 1;
         this.timeBetweenShot = 0;
         this.ammoReduction = AmmoReductionType.PerShot;

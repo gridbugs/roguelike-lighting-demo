@@ -50,12 +50,13 @@ export function PlayerCharacter(x, y) {
         new Components.Knockable(),
         new Components.Ventable(),
         new Components.AutoPickup(),
+        new Components.AutoClimb(),
         new Components.Name("You"),
         new Components.Description("You. You awoke from cryosleep in deep space. The ship's computer told you that the rest of the crew is dead.")
     ];
 }
 
-function GenericCharacter(x, y, tile, health, walkTime, burnTime = 5, healthRecovery = 0.1) {
+function GenericCharacter(x, y, tile, health, walkTime, burnTime = 5, fleeHealth = 0.5, healthRecovery = 0.1) {
     let components = [
         new Components.Position(x, y),
         new Components.Tile(tile, 4),
@@ -72,13 +73,13 @@ function GenericCharacter(x, y, tile, health, walkTime, burnTime = 5, healthReco
         new Components.WalkTime(walkTime)
     ];
     if (Config.AI) {
-        components.push(new Components.TurnTaker(new MoveTowardsPlayer()));
+        components.push(new Components.TurnTaker(new MoveTowardsPlayer(fleeHealth)));
     }
     return components;
 }
 
 export function Zombie(x, y) {
-    return GenericCharacter(x, y, Tiles.Zombie, 20, 1.5, 100).concat([
+    return GenericCharacter(x, y, Tiles.Zombie, 20, 1.5, 100, 0.5).concat([
         new Components.Attack(2),
         new Components.Defense(1),
         new Components.Accuracy(100),
@@ -89,7 +90,7 @@ export function Zombie(x, y) {
 }
 
 export function Skeleton(x, y) {
-    return GenericCharacter(x, y, Tiles.Skeleton, 5, 0.5).concat([
+    return GenericCharacter(x, y, Tiles.Skeleton, 10, 0.5, 2, 0.25).concat([
         new Components.Attack(1),
         new Components.Defense(1),
         new Components.Accuracy(80),
@@ -101,7 +102,7 @@ export function Skeleton(x, y) {
 }
 
 export function Bloat(x, y) {
-    return GenericCharacter(x, y, Tiles.Bloat, 5, 2).concat([
+    return GenericCharacter(x, y, Tiles.Bloat, 5, 2, 100, 0).concat([
         new Components.Attack(1),
         new Components.Defense(1),
         new Components.Accuracy(80),

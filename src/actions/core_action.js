@@ -442,7 +442,7 @@ export class Descend extends Action {
         position.vector = upStairs.get(Components.Position).vector;
 
         /* Clear any loading message printed as the level was generated */
-        ecsContext.hud.message = "";
+        ecsContext.hud.hideOverlay();
     }
 }
 
