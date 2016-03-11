@@ -3,7 +3,7 @@ export function renderText(stringArray) {
 }
 
 export const HelpText = [
-    'Movement: hjklyubn (vi keys)',
+    'Movement: arrow keys/numpad (numlock off)/hjklyubn (vi keys)',
     'Wait: .',
     'Ascend: &lt;',
     'Descend: &gt;',
