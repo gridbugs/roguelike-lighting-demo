@@ -58,7 +58,7 @@ PathPlanner.prototype.processInput = async function(accept) {
             return InputType.CANCEL;
         }
         default: {
-            var controlType = Control.controlTypeFromKey(key);
+            var controlType = Control.getControlTypeFromKey(key);
             if (controlType === accept) {
                 return InputType.ACCEPT;
             }

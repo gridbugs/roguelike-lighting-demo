@@ -5,21 +5,12 @@ import {Actions} from 'actions';
 import {Direction} from 'utils/direction';
 
 import * as Input from 'utils/input';
-import {controlFromChar} from 'control';
+import * as Control from 'control';
 import {Controller} from 'controller';
-
-async function getControlFunction() {
-    var key = await Input.getNonModifierKey();
-    if (Input.isCharKey(key)) {
-        var character = Input.getCharFromKey(key);
-        return controlFromChar(character);
-    }
-    return null;
-}
 
 async function getControlAction(entity) {
     while (true) {
-        var fn = await getControlFunction();
+        var fn = await Control.getControl();
 
         if (fn === null) {
             continue;

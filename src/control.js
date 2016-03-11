@@ -32,7 +32,7 @@ export const ControlTypes = makeEnum([
     'Help'
 ], true);
 
-export const ControlKeys = substituteValues(ControlTypes, {
+const ControlChars = substituteValues(ControlTypes, {
     h: 'West',
     j: 'South',
     k: 'North',
@@ -55,6 +55,18 @@ export const ControlKeys = substituteValues(ControlTypes, {
     '>': 'Down',
     x: 'Examine',
     '?': 'Help'
+});
+
+const ControlNonChars = substituteValues(ControlTypes, {
+    [Input.NonChar.LEFT_ARROW]: 'West',
+    [Input.NonChar.RIGHT_ARROW]: 'East',
+    [Input.NonChar.UP_ARROW]: 'North',
+    [Input.NonChar.DOWN_ARROW]: 'South',
+    [Input.NonChar.HOME]: 'NorthWest',
+    [Input.NonChar.PAGE_UP]: 'NorthEast',
+    [Input.NonChar.PAGE_DOWN]: 'SouthEast',
+    [Input.NonChar.END]: 'SouthWest',
+    [Input.NonChar.NUMPAD_5]: 'Wait',
 });
 
 function toggleDoor(entity) {
@@ -163,45 +175,53 @@ export async function help(entity) {
 }
 
 export const ControlTable = makeTable(ControlTypes, {
-    West:       (entity) => { return new Actions.Walk(entity, Direction.West) },
-    South:      (entity) => { return new Actions.Walk(entity, Direction.South) },
-    North:      (entity) => { return new Actions.Walk(entity, Direction.North) },
-    East:       (entity) => { return new Actions.Walk(entity, Direction.East) },
-    NorthWest:  (entity) => { return new Actions.Walk(entity, Direction.NorthWest) },
-    NorthEast:  (entity) => { return new Actions.Walk(entity, Direction.NorthEast) },
-    SouthWest:  (entity) => { return new Actions.Walk(entity, Direction.SouthWest) },
-    SouthEast:  (entity) => { return new Actions.Walk(entity, Direction.SouthEast) },
+    West:       entity => new Actions.Walk(entity, Direction.West),
+    South:      entity => new Actions.Walk(entity, Direction.South),
+    North:      entity => new Actions.Walk(entity, Direction.North),
+    East:       entity => new Actions.Walk(entity, Direction.East),
+    NorthWest:  entity => new Actions.Walk(entity, Direction.NorthWest),
+    NorthEast:  entity => new Actions.Walk(entity, Direction.NorthEast),
+    SouthWest:  entity => new Actions.Walk(entity, Direction.SouthWest),
+    SouthEast:  entity => new Actions.Walk(entity, Direction.SouthEast),
     CloseDoor:  toggleDoor,
     Fire:       useWeapon,
     Get:        maybeGet,
-    Wait:       (entity) => { return new Actions.Wait(entity) },
+    Wait:       entity => new Actions.Wait(entity),
     Up:         maybeUp,
     Down:       maybeDown,
     Examine:    examine,
-    NextWeapon: (entity) => { return new Actions.NextWeapon(entity) },
-    PreviousWeapon: (entity) => { return new Actions.PreviousWeapon(entity) },
-    Pistol: (entity) => { return new Actions.SpecificWeapon(entity, 1) },
-    Shotgun: (entity) => { return new Actions.SpecificWeapon(entity, 2) },
-    MachineGun: (entity) => { return new Actions.SpecificWeapon(entity, 3) },
-    Flamethrower: (entity) => { return new Actions.SpecificWeapon(entity, 4) },
+    NextWeapon: entity => new Actions.NextWeapon(entity),
+    PreviousWeapon: entity => new Actions.PreviousWeapon(entity),
+    Pistol:     entity => new Actions.SpecificWeapon(entity, 1),
+    Shotgun:    entity => new Actions.SpecificWeapon(entity, 2),
+    MachineGun: entity => new Actions.SpecificWeapon(entity, 3),
+    Flamethrower: entity => new Actions.SpecificWeapon(entity, 4),
     Help:       help
 });
 
-export function controlFromChar(character) {
-    let control = ControlTable[ControlKeys[character]];
-    if (control !== undefined) {
-        return control;
+export function getControlTypeFromKey(key) {
+    let type = undefined;
+    if (Input.keyIsChar(key)) {
+        type = ControlChars[Input.getCharFromKey(key)];
+    } else if (Input.keyIsNonChar(key)) {
+        type = ControlNonChars[Input.getNonCharFromKey(key)];
     }
-    return null;
+    if (type === undefined) {
+        return null;
+    }
+    return type;
 }
 
-export function controlTypeFromKey(key) {
-    if (Input.isCharKey(key)) {
-        let type = ControlKeys[Input.getCharFromKey(key)];
-        if (type === undefined) {
-            return null;
-        }
-        return type;
+export function getControlFromKey(key) {
+    let type = getControlTypeFromKey(key);
+    let control = ControlTable[type];
+    if (control === undefined) {
+        return null;
     }
-    return null;
+    return control;
+}
+
+export async function getControl() {
+    var key = await Input.getNonModifierKey();
+    return getControlFromKey(key);
 }
