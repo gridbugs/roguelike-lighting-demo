@@ -11,7 +11,7 @@ const OUTPUT_DIR = 'build'
 const SOURCE_GLOB = 'src/**/*.js'
 const SERVER_PORT = argv.port === undefined ? DEFAULT_SERVER_PORT : parseInt(argv.port)
 
-const TRACEUR_OPTS = {
+const MODERN_TRACEUR_OPTS = {
     asyncFunctions: true,
     modules: 'amd',
     classes: 'parse',
@@ -22,6 +22,26 @@ const TRACEUR_OPTS = {
     templateLiterals: 'parse',
     arrayComprehension: true,
     sourceMaps: 'inline'
+}
+
+const LEGACY_TRACEUR_OPTS = {
+    asyncFunctions: true,
+    modules: 'amd',
+    classes: true,
+    generators: 'parse',
+    arrowFunctions: true,
+    blockBinding: true,
+    forOf: true,
+    templateLiterals: 'parse',
+    arrayComprehension: true,
+    sourceMaps: 'inline',
+    symbols: true
+}
+
+var TRACEUR_OPTS = MODERN_TRACEUR_OPTS;
+
+if (argv.legacy !== undefined) {
+    TRACEUR_OPTS = LEGACY_TRACEUR_OPTS;
 }
 
 gulp.task('default',['build', 'stream', 'serve'])
