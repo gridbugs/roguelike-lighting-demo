@@ -4,7 +4,7 @@ export function renderText(stringArray) {
 
 export const HelpText = [
     'Movement: arrow keys/numpad (numlock off)/hjklyubn (vi keys)',
-    'Wait: .',
+    'Wait: ./numpad 5',
     'Ascend: &lt;',
     'Descend: &gt;',
     'Fire: f, movement keys to navigate, enter or f to fire',
