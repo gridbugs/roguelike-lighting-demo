@@ -14,6 +14,14 @@ export class Bullets extends ReactiveSystem {
                 this.ecsContext.scheduleImmediateAction(
                         new Actions.ShockWaveHit(action.contact, action.entity, action.trajectory));
             }
+            if (action.entity.is(Components.Rocket)) {
+                this.ecsContext.scheduleImmediateAction(
+                        new Actions.Explode(action.entity.cell.coord, 5));
+                for (let entity of action.entity.cell) {
+                    this.ecsContext.scheduleImmediateAction(
+                            new Actions.RocketHit(entity, action.entity, action.trajectory));
+                }
+            }
         });
     }
 }

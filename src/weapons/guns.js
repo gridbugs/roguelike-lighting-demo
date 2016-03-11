@@ -13,12 +13,13 @@ export const AmmoReductionType = makeEnum([
     'PerBurst'
 ]);
 
-class Gun extends Weapon {
+export class Gun extends Weapon {
 
     constructor() {
         super();
         this.ammo = 0;
         this.range = 30;
+        this.FireActionType = Actions.FireBullet;
     }
 
     *trajectories(line) {
@@ -38,7 +39,7 @@ class Gun extends Weapon {
         let delay = 0;
         for (let destination of this.trajectories(line)) {
             entity.ecsContext.scheduleImmediateAction(
-                new Actions.FireBullet(entity, this, destination),
+                new this.FireActionType(entity, this, destination),
                 delay
             );
             if (this.ammoReduction === AmmoReductionType.PerShot) {

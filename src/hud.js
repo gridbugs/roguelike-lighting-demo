@@ -69,16 +69,31 @@ export class Hud {
 
         this.stats = `Floor:${depth} O₂:${oxygen}/${maxOxygen} HP:${health}/${maxHealth}`;
 
-        let weaponEntity = entity.get(Components.WeaponInventory).currentWeapon;
+        let weaponInventory =entity.get(Components.WeaponInventory);
+        let weaponEntity = weaponInventory.currentWeapon;
+        let currentWeaponName = "";
         if (weaponEntity !== null) {
             let weapon = weaponEntity.get(Components.Weapon).weapon;
             let name = weaponEntity.get(Components.Name).value;
             if (typeof name === 'function') {
-                this.weapon = name(weaponEntity);
+                currentWeaponName = name(weaponEntity);
             } else {
-                this.weapon = name;
+                currentWeaponName = name;
             }
         }
+        let weaponSummary = '[';
+        for (let i = 1; i < weaponInventory.slots.length; ++i) {
+            let slot = weaponInventory.slots[i];
+            if (slot === null) {
+                weaponSummary += `<span style='color:#444444'>${i}</span>`;
+            } else if (i === weaponInventory.index) {
+                weaponSummary += `<span style='color:#ff0000'>${i}</span>`;
+            } else {
+                weaponSummary += `<span style='color:#ffffff'>${i}</span>`;
+            }
+        }
+        weaponSummary += ']';
+        this.weapon = `${weaponSummary} ${currentWeaponName}`;
 
         if (!this.messageChanged) {
             let item = entity.cell.find(Components.Getable);

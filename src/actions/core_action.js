@@ -181,6 +181,31 @@ export class FireBullet extends Action {
     }
 }
 
+export class FireRocket extends Action {
+    constructor(entity, weapon, destination) {
+        super();
+        this.entity = entity;
+        this.weapon = weapon;
+        this.destination = destination;
+    }
+
+    commit(ecsContext) {
+        let trajectory = new Line(this.entity.cell.coord, this.destination);
+        if (this.weapon.ammo > 0) {
+            let projectile = this.entity.ecsContext.emplaceEntity(
+                EntityPrototypes.Rocket(trajectory.startCoord.x, trajectory.startCoord.y)
+            );
+            ecsContext.scheduleImmediateAction(
+                new FireProjectile(this.entity, projectile, trajectory, false /* infinite */)
+            );
+        } else {
+            ecsContext.scheduleImmediateAction(
+                new FailFire(this.entity, this.weapon)
+            );
+        }
+    }
+}
+
 export class ReduceAmmo extends Action {
     constructor(entity, weapon) {
         super();
@@ -554,6 +579,29 @@ export class ShockWaveHit extends Action {
     }
 }
 
+export class RocketHit extends Action {
+    constructor(entity, rocket, trajectory) {
+        super();
+        this.entity = entity;
+        this.rocket = rocket;
+        this.trajectory = trajectory;
+    }
+
+    commit(ecsContext) {
+        ecsContext.scheduleImmediateAction(
+            new TakeDamage(this.entity, 4 + roll(6))
+        );
+        if (this.entity.is(Components.Knockable)) {
+            let next = this.trajectory.next();
+            if (!next.done) {
+                ecsContext.scheduleImmediateAction(
+                    new Knockback(this.entity, next.value)
+                );
+            }
+        }
+    }
+}
+
 export class Get extends Action {
     constructor(entity, item) {
         super();
@@ -654,7 +702,6 @@ export class OpenBreach extends Action {
         ecsContext.atmosphere.updateVenting();
         if (this.breached) {
             ecsContext.atmosphere.suckEntities(1);
-            ecsContext.hud.message = "HULL BREACH DETECTED!";
         }
     }
 }

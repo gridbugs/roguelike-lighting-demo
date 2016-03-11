@@ -172,19 +172,17 @@ export class Atmosphere extends ReactiveSystem {
 
         this.on(Actions.Destroy, (action) => {
             if (action.entity.ecsContext !== null) {
-                if (this.grid.get(action.entity.cell.coord).pressureWall) {
                     this.ecsContext.scheduleImmediateAction(
-                        new Actions.OpenBreach(true),
+                        new Actions.OpenBreach(),
                         100
                     );
-                }
             }
         });
 
         this.on(Actions.OpenDoor, (action) => {
             let breached = this.grid.get(action.door.cell.coord).pressureWall;
             this.ecsContext.scheduleImmediateAction(
-                new Actions.OpenBreach(breached)
+                new Actions.OpenBreach()
             );
         });
 

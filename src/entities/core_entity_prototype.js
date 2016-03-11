@@ -31,7 +31,8 @@ export function Door(x, y) {
         new Components.Door(false, Tiles.OpenDoor, Tiles.Door),
         new Components.Opacity(1),
         new Components.Solid(),
-        new Components.Name("Door")
+        new Components.Name("Door"),
+        new Components.Breakable()
     ];
 }
 
@@ -129,6 +130,16 @@ export function Bullet(x, y) {
     ];
 }
 
+export function Rocket(x, y) {
+    return [
+        new Components.Position(x, y),
+        new Components.Tile(Tiles.Rocket, 3),
+        new Components.Projectile(),
+        new Components.Name("Rocket"),
+        new Components.Rocket()
+    ];
+}
+
 function getWeaponInfo(name) {
     return function(entity) {
         let weapon = entity.get(Components.Weapon).weapon;
@@ -181,6 +192,18 @@ export function Flamethrower(x, y) {
         new Components.Ventable(),
         new Components.Name(getWeaponInfo("Flamethrower"), "Flamethrower"),
         new Components.Description("A flamethrower. Considered a safe weapon for use on a ship as it can't damage the hull, but requires oxygen to function.")
+    ];
+}
+
+export function RocketLauncher(x, y) {
+    return [
+        new Components.Position(x, y),
+        new Components.Tile(Tiles.RocketLauncher, 2),
+        new Components.Weapon(new Weapons.RocketLauncher()),
+        new Components.Getable(),
+        new Components.Ventable(),
+        new Components.Name(getWeaponInfo("Rocket Launcher"), "Rocket Launcher"),
+        new Components.Description('"A rocket launcher, sir? On a spaceship?"<br/><br/><br/>"Yes marine. How else will we get rid of our surplus toxic barrels."')
     ];
 }
 
