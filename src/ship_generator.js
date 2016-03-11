@@ -797,13 +797,9 @@ export class ShipGenerator {
 
         if (this.firstLevel) {
             let pc = ecsContext.emplaceEntity(EntityPrototypes.PlayerCharacter(source.x, source.y));
-            let startWeaponEntity = ecsContext.emplaceEntity(
-                            ArrayUtils.getRandomElement(chosenWeapons)(source.x, source.y));
+            let startWeaponEntity = ecsContext.emplaceEntity(EntityPrototypes.Pistol(source.x, source.y));
             let startWeapon = startWeaponEntity.get(Components.Weapon).weapon;
-            startWeapon.ammo = Random.getRandomIntInclusive(
-                Math.floor(startWeapon.maxAmmo/4),
-                Math.floor(startWeapon.maxAmmo/2)
-            );
+            startWeapon.ammo = 50;
             startWeaponEntity.remove(Components.Position);
             pc.get(Components.WeaponInventory).addWeapon(startWeaponEntity);
         } else {

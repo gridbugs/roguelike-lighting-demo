@@ -12,7 +12,7 @@ export const HelpText = [
     'Get Item: g',
     'Examine: x, movement keys to navigate, enter or x for details',
     'Prev/Next Weapon: w/e',
-    'Select Weapon: 1-4',
+    'Select Weapon: 1-5',
     'Show this screen: ?'
 ]
 
