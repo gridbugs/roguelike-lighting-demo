@@ -754,7 +754,8 @@ export class ShipGenerator {
             EntityPrototypes.Pistol,
             EntityPrototypes.Shotgun,
             EntityPrototypes.MachineGun,
-            EntityPrototypes.Flamethrower
+            EntityPrototypes.Flamethrower,
+            EntityPrototypes.RocketLauncher
         ], ecsContext);
         this.spawnHealthKits(3, 6, ecsContext);
 
