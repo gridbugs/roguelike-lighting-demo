@@ -639,7 +639,7 @@ export class ShipGenerator {
                 let cell = room.cells[numNpcs];
                 if (i === 0 || Math.random() < 0.5) {
                     cell.populated = true;
-                    if (Math.random() < 0.5) {
+                    if (Math.random() < 0.3) {
                         ecsContext.emplaceEntity(EntityPrototypes.Skeleton(cell.x, cell.y));
                     } else {
                         ecsContext.emplaceEntity(EntityPrototypes.Bloat(cell.x, cell.y));

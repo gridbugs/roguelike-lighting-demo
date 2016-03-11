@@ -303,7 +303,12 @@ export class Atmosphere extends ReactiveSystem {
                 let cell = this.grid.get(entity.cell.coord);
                 if (cell.venting) {
                     for (let i = 0; i < whole; ++i) {
-                        if (roll(2) === 1) {
+                        let n = 2;
+                        /* The player is harder to suck out than NPCs and items */
+                        if (entity.is(Components.PlayerCharacter)) {
+                            n = 4;
+                        }
+                        if (roll(n) === 1) {
                             let dest = cell.getLowestNeighbours().getRandom();
                             this.ecsContext.scheduleImmediateAction(
                                 new Actions.Vent(entity, dest.direction)
