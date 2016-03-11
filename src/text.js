@@ -10,7 +10,7 @@ export const HelpText = [
     'Fire: f, movement keys to navigate, enter or f to fire',
     'Open/Close: c',
     'Get Item: g',
-    'Examine: x, movement keys to nagivate, enter or x for details',
+    'Examine: x, movement keys to navigate, enter or x for details',
     'Prev/Next Weapon: w/e',
     'Select Weapon: 1-4',
     'Show this screen: ?'
