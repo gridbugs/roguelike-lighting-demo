@@ -5,14 +5,17 @@
     <link rel="icon" type="image/png" href="images/favicon.png">
     <script src="lib/require.js"></script>
     <script>
-        requirejs.config({
-            baseUrl: 'build',
-            paths: {
-                jquery: '../lib/jquery',
-                seedrandom: '../lib/seedrandom'
-            }
-        });
-        requirejs(['requirejs-main'])
+requirejs.config({
+    baseUrl: 'build',
+    paths: {
+        seedrandom: '../lib/seedrandom',
+        jquery: '../lib/jquery',
+    }
+});
+requirejs(['seedrandom', 'jquery', 'main'], function(seedrandom, jquery, main) {
+    window.$ = jquery;
+    jquery(main.main);
+});
     </script>
 
 <script src="lib/traceur-runtime.js"></script>
