@@ -17,9 +17,6 @@ export class EntitySet {
     add(entity) {
         this.set.add(entity);
     }
-    entries() {
-        return this.set.entries();
-    }
     has(entity) {
         return this.set.has(entity);
     }
