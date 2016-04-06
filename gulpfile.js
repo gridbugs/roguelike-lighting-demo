@@ -1,47 +1,37 @@
 const gulp = require('gulp')
-const traceur = require('gulp-traceur')
-const plumber = require('gulp-plumber')
-const webserver = require('gulp-webserver')
+
 const clean = require('gulp-clean')
+const plumber = require('gulp-plumber')
+const replace = require('gulp-replace')
+const requirejsOptimize = require('gulp-requirejs-optimize')
+const traceur = require('gulp-traceur')
+const webserver = require('gulp-webserver')
+
 const argv = require('yargs').argv
+const path = require('path')
+
 
 const DEFAULT_SERVER_PORT = 8000
 
 const OUTPUT_DIR = 'build'
-const SOURCE_GLOB = 'src/**/*.js'
+const SOURCE_DIR = 'src'
+const ENTRY_FILE = 'main.js'
+const INDEX_FILE = 'index.html'
+const SOURCE_GLOB = `${SOURCE_DIR}/**/*.js`
+
 const SERVER_PORT = argv.port === undefined ? DEFAULT_SERVER_PORT : parseInt(argv.port)
 
-const MODERN_TRACEUR_OPTS = {
+const TRACEUR_OPTS = {
     asyncFunctions: true,
-    modules: 'amd',
-    classes: 'parse',
-    generators: 'parse',
-    arrowFunctions: 'parse',
-    blockBinding: 'parse',
-    forOf: 'parse',
-    templateLiterals: 'parse',
-    arrayComprehension: true,
-    sourceMaps: 'inline'
-}
-
-const LEGACY_TRACEUR_OPTS = {
-    asyncFunctions: true,
-    modules: 'amd',
     classes: true,
-    generators: 'parse',
+    generators: true,
     arrowFunctions: true,
     blockBinding: true,
     forOf: true,
-    templateLiterals: 'parse',
+    templateLiterals: true,
     arrayComprehension: true,
     sourceMaps: 'inline',
-    symbols: true
-}
-
-var TRACEUR_OPTS = MODERN_TRACEUR_OPTS;
-
-if (argv.legacy !== undefined) {
-    TRACEUR_OPTS = LEGACY_TRACEUR_OPTS;
+    modules: 'amd'
 }
 
 gulp.task('default',['build', 'stream', 'serve'])
@@ -62,11 +52,27 @@ gulp.task('build', () => {
     .pipe(gulp.dest(OUTPUT_DIR))
 })
 
+gulp.task('optimize', () => {
+    /* The optimizer uses the ENTRY_FILE name as the module name
+     * of the main module. We need to remove the file extension
+     * from it to maintain compatibility with the unoptimized code. */
+    const QUOTE = '"'
+    const EXTENSION = '.js'
+    const ENTRY_FILE_PATTERN = `${QUOTE}${ENTRY_FILE}${QUOTE}`
+    const ENTRY_MODULE_PATTERN = ENTRY_FILE_PATTERN.replace(
+        new RegExp(`${QUOTE}([^${QUOTE}]*)${EXTENSION}${QUOTE}`), `${QUOTE}$1${QUOTE}`);
+
+    gulp.src([OUTPUT_DIR , ENTRY_FILE].join(path.sep))
+        .pipe(requirejsOptimize())
+        .pipe(replace(ENTRY_FILE_PATTERN, ENTRY_MODULE_PATTERN))
+        .pipe(gulp.dest(OUTPUT_DIR))
+})
+
 gulp.task('serve', () => {
     gulp.src('.')
     .pipe(webserver({
         port: SERVER_PORT,
-        fallback: 'index.html',
+        fallback: INDEX_FILE,
         livereload: false
     }))
 })
