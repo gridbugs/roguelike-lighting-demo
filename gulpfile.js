@@ -1,3 +1,5 @@
+const cljs = require('clojurescript-nodejs')
+
 const gulp = require('gulp')
 
 const clean = require('gulp-clean')
@@ -10,29 +12,12 @@ const webserver = require('gulp-webserver')
 const argv = require('yargs').argv
 const path = require('path')
 
+/* The build config file is config/build.cljs */
+const CONFIG = cljs([__dirname, 'config', 'buildjs.cljs'].join(path.sep), [__dirname])
 
-const DEFAULT_SERVER_PORT = 8000
+const SOURCE_GLOB = `${CONFIG.SOURCE_DIR}/**/*.js`
 
-const OUTPUT_DIR = 'build'
-const SOURCE_DIR = 'src'
-const ENTRY_FILE = 'main.js'
-const INDEX_FILE = 'index.html'
-const SOURCE_GLOB = `${SOURCE_DIR}/**/*.js`
-
-const SERVER_PORT = argv.port === undefined ? DEFAULT_SERVER_PORT : parseInt(argv.port)
-
-const TRACEUR_OPTS = {
-    asyncFunctions: true,
-    classes: true,
-    generators: true,
-    arrowFunctions: true,
-    blockBinding: true,
-    forOf: true,
-    templateLiterals: true,
-    arrayComprehension: true,
-    sourceMaps: 'inline',
-    modules: 'amd'
-}
+const SERVER_PORT = argv.port === undefined ? CONFIG.DEFAULT_SERVER_PORT : parseInt(argv.port)
 
 gulp.task('default',['build', 'stream', 'serve'])
 
@@ -48,8 +33,8 @@ gulp.task('build', () => {
             this.emit('end')
         }
     }))
-    .pipe(traceur(TRACEUR_OPTS))
-    .pipe(gulp.dest(OUTPUT_DIR))
+    .pipe(traceur(CONFIG.TRACEUR_OPTS))
+    .pipe(gulp.dest(CONFIG.OUTPUT_DIR))
 })
 
 gulp.task('optimize', () => {
@@ -58,26 +43,26 @@ gulp.task('optimize', () => {
      * from it to maintain compatibility with the unoptimized code. */
     const QUOTE = '"'
     const EXTENSION = '.js'
-    const ENTRY_FILE_PATTERN = `${QUOTE}${ENTRY_FILE}${QUOTE}`
+    const ENTRY_FILE_PATTERN = `${QUOTE}${CONFIG.ENTRY_FILE}${QUOTE}`
     const ENTRY_MODULE_PATTERN = ENTRY_FILE_PATTERN.replace(
         new RegExp(`${QUOTE}([^${QUOTE}]*)${EXTENSION}${QUOTE}`), `${QUOTE}$1${QUOTE}`);
 
-    gulp.src([OUTPUT_DIR , ENTRY_FILE].join(path.sep))
+    gulp.src([CONFIG.OUTPUT_DIR , CONFIG.ENTRY_FILE].join(path.sep))
         .pipe(requirejsOptimize())
         .pipe(replace(ENTRY_FILE_PATTERN, ENTRY_MODULE_PATTERN))
-        .pipe(gulp.dest(OUTPUT_DIR))
+        .pipe(gulp.dest(CONFIG.OUTPUT_DIR))
 })
 
 gulp.task('serve', () => {
     gulp.src('.')
     .pipe(webserver({
         port: SERVER_PORT,
-        fallback: INDEX_FILE,
+        fallback: CONFIG.INDEX_FILE,
         livereload: false
     }))
 })
 
 gulp.task('clean', () => {
-    gulp.src(OUTPUT_DIR)
+    gulp.src(CONFIG.OUTPUT_DIR)
     .pipe(clean())
 })
