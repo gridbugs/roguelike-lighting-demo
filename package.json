@@ -9,12 +9,13 @@
   "devDependencies": {
     "clojurescript-nodejs": "*",
     "gulp": "*",
-    "gulp-clean": "*",
     "gulp-plumber": "*",
     "gulp-replace": "*",
     "gulp-requirejs-optimize": "*",
+    "gulp-rimraf": "*",
     "gulp-traceur": "*",
     "gulp-webserver": "*",
+    "run-sequence": "*",
     "yargs": "*"
   },
   "repository": {

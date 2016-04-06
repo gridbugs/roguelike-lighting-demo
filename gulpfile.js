@@ -1,40 +1,76 @@
 const cljs = require('clojurescript-nodejs')
-
 const gulp = require('gulp')
+const runSequence = require('run-sequence')
 
-const clean = require('gulp-clean')
+const rimraf = require('gulp-rimraf')
 const plumber = require('gulp-plumber')
 const replace = require('gulp-replace')
 const requirejsOptimize = require('gulp-requirejs-optimize')
 const traceur = require('gulp-traceur')
 const webserver = require('gulp-webserver')
+const debug = require('gulp-debug')
 
 const argv = require('yargs').argv
 const path = require('path')
 
 /* The build config file is config/build.cljs */
-const CONFIG = cljs([__dirname, 'config', 'buildjs.cljs'].join(path.sep), [__dirname])
+const CONFIG = cljs(path.join(__dirname, 'config', 'buildjs.cljs'), [__dirname])
 
-const SOURCE_GLOB = `${CONFIG.SOURCE_DIR}/**/*.js`
+function glob(dir, ext) {
+    ext = ext === undefined ? '.js' : ext;
+    return `${dir}/**/*${ext}`;
+}
 
 const SERVER_PORT = argv.port === undefined ? CONFIG.DEFAULT_SERVER_PORT : parseInt(argv.port)
+const OUTPUT_SOURCE_DIR_FULL = path.join(CONFIG.OUTPUT_DIR, CONFIG.OUTPUT_SOURCE_DIR)
 
-gulp.task('default',['build', 'stream', 'serve'])
+gulp.task('default', ['development'])
 
-gulp.task('stream', () => {
-    gulp.watch(SOURCE_GLOB, ['build'])
+gulp.task('production', (callback) => {
+    runSequence('build', 'optimize', ['serve', 'stream'])
 })
 
-gulp.task('build', () => {
-    gulp.src(SOURCE_GLOB)
-    .pipe(plumber({
-        handleError: (err) => {
-            console.log(err.toString())
-            this.emit('end')
-        }
-    }))
-    .pipe(traceur(CONFIG.TRACEUR_OPTS))
-    .pipe(gulp.dest(CONFIG.OUTPUT_DIR))
+gulp.task('development', (callback) => {
+    runSequence('build', ['serve', 'stream'])
+})
+
+gulp.task('build', (callback) => {
+    runSequence(['static', 'stage'], 'images', 'compile', callback)
+})
+
+gulp.task('stream', () => {
+    return gulp.watch(glob(CONFIG.SOURCE_DIR), ['build'])
+})
+
+gulp.task('stage', () => {
+    return gulp.src(glob(CONFIG.SOURCE_DIR))
+        .pipe(debug({title: 'stage'}))
+        .pipe(gulp.dest(CONFIG.STAGE_DIR))
+})
+
+gulp.task('static', () => {
+    return gulp.src(`${CONFIG.STATIC_DIR}/**`)
+        .pipe(debug({title: 'static'}))
+        .pipe(gulp.dest(CONFIG.OUTPUT_DIR))
+})
+
+gulp.task('images', () => {
+    return gulp.src(`${CONFIG.IMAGE_DIR}/**`)
+        .pipe(debug({title: 'images'}))
+        .pipe(gulp.dest(path.join(CONFIG.OUTPUT_DIR, CONFIG.OUTPUT_IMAGE_DIR)))
+})
+
+gulp.task('compile', () => {
+    return gulp.src(glob(CONFIG.STAGE_DIR))
+        .pipe(plumber({
+            handleError: (err) => {
+                console.log(err.toString())
+                this.emit('end')
+            }
+        }))
+        .pipe(debug({title: 'compile'}))
+        .pipe(traceur(CONFIG.TRACEUR_OPTS))
+        .pipe(gulp.dest(OUTPUT_SOURCE_DIR_FULL))
 })
 
 gulp.task('optimize', () => {
@@ -47,14 +83,15 @@ gulp.task('optimize', () => {
     const ENTRY_MODULE_PATTERN = ENTRY_FILE_PATTERN.replace(
         new RegExp(`${QUOTE}([^${QUOTE}]*)${EXTENSION}${QUOTE}`), `${QUOTE}$1${QUOTE}`);
 
-    gulp.src([CONFIG.OUTPUT_DIR , CONFIG.ENTRY_FILE].join(path.sep))
+    return gulp.src(path.join(OUTPUT_SOURCE_DIR_FULL , CONFIG.ENTRY_FILE))
+        .pipe(debug({title: 'optimize'}))
         .pipe(requirejsOptimize())
         .pipe(replace(ENTRY_FILE_PATTERN, ENTRY_MODULE_PATTERN))
-        .pipe(gulp.dest(CONFIG.OUTPUT_DIR))
+        .pipe(gulp.dest(OUTPUT_SOURCE_DIR_FULL))
 })
 
 gulp.task('serve', () => {
-    gulp.src('.')
+    return gulp.src(CONFIG.OUTPUT_DIR)
     .pipe(webserver({
         port: SERVER_PORT,
         fallback: CONFIG.INDEX_FILE,
@@ -63,6 +100,13 @@ gulp.task('serve', () => {
 })
 
 gulp.task('clean', () => {
-    gulp.src(CONFIG.OUTPUT_DIR)
-    .pipe(clean())
+    return gulp.src(CONFIG.STAGE_DIR)
+        .pipe(rimraf())
 })
+
+gulp.task('cleanout', () => {
+    return gulp.src(CONFIG.OUTPUT_DIR)
+        .pipe(rimraf())
+})
+
+gulp.task('mrproper', ['clean', 'cleanout'])
