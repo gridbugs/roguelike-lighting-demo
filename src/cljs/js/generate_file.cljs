@@ -6,10 +6,11 @@
 (def path (js/require "path"))
 (def beautify (js/require "js-beautify"))
 
+(def header-comment "Generated file. Do not edit.")
+
 (defn create [filename varname value]
-  (let [contents (str "export const "
-                      varname
-                      " = "
+  (let [contents (str "/* " header-comment " */"
+                      "export const " varname " = "
                       (jsgen/convert value))
         pretty-contents (beautify contents)
         file-path (.join path

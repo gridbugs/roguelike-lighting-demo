@@ -45,7 +45,7 @@ gulp.task('build', (callback) => {
 })
 
 gulp.task('stream', () => {
-    return gulp.watch(glob(CONFIG.SOURCE_DIR, '.*'), ['build'])
+    return gulp.watch(`${CONFIG.SOURCE_DIR}/**`, ['build'])
 })
 
 gulp.task('cljs', (callback) => {
