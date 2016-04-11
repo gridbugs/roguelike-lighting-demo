@@ -1,3 +1,5 @@
+'use strict'
+
 const cljs = require('clojurescript-nodejs')
 const gulp = require('gulp')
 const runSequence = require('run-sequence')
@@ -10,6 +12,7 @@ const traceur = require('gulp-traceur')
 const webserver = require('gulp-webserver')
 const debug = require('gulp-debug')
 
+const through = require('through2')
 const argv = require('yargs').argv
 const path = require('path')
 
@@ -17,17 +20,20 @@ const path = require('path')
 const CONFIG = cljs(path.join(__dirname, 'config', 'buildjs.cljs'), [__dirname])
 
 function glob(dir, ext) {
-    ext = ext === undefined ? '.js' : ext;
-    return `${dir}/**/*${ext}`;
+    ext = ext === undefined ? '.js' : ext
+    return `${dir}/**/*${ext}`
 }
 
 const SERVER_PORT = argv.port === undefined ? CONFIG.DEFAULT_SERVER_PORT : parseInt(argv.port)
-const OUTPUT_SOURCE_DIR_FULL = path.join(CONFIG.OUTPUT_DIR, CONFIG.OUTPUT_SOURCE_DIR)
+const OUTPUT_JS_DIR_FULL = path.join(CONFIG.OUTPUT_DIR, CONFIG.OUTPUT_JS_DIR)
+
+const SOURCE_JS_DIR = path.join(CONFIG.SOURCE_DIR, CONFIG.JS_DIR)
+const SOURCE_CLJS_DIR = path.join(CONFIG.SOURCE_DIR, CONFIG.CLJS_DIR)
 
 gulp.task('default', ['development'])
 
 gulp.task('production', (callback) => {
-    runSequence('build', 'optimize', ['serve', 'stream'])
+    runSequence('build', 'optimize')
 })
 
 gulp.task('development', (callback) => {
@@ -35,15 +41,29 @@ gulp.task('development', (callback) => {
 })
 
 gulp.task('build', (callback) => {
-    runSequence(['static', 'stage'], 'images', 'compile', callback)
+    runSequence(['static', 'stage'], 'cljs', 'images', 'compile', callback)
 })
 
 gulp.task('stream', () => {
-    return gulp.watch(glob(CONFIG.SOURCE_DIR), ['build'])
+    return gulp.watch(glob(CONFIG.SOURCE_DIR, '.*'), ['build'])
+})
+
+gulp.task('cljs', (callback) => {
+    const CLJS_PATHS = [__dirname, path.join(__dirname, SOURCE_CLJS_DIR)]
+
+    function runCljsScript(name) {
+        return cljs(path.join(__dirname, SOURCE_CLJS_DIR, CONFIG.CLJS_SCRIPTS[name]), CLJS_PATHS)
+    }
+
+    for (let name in CONFIG.CLJS_SCRIPTS) {
+        runCljsScript(name)
+    }
+
+    callback();
 })
 
 gulp.task('stage', () => {
-    return gulp.src(glob(CONFIG.SOURCE_DIR))
+    return gulp.src(glob(SOURCE_JS_DIR))
         .pipe(debug({title: 'stage'}))
         .pipe(gulp.dest(CONFIG.STAGE_DIR))
 })
@@ -70,7 +90,7 @@ gulp.task('compile', () => {
         }))
         .pipe(debug({title: 'compile'}))
         .pipe(traceur(CONFIG.TRACEUR_OPTS))
-        .pipe(gulp.dest(OUTPUT_SOURCE_DIR_FULL))
+        .pipe(gulp.dest(OUTPUT_JS_DIR_FULL))
 })
 
 gulp.task('optimize', () => {
@@ -81,13 +101,13 @@ gulp.task('optimize', () => {
     const EXTENSION = '.js'
     const ENTRY_FILE_PATTERN = `${QUOTE}${CONFIG.ENTRY_FILE}${QUOTE}`
     const ENTRY_MODULE_PATTERN = ENTRY_FILE_PATTERN.replace(
-        new RegExp(`${QUOTE}([^${QUOTE}]*)${EXTENSION}${QUOTE}`), `${QUOTE}$1${QUOTE}`);
+        new RegExp(`${QUOTE}([^${QUOTE}]*)${EXTENSION}${QUOTE}`), `${QUOTE}$1${QUOTE}`)
 
-    return gulp.src(path.join(OUTPUT_SOURCE_DIR_FULL , CONFIG.ENTRY_FILE))
+    return gulp.src(path.join(OUTPUT_JS_DIR_FULL , CONFIG.ENTRY_FILE))
         .pipe(debug({title: 'optimize'}))
         .pipe(requirejsOptimize())
         .pipe(replace(ENTRY_FILE_PATTERN, ENTRY_MODULE_PATTERN))
-        .pipe(gulp.dest(OUTPUT_SOURCE_DIR_FULL))
+        .pipe(gulp.dest(OUTPUT_JS_DIR_FULL))
 })
 
 gulp.task('serve', () => {
