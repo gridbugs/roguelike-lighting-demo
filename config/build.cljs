@@ -14,6 +14,9 @@
   ;; Directory containing javascript source to be compiled
   :JS_DIR         "js"
 
+  ;; Directory containing compiled javascript files
+  :JS_COMPILED_DIR "js-compiled"
+
   ;; Directory containing clojurescript source to be run at compile time
   :CLJS_DIR       "cljs"
 
@@ -30,9 +33,6 @@
 
   ;; Directory to store all output files
   :OUTPUT_DIR     "out"
-
-  ;; Directory to store compiled source, relative to OUTPUT_DIR
-  :OUTPUT_JS_DIR "js"
 
   ;; Directory to store images in the output
   :OUTPUT_IMAGE_DIR "images"

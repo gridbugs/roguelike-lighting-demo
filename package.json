@@ -9,7 +9,6 @@
   "devDependencies": {
     "clojurescript-nodejs": "*",
     "gulp": "*",
-    "gulp-debug": "*",
     "gulp-plumber": "*",
     "gulp-replace": "*",
     "gulp-requirejs-optimize": "*",
