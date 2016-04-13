@@ -16,7 +16,6 @@
     "gulp-rimraf": "*",
     "gulp-traceur": "*",
     "gulp-webserver": "*",
-    "jimp": "*",
     "js-beautify": "*",
     "run-sequence": "*",
     "through2": "*",
