@@ -7,6 +7,7 @@
   "main": "index.html",
   "js-flags": "--harmony --harmony_modules",
   "devDependencies": {
+    "async": "*",
     "clojurescript-nodejs": "*",
     "gulp": "*",
     "gulp-plumber": "*",
@@ -15,6 +16,7 @@
     "gulp-rimraf": "*",
     "gulp-traceur": "*",
     "gulp-webserver": "*",
+    "jimp": "*",
     "js-beautify": "*",
     "run-sequence": "*",
     "through2": "*",

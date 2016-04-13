@@ -1,8 +1,5 @@
 ;;; Build config file
-
 (ns config.build)
-
-(def path (js/require "path"))
 
 (def config {
 

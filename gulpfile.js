@@ -14,6 +14,7 @@ const webserver = require('gulp-webserver');
 const through = require('through2');
 const argv = require('yargs').argv;
 const path = require('path');
+const async = require('async');
 
 /* The build config file is config/build.cljs */
 const CONFIG = cljs(path.join(__dirname, 'config', 'buildjs.cljs'), [__dirname]);
@@ -75,15 +76,12 @@ gulp.task('build', (callback) => {
 gulp.task('cljs', (callback) => {
     const CLJS_PATHS = [__dirname, path.join(__dirname, SOURCE_CLJS_DIR)];
 
-    function runCljsScript(name) {
+    function getCljsTask(name) {
         return cljs(path.join(__dirname, SOURCE_CLJS_DIR, CONFIG.CLJS_SCRIPTS[name]), CLJS_PATHS);
     }
 
-    for (let name in CONFIG.CLJS_SCRIPTS) {
-        runCljsScript(name);
-    }
-
-    callback();
+    const tasks = Object.keys(CONFIG.CLJS_SCRIPTS).map(getCljsTask);
+    async.parallel(tasks, callback);
 });
 
 /* Copy js source to stage directory */

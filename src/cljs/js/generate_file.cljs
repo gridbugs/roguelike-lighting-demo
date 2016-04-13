@@ -15,4 +15,6 @@
                       (jsgen/convert value))
         pretty-contents (beautify contents)
         file-path (.join path js-stage-dir filename)]
-       (.writeFile fs file-path pretty-contents)))
+       (do
+         (.writeFile fs file-path pretty-contents)
+         pretty-contents)))
