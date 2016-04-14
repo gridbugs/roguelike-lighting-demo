@@ -1,5 +1,6 @@
 (ns tiles.types
-  (:require [config.build :as buildconfig]))
+  (:require [config.build :as buildconfig]
+            [clojure.string :as str]))
 
 (def node-path (js/require "path"))
 
@@ -25,3 +26,19 @@
                               :else {})
                         {:transparent (boolean transparent)}))))
   ([path] (image path false)))
+
+(defn dot [size colour background-color]
+  {:type "dot" :colour colour :backgroundColour background-color})
+
+(defn solid [colour] {:type "solid" :colour colour})
+
+(defn image-sequence
+  ([key-pattern file-pattern indices]
+   (image-sequence key-pattern file-pattern indices :opaque))
+  ([key-pattern file-pattern indices transparent]
+   (into {} (map
+              (fn [i] [(keyword (str/replace key-pattern "$$" i))
+                       (image
+                         (str/replace file-pattern "$$" i)
+                         transparent)])
+              indices))))
