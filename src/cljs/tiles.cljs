@@ -65,5 +65,6 @@
   }
   (image-sequence "HealthBar$$" "health-bar-$$.png" (range 0 9) :transparent)
   (image-sequence "Stars$$" "stars-$$.png" (range 0 4))
-  (image-sequence "Teleport$$" "teleport-$$.png" (range 0 4))
+  (image-sequence "Teleport$$" "teleport-$$.png" (range 0 4) :transparent)
+  (image-sequence "Water$$" "water-$$.png" (range 0 2))
 )})))
