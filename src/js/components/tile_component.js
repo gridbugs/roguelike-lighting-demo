@@ -73,28 +73,28 @@ export class WallTile extends Component {
 export class RandomlyChosenTile extends Component {
     constructor(probabilities, depth) {
         super();
+
         this.depth = depth;
-        if (probabilities.constructor === Object) {
-            let total = 0;
-            for (let tileName in probabilities) {
-                let probability = probabilities[tileName];
-                total += probability;
-                probabilities[tileName] = total;
+
+        let total = 0;
+        for (let [tile, probability] of probabilities) {
+            total += probability;
+        }
+
+        let rand = getRandomInt(0, total);
+
+        for (let [tile, probability] of probabilities) {
+            rand -= probability;
+            if (rand <= 0) {
+                this.tile = tile;
+                break;
             }
-            let rand = Math.random() * total;
-            for (let tileName in probabilities) {
-                if (rand < probabilities[tileName]){
-                    this.tile = Tiles[tileName];
-                    break;
-                }
-            }
-        } else {
-            this.tile = probabilities;
         }
     }
 
     clone() {
-        return new RandomlyChosenTile(this.tile, this.depth);
+        /* Pass the chosen tile with absolute probability */
+        return new RandomlyChosenTile([[this.tile, 1]], this.depth);
     }
 
     copypTo(dest) {

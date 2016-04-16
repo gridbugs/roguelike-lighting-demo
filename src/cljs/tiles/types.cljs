@@ -1,20 +1,17 @@
 (ns tiles.types
   (:require [config.build :as buildconfig]
+            [tiles.colour :as colour]
             [clojure.string :as str]))
 
 (def node-path (js/require "path"))
 
 (defn character
   ([ch]
-   {:type "character" :character ch})
+   (character ch colour/black colour/transparent))
   ([ch colour]
-   (assoc (character ch) :colour colour))
+   (character ch colour colour/transparent))
   ([ch colour background-color]
-   (assoc (character ch colour) :backgroundColour background-color))
-  ([ch colour background-color font-face]
-   (assoc (character ch colour background-color) :fontFace font-face))
-  ([ch colour background-color font-face font-size]
-   (assoc (character ch colour background-color font-face) :fontSize font-size)))
+   {:type "character" :character ch :colour colour :backgroundColour background-colour}))
 
 (defn image
   ([path transparent]
@@ -27,18 +24,12 @@
                         {:transparent (boolean transparent)}))))
   ([path] (image path false)))
 
-(defn dot [size colour background-color]
-  {:type "dot" :colour colour :backgroundColour background-color})
+(defn dot [size colour background-colour]
+  {:type "dot" :size size :colour colour :backgroundColour background-colour})
 
 (defn solid [colour] {:type "solid" :colour colour})
 
 (defn image-sequence
-  ([key-pattern file-pattern indices]
-   (image-sequence key-pattern file-pattern indices :opaque))
-  ([key-pattern file-pattern indices transparent]
-   (into {} (map
-              (fn [i] [(keyword (str/replace key-pattern "$$" i))
-                       (image
-                         (str/replace file-pattern "$$" i)
-                         transparent)])
-              indices))))
+  ([pattern indices] (image-sequence pattern indices :opaque))
+  ([pattern indices transparent]
+   (map #(image (str/replace pattern "$$" %) transparent) indices)))

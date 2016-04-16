@@ -60,8 +60,10 @@ export class KnowledgeRenderer extends System {
     getHealthBarTile(entity) {
         let maxHealth = entity.get(Components.MaxHealth).value;
         let health = Math.max(Math.min(entity.get(Components.Health).value, maxHealth), 0);
-        let barLength = Math.floor((Tiles.HealthBarSize * health) / maxHealth);
-        return Tiles.HealthBars[barLength];
+        /* 1 less than length as the array includes empty and full health bars */
+        let healthBarSize = Tiles.HealthBar.length - 1;
+        let barLength = Math.floor((healthBarSize * health) / maxHealth);
+        return Tiles.HealthBar[barLength];
     }
 
     drawTile(cell, grid) {

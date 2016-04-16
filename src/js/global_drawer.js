@@ -10,8 +10,8 @@ export const GlobalDrawer = {
         );
         if (Config.DEBUG) {
             let canvas = document.createElement('canvas');
-            canvas.width = CANVAS_WIDTH;
-            canvas.height = CANVAS_HEIGHT;
+            canvas.width = this.Drawer.width;
+            canvas.height = this.Drawer.height;
             canvas.id = 'debug-canvas';
 
             this.DebugDrawer = new Drawer(

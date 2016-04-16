@@ -19,6 +19,7 @@
 
   ;; Clojurescript files to invoke at compile time, relative to CLJS_DIR
   :CLJS_SCRIPTS {
+    :tile-description "tile_description.cljs"
     :config   "config.cljs"
   }
 

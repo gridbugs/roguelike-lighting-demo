@@ -108,13 +108,13 @@ export function Teleport(x, y) {
 export function Void(x, y) {
     return [
         new Components.Position(x, y),
-        new Components.RandomlyChosenTile({
-            Void: 20,
-            Stars0: 1,
-            Stars1: 1,
-            Stars2: 1,
-            Stars3: 1,
-        }, 0),
+        new Components.RandomlyChosenTile([
+            [Tiles.Void, 20],
+            [Tiles.Stars[0],  1],
+            [Tiles.Stars[1],  1],
+            [Tiles.Stars[2],  1],
+            [Tiles.Stars[3],  1],
+        ], 0),
         new Components.Name("Nothing"),
         new Components.Void()
     ];

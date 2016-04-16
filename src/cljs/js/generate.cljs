@@ -18,10 +18,9 @@
        (str "{" (str/join ", " (map convert-kvp m)) "}")))
 
 (defn convert [x]
-  (cond (list? x) (convert-list x)
-                  (vector? x)   (convert-list x)
-                  (string? x)   (convert-string x)
-                  (map? x)      (convert-map x)
-                  (keyword? x)  (convert-keyword x)
-                  (nil? x)      "null"
-                  :else x))
+  (cond (map? x)      (convert-map x)
+        (seq? x)      (convert-list x)
+        (string? x)   (convert-string x)
+        (keyword? x)  (convert-keyword x)
+        (nil? x)      "null"
+        :else x))

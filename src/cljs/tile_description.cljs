@@ -1,9 +1,8 @@
 (ns script.tiles
   (:require [tiles.colour :as colour]
             [tiles.types :as types]
-            [js.generate :as jsgen]))
-
-(def beautify (js/require "js-beautify"))
+            [js.generate-file :as jsfile]
+            [js.build-task :as build]))
 
 ;;; Shorthands
 (def rgba colour/rgba)
@@ -15,12 +14,8 @@
 (def solid types/solid)
 (def image-sequence types/image-sequence)
 
-(println (beautify (jsgen/convert {
-  :defaultFontFace "IBM-BIOS"
-  :defaultFontSize 16
-  :defaultFontColour colour/black
-  :defaultFontBackgroundColour colour/transparent
-  :tiles (merge {
+(build/task #(jsfile/create "tile_description.js" "TileDescription" {
+  :tiles {
 
     :PlayerCharacter  (character "@" colour/black)
     :Zombie           (character "Z" "#3f3e0b")
@@ -40,7 +35,7 @@
 
     :Floor            (dot 4 "#b08c4c" "#d4b888")
 
-    :Void             (character " " "#000000" "00003b")
+    :Void             (character " " "#000000" "#00003b")
 
     :HealthKit        (image "healthkit.png" :transparent)
 
@@ -63,8 +58,10 @@
     :PressureWallOverlay  (solid (rgba 0 255 0 0.3))
     :VentingOverlay   (solid (rgba 255 0 0 0.3))
   }
-  (image-sequence "HealthBar$$" "health-bar-$$.png" (range 0 9) :transparent)
-  (image-sequence "Stars$$" "stars-$$.png" (range 0 4))
-  (image-sequence "Teleport$$" "teleport-$$.png" (range 0 4) :transparent)
-  (image-sequence "Water$$" "water-$$.png" (range 0 2))
-)})))
+  :groups {
+    :HealthBar (image-sequence "health-bar-$$.png" (range 0 9) :transparent)
+    :Stars (image-sequence "stars-$$.png" (range 0 4))
+    :Teleport (image-sequence "teleport-$$.png" (range 0 4) :transparent)
+    :Water (image-sequence "water-$$.png" (range 0 2))
+  }
+}))
