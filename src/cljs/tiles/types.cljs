@@ -10,7 +10,7 @@
    (character ch colour/black colour/transparent))
   ([ch colour]
    (character ch colour colour/transparent))
-  ([ch colour background-color]
+  ([ch colour background-colour]
    {:type "character" :character ch :colour colour :backgroundColour background-colour}))
 
 (defn image
