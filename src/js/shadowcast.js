@@ -20,58 +20,66 @@ function computeSlope(fromVec, toVec, lateralIndex, depthIndex) {
             (toVec.arrayGet(depthIndex) - fromVec.arrayGet(depthIndex));
 }
 
-export function* detectVisibleArea(eyePosition, viewDistance, grid) {
+export function detectVisibleArea(eyePosition, viewDistance, grid, visionCells) {
     let eyeCell = grid.get(eyePosition);
     let xMax = grid.width - 1;
     let yMax = grid.height - 1;
     let squareViewDistance = SQRT2 * viewDistance;
     let viewDistanceSquared = viewDistance * viewDistance;
 
-    yield eyeCell;
+    visionCells.add(eyeCell, 1);
 
     //  \|
-    yield* detectVisibleAreaOctant( eyeCell, viewDistance, grid, -1, 0,
-                                    Direction.NorthWest.subIndex, Direction.SouthWest.subIndex,
-                                    -1, Vec2.X_IDX, xMax, yMax, squareViewDistance, viewDistanceSquared
+    detectVisibleAreaOctant( eyeCell, viewDistance, grid, -1, 0,
+                             Direction.NorthWest.subIndex, Direction.SouthWest.subIndex,
+                             -1, Vec2.X_IDX, xMax, yMax, squareViewDistance, viewDistanceSquared,
+                             visionCells
     );
     //  |/
-    yield* detectVisibleAreaOctant( eyeCell, viewDistance, grid, 0, 1,
-                                    Direction.SouthWest.subIndex, Direction.NorthWest.subIndex,
-                                    -1, Vec2.X_IDX, xMax, yMax, squareViewDistance, viewDistanceSquared
+    detectVisibleAreaOctant( eyeCell, viewDistance, grid, 0, 1,
+                             Direction.SouthWest.subIndex, Direction.NorthWest.subIndex,
+                             -1, Vec2.X_IDX, xMax, yMax, squareViewDistance, viewDistanceSquared,
+                             visionCells
     );
     //  /|
-    yield* detectVisibleAreaOctant( eyeCell, viewDistance, grid, -1, 0,
-                                    Direction.SouthWest.subIndex, Direction.NorthWest.subIndex,
-                                    1, Vec2.X_IDX, xMax, yMax, squareViewDistance, viewDistanceSquared
+    detectVisibleAreaOctant( eyeCell, viewDistance, grid, -1, 0,
+                             Direction.SouthWest.subIndex, Direction.NorthWest.subIndex,
+                             1, Vec2.X_IDX, xMax, yMax, squareViewDistance, viewDistanceSquared,
+                             visionCells
     );
     //  |\
-    yield* detectVisibleAreaOctant( eyeCell, viewDistance, grid, 0, 1,
-                                    Direction.NorthWest.subIndex, Direction.SouthWest.subIndex,
-                                    1, Vec2.X_IDX, xMax, yMax, squareViewDistance, viewDistanceSquared
+    detectVisibleAreaOctant( eyeCell, viewDistance, grid, 0, 1,
+                             Direction.NorthWest.subIndex, Direction.SouthWest.subIndex,
+                             1, Vec2.X_IDX, xMax, yMax, squareViewDistance, viewDistanceSquared,
+                             visionCells
     );
     //  _\
-    yield* detectVisibleAreaOctant( eyeCell, viewDistance, grid, -1, 0,
-                                    Direction.NorthWest.subIndex, Direction.NorthEast.subIndex,
-                                    -1, Vec2.Y_IDX, yMax, xMax, squareViewDistance, viewDistanceSquared
+    detectVisibleAreaOctant( eyeCell, viewDistance, grid, -1, 0,
+                             Direction.NorthWest.subIndex, Direction.NorthEast.subIndex,
+                             -1, Vec2.Y_IDX, yMax, xMax, squareViewDistance, viewDistanceSquared,
+                             visionCells
     );
     //  "/
-    yield* detectVisibleAreaOctant( eyeCell, viewDistance, grid, 0, 1,
-                                    Direction.NorthEast.subIndex, Direction.NorthWest.subIndex,
-                                    -1, Vec2.Y_IDX, yMax, xMax, squareViewDistance, viewDistanceSquared
+    detectVisibleAreaOctant( eyeCell, viewDistance, grid, 0, 1,
+                             Direction.NorthEast.subIndex, Direction.NorthWest.subIndex,
+                             -1, Vec2.Y_IDX, yMax, xMax, squareViewDistance, viewDistanceSquared,
+                             visionCells
     );
     //  /_
-    yield* detectVisibleAreaOctant( eyeCell, viewDistance, grid, -1, 0,
-                                    Direction.NorthEast.subIndex, Direction.NorthWest.subIndex,
-                                    1, Vec2.Y_IDX, yMax, xMax, squareViewDistance, viewDistanceSquared
+    detectVisibleAreaOctant( eyeCell, viewDistance, grid, -1, 0,
+                             Direction.NorthEast.subIndex, Direction.NorthWest.subIndex,
+                             1, Vec2.Y_IDX, yMax, xMax, squareViewDistance, viewDistanceSquared,
+                             visionCells
     );
     //  \"
-    yield* detectVisibleAreaOctant( eyeCell, viewDistance, grid, 0, 1,
-                                    Direction.NorthWest.subIndex, Direction.NorthEast.subIndex,
-                                    1, Vec2.Y_IDX, yMax, xMax, squareViewDistance, viewDistanceSquared
+    detectVisibleAreaOctant( eyeCell, viewDistance, grid, 0, 1,
+                             Direction.NorthWest.subIndex, Direction.NorthEast.subIndex,
+                             1, Vec2.Y_IDX, yMax, xMax, squareViewDistance, viewDistanceSquared,
+                             visionCells
     );
 }
 
-function* detectVisibleAreaOctant(
+function detectVisibleAreaOctant(
     eyeCell,
     viewDistance,
     grid,
@@ -84,7 +92,8 @@ function* detectVisibleAreaOctant(
     lateralMax,
     depthMax,
     squareViewDistance,
-    viewDistanceSquared
+    viewDistanceSquared,
+    visionCells
 ) {
 
     let depthIndex = Vec2.getOtherIndex(lateralIndex);
@@ -158,7 +167,7 @@ function* detectVisibleAreaOctant(
             let cell = grid.get(COORD_IDX);
 
             if (COORD_IDX.getDistanceSquared(eyeCell.coord) < viewDistanceSquared) {
-                yield cell;
+                visionCells.add(cell, visibility);
             }
 
             let currentVisibility = Math.max(visibility - cell.opacity, 0);
