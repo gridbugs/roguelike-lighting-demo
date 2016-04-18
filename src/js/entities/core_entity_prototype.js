@@ -96,7 +96,7 @@ export function Water(x, y) {
 export function Teleport(x, y) {
     return [
         new Components.Position(x, y),
-        new Components.RandomlyAnimatedTile(Tiles.TeleportAnimationTiles,
+        new Components.RandomlyAnimatedTile(Tiles.Teleport,
                 /* depth */ 2, /* min time */ 0, /* max time */ 0),
         new Components.Teleport(),
         new Components.Name("Teleport"),
