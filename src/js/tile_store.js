@@ -60,7 +60,7 @@ export class TileStore {
         this.tempCtx = this.tempCanvas.getContext('2d');
 
         this.setFont('IBM-BIOS', 16);
-        this.textXOffset = 2;
+        this.textXOffset = 1;
         this.textYOffset = -1;
 
         this.column = 0;

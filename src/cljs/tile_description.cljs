@@ -24,7 +24,7 @@
 
     :PileOfBones      (image "pile-of-bones.png" :transparent)
 
-    :Unseen           (character " " colour/black colour/black)
+    :Unseen           (solid colour/black)
     :Target           (image "target.png" :transparent)
     :Path             (image "path.png" :transparent)
 
@@ -54,9 +54,9 @@
     :UpStairs         (image "up-stairs.png" :transparent)
     :FireBackground   (image "fire-background.png" :transparent)
 
-    :VacuumOverlay    (solid (rgba 0 0 255 0.3))
-    :PressureWallOverlay  (solid (rgba 0 255 0 0.3))
-    :VentingOverlay   (solid (rgba 255 0 0 0.3))
+    :VacuumOverlay    (solid (rgba 0 0 255 0.3) :transparent)
+    :PressureWallOverlay  (solid (rgba 0 255 0 0.3) :transparent)
+    :VentingOverlay   (solid (rgba 255 0 0 0.3) :transparent)
   }
   :groups {
     :HealthBar (image-sequence "health-bar-$$.png" (range 0 9) :transparent)

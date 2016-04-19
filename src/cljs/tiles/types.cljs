@@ -5,29 +5,52 @@
 
 (def node-path (js/require "path"))
 
+(defn resolve-transparent [transparent]
+  (if (keyword? transparent)
+      (cond (= transparent :transparent) true
+            (= transparent :opaque) false
+            :else false)
+      (boolean transparent)))
+
 (defn character
   ([ch]
-   (character ch colour/black colour/transparent))
+   (character ch colour/black :transparent))
   ([ch colour]
-   (character ch colour colour/transparent))
+   (character ch colour colour/transparent :transparent))
   ([ch colour background-colour]
-   {:type "character" :character ch :colour colour :backgroundColour background-colour}))
+   (character ch colour background-colour :opaque))
+  ([ch colour background-colour transparent]
+   {:type "character"
+    :character ch
+    :colour colour
+    :transparent (resolve-transparent transparent)
+    :backgroundColour background-colour}))
 
 (defn image
+  ([path] (image path :opaque))
   ([path transparent]
-   (let [fullpath (.join node-path (buildconfig/config :IMAGE_DIR) path)
-         base {:type "image" :image fullpath}]
-        (merge base (if (keyword? transparent)
-                        (cond (= transparent :transparent)  {:transparent true}
-                              (= transparent :opaque)       {:transparent false}
-                              :else {})
-                        {:transparent (boolean transparent)}))))
-  ([path] (image path false)))
+   (let [fullpath (.join node-path (buildconfig/config :IMAGE_DIR) path)]
+        {:type "image"
+         :image fullpath
+         :transparent (resolve-transparent transparent)})))
 
-(defn dot [size colour background-colour]
-  {:type "dot" :size size :colour colour :backgroundColour background-colour})
+(defn dot
+  ([size] (dot size colour/black))
+  ([size colour] (dot size colour colour/transparent))
+  ([size colour background-colour] (dot size colour background-colour :opaque))
+  ([size colour background-colour transparent]
+   {:type "dot"
+    :size size
+    :colour colour
+    :transparent (resolve-transparent transparent)
+    :backgroundColour background-colour}))
 
-(defn solid [colour] {:type "solid" :colour colour})
+(defn solid
+  ([colour] (solid colour :opaque))
+  ([colour transparent]
+   {:type "solid"
+    :colour colour
+    :transparent (resolve-transparent transparent)}))
 
 (defn image-sequence
   ([pattern indices] (image-sequence pattern indices :opaque))
