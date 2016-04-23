@@ -8,20 +8,14 @@
   ;; Directory containing all source files
   :SOURCE_DIR     "src"
 
-  ;; Directory containing javascript source to be compiled
-  :JS_DIR         "js"
+  ;; Directory containing source javascript files in the stage Directory
+  :JS_SOURCE_DIR  "js-src"
 
-  ;; Directory containing compiled javascript files
-  :JS_COMPILED_DIR "js-compiled"
+  ;; Directory containing compiled javascript files in the stage and output directory
+  :JS_COMPILED_DIR  "js-compiled"
 
   ;; Directory containing clojurescript source to be run at compile time
-  :CLJS_DIR       "cljs"
-
-  ;; Clojurescript files to invoke at compile time, relative to CLJS_DIR
-  :CLJS_SCRIPTS {
-    :tile-description "tile_description.cljs"
-    :config   "config.cljs"
-  }
+  :CLJS_LIB_DIR   "cljs"
 
   ;; Directory containing static files (html, static javascript, static images)
   :STATIC_DIR     "static"

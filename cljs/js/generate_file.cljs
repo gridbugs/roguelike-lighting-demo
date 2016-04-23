@@ -7,7 +7,7 @@
 (def beautify (js/require "js-beautify"))
 
 (def header-comment "Generated file. Do not edit.")
-(def js-stage-dir (.join path (buildconfig/config :STAGE_DIR) (buildconfig/config :JS_DIR)))
+(def js-stage-dir (.join path (buildconfig/config :STAGE_DIR) (buildconfig/config :JS_SOURCE_DIR)))
 
 (defn create [filename varname value]
   (let [contents (str "/* " header-comment " */"

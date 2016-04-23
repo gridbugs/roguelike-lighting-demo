@@ -9,6 +9,7 @@
   "devDependencies": {
     "async": "*",
     "clojurescript-nodejs": "*",
+    "glob": "*",
     "gulp": "*",
     "gulp-plumber": "*",
     "gulp-replace": "*",

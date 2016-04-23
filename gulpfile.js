@@ -15,24 +15,20 @@ const through = require('through2');
 const argv = require('yargs').argv;
 const path = require('path');
 const async = require('async');
+const glob = require('glob');
 
 /* The build config file is config/build.cljs */
 const CONFIG = cljs(path.join(__dirname, 'config', 'buildjs.cljs'), [__dirname]);
 
-function glob(dir, ext) {
-    ext = ext === undefined ? '.js' : ext;
-    return `${dir}/**/*${ext}`;
-}
+/* Port for webserver */
+const SERVER_PORT = argv.port === undefined ? CONFIG.DEFAULT_SERVER_PORT : parseInt(argv.port);
 
 /* Path shorthand */
-const SERVER_PORT = argv.port === undefined ? CONFIG.DEFAULT_SERVER_PORT : parseInt(argv.port);
 const OUTPUT_JS_DIR = path.join(CONFIG.OUTPUT_DIR, CONFIG.JS_COMPILED_DIR);
 
-const SOURCE_JS_DIR = path.join(CONFIG.SOURCE_DIR, CONFIG.JS_DIR);
-const SOURCE_CLJS_DIR = path.join(CONFIG.SOURCE_DIR, CONFIG.CLJS_DIR);
-
-const STAGE_JS_DIR = path.join(CONFIG.STAGE_DIR, CONFIG.JS_DIR);
-const STAGE_OUTPUT_JS_DIR = path.join(CONFIG.STAGE_DIR, CONFIG.JS_COMPILED_DIR);
+const STAGE_JS_SOURCE_DIR = path.join(CONFIG.STAGE_DIR, CONFIG.JS_SOURCE_DIR);
+const STAGE_JS_COMPILED_DIR = path.join(CONFIG.STAGE_DIR, CONFIG.JS_COMPILED_DIR);
+const OUTPUT_JS_COMPILED_DIR = path.join(CONFIG.OUTPUT_DIR, CONFIG.JS_COMPILED_DIR);
 
 /* Running 'gulp' with no argument starts a development environment */
 gulp.task('default', ['development-environment']);
@@ -74,20 +70,17 @@ gulp.task('build', (callback) => {
 
 /* Run clojurescript build scripts which operate on the stage directory */
 gulp.task('cljs', (callback) => {
-    const CLJS_PATHS = [__dirname, path.join(__dirname, SOURCE_CLJS_DIR)];
-
-    function getCljsTask(name) {
-        return cljs(path.join(__dirname, SOURCE_CLJS_DIR, CONFIG.CLJS_SCRIPTS[name]), CLJS_PATHS);
-    }
-
-    const tasks = Object.keys(CONFIG.CLJS_SCRIPTS).map(getCljsTask);
-    async.parallel(tasks, callback);
+    const CLJS_PATHS = [__dirname, path.join(__dirname, CONFIG.CLJS_LIB_DIR)];
+    glob(`${CONFIG.SOURCE_DIR}/**/*.cljs`, (err, files) => {
+        let tasks = files.map(file => cljs(path.join(__dirname, file), CLJS_PATHS));
+        async.parallel(tasks, callback);
+    });
 });
 
 /* Copy js source to stage directory */
 gulp.task('stage', () => {
-    return gulp.src(glob(SOURCE_JS_DIR))
-        .pipe(gulp.dest(STAGE_JS_DIR));
+    return gulp.src(`${CONFIG.SOURCE_DIR}/**/*.js`)
+        .pipe(gulp.dest(STAGE_JS_SOURCE_DIR));
 });
 
 /* Copy static files to output directory */
@@ -104,7 +97,7 @@ gulp.task('images', () => {
 
 /* Compile ES6 to javascript */
 gulp.task('compile', () => {
-    return gulp.src(glob(STAGE_JS_DIR))
+    return gulp.src(`${STAGE_JS_SOURCE_DIR}/**/*.js`)
         .pipe(plumber({
             handleError: (err) => {
                 console.log(err.toString())
@@ -112,14 +105,14 @@ gulp.task('compile', () => {
             }
         }))
         .pipe(traceur(CONFIG.TRACEUR_OPTS))
-        .pipe(gulp.dest(STAGE_OUTPUT_JS_DIR));
+        .pipe(gulp.dest(STAGE_JS_COMPILED_DIR));
 });
 
 /* Copies compiled javascript from stage directory to output directory.
  * This is functionally equivalent to the 'optimize' task. */
 gulp.task('copy', () => {
-    return gulp.src(glob(STAGE_OUTPUT_JS_DIR))
-        .pipe(gulp.dest(OUTPUT_JS_DIR));
+    return gulp.src(`${STAGE_JS_COMPILED_DIR}/**/*.js`)
+        .pipe(gulp.dest(OUTPUT_JS_COMPILED_DIR));
 });
 
 /* Minifies the compiled javascript in the stage directory, storing the
@@ -135,10 +128,10 @@ gulp.task('optimize', () => {
     const ENTRY_MODULE_PATTERN = ENTRY_FILE_PATTERN.replace(
         new RegExp(`${QUOTE}([^${QUOTE}]*)${EXTENSION}${QUOTE}`), `${QUOTE}$1${QUOTE}`)
 
-    return gulp.src(path.join(STAGE_OUTPUT_JS_DIR, CONFIG.ENTRY_FILE))
+    return gulp.src(path.join(STAGE_JS_COMPILED_DIR, CONFIG.ENTRY_FILE))
         .pipe(requirejsOptimize())
         .pipe(replace(ENTRY_FILE_PATTERN, ENTRY_MODULE_PATTERN))
-        .pipe(gulp.dest(OUTPUT_JS_DIR));
+        .pipe(gulp.dest(OUTPUT_JS_COMPILED_DIR));
 });
 
 /* Start a webserver in the output directory */
