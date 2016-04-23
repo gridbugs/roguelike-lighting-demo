@@ -1,11 +1,10 @@
 {
-  "name": "skeleton-crew",
+  "name": "they-came-from-the-sea",
   "version": "0.0.1",
-  "description": "Roguelike where you fight undead things on a spaceship",
+  "description": "Experimental roguelike where you try to avoid seeing eldrich beings that will drive you mad.",
   "author": "Stephen Sherratt",
   "license": "MIT",
   "main": "index.html",
-  "js-flags": "--harmony --harmony_modules",
   "devDependencies": {
     "async": "*",
     "clojurescript-nodejs": "*",
@@ -24,12 +23,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/stevebob/skeleton-crew.git"
+    "url": "git+https://github.com/stevebob/they-came-from-the-sea.git"
   },
   "bugs": {
-    "url": "https://github.com/stevebob/skeleton-crew/issues"
+    "url": "https://github.com/stevebob/they-came-from-the-sea/issues"
   },
-  "homepage": "https://github.com/stevebob/skeleton-crew#readme",
+  "homepage": "https://github.com/stevebob/they-came-from-the-sea#readme",
   "window": {
     "toolbar": false,
     "resizable": false,
