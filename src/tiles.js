@@ -1,10 +1,13 @@
-import {TileStore} from 'tile_store';
+import {TileStore} from 'tiles/tile_store';
 import {loadImage} from 'utils/image_loader';
 import {Transparent} from 'utils/colour';
 import {Config} from 'config';
 import {resolvePromiseStructure} from 'utils/async';
 
 export const Tiles = {};
+
+const TILE_STORE_WIDTH = 1024;
+const TILE_STORE_HEIGHT = 1024;
 
 const promiseConstructors = {
     image: (description, tileStore) => {
@@ -16,7 +19,7 @@ const promiseConstructors = {
     },
     solid: (description, tileStore) => {
         return new Promise((resolve, reject) => {
-            resolve(tileStore.allocateSquareTile(description.colour));
+            resolve(tileStore.createSolidTile(description.colour, description.transparent));
         });
     },
     dot: (description, tileStore) => {
@@ -27,14 +30,19 @@ const promiseConstructors = {
     },
     character: (description, tileStore) => {
         return new Promise((resolve, reject) => {
-            resolve(tileStore.allocateCharacterTile(
-                        description.character, description.colour, description.backgroundColour));
+            resolve(tileStore.createCharacterTile(
+                        description.character,
+                        description.font,
+                        description.colour,
+                        description.backgroundColour,
+                        description.transparent));
         });
     }
 };
 
 export async function initTiles(description) {
-    const tileStore = new TileStore(Config.TILE_WIDTH, Config.TILE_HEIGHT);
+    const tileStore = new TileStore(Config.TILE_WIDTH, Config.TILE_HEIGHT,
+            TILE_STORE_WIDTH, TILE_STORE_HEIGHT);
 
     await loadTiles(description, tileStore);
 

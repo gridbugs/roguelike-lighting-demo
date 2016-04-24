@@ -13,15 +13,16 @@
       (boolean transparent)))
 
 (defn character
-  ([ch]
-   (character ch colour/black :transparent))
-  ([ch colour]
-   (character ch colour colour/transparent :transparent))
-  ([ch colour background-colour]
-   (character ch colour background-colour :opaque))
-  ([ch colour background-colour transparent]
+  ([ch font]
+   (character ch font colour/black :transparent))
+  ([ch font colour]
+   (character ch font colour colour/transparent :transparent))
+  ([ch font colour background-colour]
+   (character ch font colour background-colour :opaque))
+  ([ch font colour background-colour transparent]
    {:type "character"
     :character ch
+    :font font
     :colour colour
     :transparent (resolve-transparent transparent)
     :backgroundColour background-colour}))

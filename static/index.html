@@ -31,8 +31,18 @@ body {
     font-family: 'IBM-BIOS';
     src: url('fonts/PxPlus_IBM_BIOS.ttf');
 }
-p.font-loader {
+@font-face {
+    font-family: 'GothicPixel';
+    src: url('fonts/Gothic-Pixel.otf');
+}
+p.font-loader-IBM-BIOS {
     font-family: IBM-BIOS;
+    position: absolute;
+    top: -10px;
+    left: -10px;
+}
+p.font-loader-GothicPixel {
+    font-family: GothicPixel;
     position: absolute;
     top: -10px;
     left: -10px;
@@ -112,7 +122,8 @@ p.font-loader {
 
 </head>
 <body>
-    <p class='font-loader'>.</p>
+    <p class='font-loader-IBM-BIOS'>.</p>
+    <p class='font-loader-GothicPixel'>.</p>
     <div id="game">
         <canvas id="canvas" width=1024 height=640></canvas>
         <div id="hud">
@@ -125,7 +136,7 @@ p.font-loader {
                 <div id="stats"></div>
             </div>
         </div>
-        <div id="overlay">
+        <!--<div id="overlay">-->
 Loading...<br/>
 <br/>
 <br/>

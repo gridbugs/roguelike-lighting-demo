@@ -1,6 +1,7 @@
 (ns script.tiles
   (:require [tiles.colour :as colour]
             [tiles.types :as types]
+            [tiles.font :as font]
             [js.generate-file :as jsfile]
             [js.build-task :as build]))
 
@@ -14,54 +15,21 @@
 (def solid types/solid)
 (def image-sequence types/image-sequence)
 
+(def ibm-font (font/font "IBM-BIOS" 16 1 -1))
+(def gothic-font (font/font "GothicPixel" 24 1 -1))
+(def gothic-font-bold (font/font "GothicPixel" 24 1 -1 :bold))
+
 (build/task #(jsfile/create "tile_description.js" "TileDescription" {
   :tiles {
 
-    :PlayerCharacter  (character "@" colour/black)
-    :Zombie           (character "Z" "#3f3e0b")
-    :Skeleton         (character "S" "#444444")
-    :Bloat            (character "B" "#9a4500")
+    :PlayerCharacter  (character "@" ibm-font colour/black)
 
-    :PileOfBones      (image "pile-of-bones.png" :transparent)
+    :Ground           (character "." ibm-font (rgb 0x2d 0x80 0x3b) (rgb 0x06 0x31 0x0d))
+    :Tree             (character "T" gothic-font-bold (rgb 0x2d 0x80 0x3b))
+    :Water            (character "~" ibm-font (rgb 0x22 0x88 0xcc) (rgb 0x00 0x44 0x88))
+    :Rock             (character "*" ibm-font (rgb 0x22 0x22 0x22) (rgb 0x44 0x44 0x44))
 
-    :Unseen           (solid colour/black)
-    :Target           (image "target.png" :transparent)
-    :Path             (image "path.png" :transparent)
-
-    :WallTop          (image "wall-top.png")
-    :WallFront        (image "wall-front.png")
-    :WindowTop        (image "window-top.png")
-    :WindowFront      (image "window-front.png")
-
-    :Floor            (dot 4 "#b08c4c" "#d4b888")
-
-    :Void             (character " " "#000000" "#00003b")
-
-    :HealthKit        (image "healthkit.png" :transparent)
-
-    :Pistol           (image "pistol.png" :transparent)
-    :Shotgun          (image "shotgun.png" :transparent)
-    :MachineGun       (image "machinegun.png" :transparent)
-    :Flamethrower     (image "flamethrower.png" :transparent)
-    :RocketLauncher   (image "rocket-launcher.png" :transparent)
-
-    :Bullet           (image "bullet.png" :transparent)
-    :Rocket           (image "rocket.png" :transparent)
-    :Fireball         (image "fireball.png" :transparent)
-    :Door             (image "door.png" :transparent)
-    :OpenDoor         (image "door-open.png" :transparent)
-    :DownStairs       (image "down-stairs.png" :transparent)
-    :UpStairs         (image "up-stairs.png" :transparent)
-    :FireBackground   (image "fire-background.png" :transparent)
-
-    :VacuumOverlay    (solid (rgba 0 0 255 0.3) :transparent)
-    :PressureWallOverlay  (solid (rgba 0 255 0 0.3) :transparent)
-    :VentingOverlay   (solid (rgba 255 0 0 0.3) :transparent)
-  }
-  :groups {
-    :HealthBar (image-sequence "health-bar-$$.png" (range 0 9) :transparent)
-    :Stars (image-sequence "stars-$$.png" (range 0 4))
-    :Teleport (image-sequence "teleport-$$.png" (range 0 4) :transparent)
-    :Water (image-sequence "water-$$.png" (range 0 2))
+    :Unseen           (solid (rgb 0 0 0))
+    :Yellow           (solid (rgba 0xff 0xff 0x00 0.25))
   }
 }))
