@@ -94,11 +94,9 @@ export async function main() {
     var first = true;
     Level.EcsContext = GameContext;
     let hud = GlobalHud.Hud;
+    hud.hideOverlay();
 
     while (true) {
-        hud.overlay = LOADING_SCREEN;
-        hud.showOverlay();
-        await msDelay(30);
 
         var generator;
         if (Config.DEMO) {
@@ -109,16 +107,6 @@ export async function main() {
 
         var firstLevel = new Level(generator);
         var playerCharacter = firstLevel.ecsContext.playerCharacter;
-
-        if (first) {
-            first = false;
-            hud.overlay = LOADED_SCREEN;
-            await getKey();
-        }
-
-        hud.hideOverlay();
-
-        hud.message = 'SHIP COMPUTER: "Get to the teleporter on Floor 3"';
 
         var currentEcsContext;
         while (true) {

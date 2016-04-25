@@ -17,19 +17,8 @@ class EntityMemory extends InvalidatingComponentTable {
             EntityMemory.RememberedComponents = [
                 Components.Position,
                 Components.Tile,
-                Components.WallTile,
-                Components.RandomlyAnimatedTile,
-                Components.RandomlyChosenTile,
                 Components.Solid,
-                Components.PlayerCharacter,
-                Components.Burning,
-                Components.Health,
-                Components.MaxHealth,
-                Components.Door,
-                Components.Name,
-                Components.Description,
-                Components.Weapon,
-                Components.Void
+                Components.PlayerCharacter
             ];
         }
     }
