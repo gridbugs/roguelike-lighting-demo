@@ -1,6 +1,7 @@
 import {TileStore} from 'tiles/tile_store';
 import {loadImage} from 'utils/image_loader';
 import {Config} from 'config';
+import {Effect} from 'effect';
 import {resolvePromiseStructure} from 'utils/async';
 
 export const Tiles = {};
@@ -12,19 +13,28 @@ const promiseConstructors = {
     image: (description, tileStore) => {
         return new Promise((resolve, reject) => {
             loadImage(description.image).then((image) => {
-                resolve(tileStore.allocateImageTile(image, description.transparent));
+                resolve(tileStore.allocateImageTile(
+                            image,
+                            description.transparent,
+                            description.effects));
             });
         });
     },
     solid: (description, tileStore) => {
         return new Promise((resolve, reject) => {
-            resolve(tileStore.createSolidTile(description.colour, description.transparent));
+            resolve(tileStore.createSolidTile(
+                        description.colour,
+                        description.transparent,
+                        description.effects));
         });
     },
     dot: (description, tileStore) => {
         return new Promise((resolve, reject) => {
             resolve(tileStore.allocateDotTile(
-                        description.size, description.colour, description.backgroundColour));
+                        description.size,
+                        description.colour,
+                        description.backgroundColour,
+                        description.effects));
         });
     },
     character: (description, tileStore) => {
@@ -34,7 +44,8 @@ const promiseConstructors = {
                         description.font,
                         description.colour,
                         description.backgroundColour,
-                        description.transparent));
+                        description.transparent,
+                        description.effects));
         });
     }
 };
@@ -76,7 +87,7 @@ function initDebugTiles(tileStore) {
         name: "IBM-BIOS",
         size: 16,
         xOffset: 1,
-        yOffset: -1
+        yOffset: -2
     };
 
     let colour = "rgb(0, 0, 0)";
@@ -86,17 +97,21 @@ function initDebugTiles(tileStore) {
 
     Tiles.debugArray = [];
     for (var i = 0; i <= 9; ++i) {
-        Tiles.debugArray.push(tileStore.createCharacterTile('' + i, font, colour, 'rgba(255, 255, 255, 0.25)'));
+        Tiles.debugArray.push(
+            tileStore.createCharacterTile('' + i, font, colour, 'rgba(255, 255, 255, 0.25)', true, Effect.None));
     }
     for (var i = 0; i < 26; ++i) {
         var c = String.fromCharCode('a'.charCodeAt(0) + i);
-        Tiles.debugArray.push(tileStore.createCharacterTile(c, font, colour, 'rgba(255, 255, 255, 0.25)'));
+        Tiles.debugArray.push(
+            tileStore.createCharacterTile(c, font, colour, 'rgba(255, 255, 255, 0.25)', true, Effect.None));
     }
     for (var i = 0; i < 26; ++i) {
         var c = String.fromCharCode('A'.charCodeAt(0) + i);
-        Tiles.debugArray.push(tileStore.createCharacterTile(c, font, colour, 'rgba(255, 255, 255, 0.25)'));
+        Tiles.debugArray.push(
+            tileStore.createCharacterTile(c, font, colour, 'rgba(255, 255, 255, 0.25)', true, Effect.None));
     }
-    Tiles.debugExtra = tileStore.createCharacterTile('?', font, colour, 'rgba(255, 255, 255, 0.25)');
+    Tiles.debugExtra =
+        tileStore.createCharacterTile('?', font, colour, 'rgba(255, 255, 255, 0.25)', true, Effect.None);
 }
 
 export function getDebugTile(i) {

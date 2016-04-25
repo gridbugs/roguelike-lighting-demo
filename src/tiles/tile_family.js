@@ -1,26 +1,66 @@
-const NUM_LIGHT_LEVELS = 10;
+import {makeEnum} from 'utils/enum';
+import {Effect} from 'effect';
+
+const NUM_LIGHT_LEVELS = 32;
+const NUM_TRANSPARENCY_LEVELS = 32;
 
 export class TileFamily {
-    constructor(sprite, transparent) {
+    constructor(sprite, transparent, effects = Effect.Default) {
 
         this.tileStore = sprite.tileStore;
 
         this.main = sprite;
         this.main.family = this;
 
-        this.greyScale = this.tileStore.createGreyScaleSprite(this.main);
+        this.transparent = transparent;
 
-        this.lightLevels = new Array(NUM_LIGHT_LEVELS);
-        for (let i = 0; i < NUM_LIGHT_LEVELS; ++i) {
-//            this.lightLevels[i] = this.tileStore.createLightLevelSprite(this.main, i/NUM_LIGHT_LEVELS);
+        if (effects.has(Effect.Type.GREYSCALE)) {
+            this.greyScale = this.tileStore.createGreyscaleSprite(this.main);
+        } else {
+            this.greyScale = null;
+        }
+
+        if (effects.has(Effect.Type.LIGHT_LEVELS)) {
+            this.lightLevels = new Array(NUM_LIGHT_LEVELS);
+            for (let i = 0; i < NUM_LIGHT_LEVELS; ++i) {
+                let litRatio = i * 2 / NUM_LIGHT_LEVELS;
+                let litOffset = (i - NUM_LIGHT_LEVELS / 2) * 2;
+                this.lightLevels[i] = this.tileStore.createLightLevelSprite(
+                    this.main,
+                    litRatio,
+                    litOffset
+                );
+            }
+        } else {
+            this.lightLevels = null;
+        }
+
+        if (effects.has(Effect.Type.TRANSPARENCY_LEVELS)) {
+            this.transparencyLevels = new Array(NUM_TRANSPARENCY_LEVELS);
+            for (let i = 0; i < NUM_TRANSPARENCY_LEVELS; ++i) {
+                let alpha = i / NUM_TRANSPARENCY_LEVELS;
+                this.transparencyLevels[i] = this.tileStore.createTransparentSprite(
+                    this.main,
+                    alpha
+                );
+            }
+        } else {
+            this.transparencyLevels = null;
         }
     }
 }
 
 export class ComplexTileFamily extends TileFamily {
-    constructor(foregroundSprite, backgroundSprite, transparent) {
-        super(foregroundSprite.tileStore.createLayeredSprite(foregroundSprite, backgroundSprite));
-        this.foreground = new TileFamily(foregroundSprite);
-        this.background = new TileFamily(backgroundSprite);
+    constructor(foregroundSprite, backgroundSprite, transparent, effects = Effect.Default) {
+        super(
+            foregroundSprite.tileStore.createLayeredSprite(foregroundSprite, backgroundSprite),
+            transparent,
+            effects
+        );
+
+        this.foreground = new TileFamily(foregroundSprite, true, effects);
+        this.background = new TileFamily(backgroundSprite, transparent, effects);
+
+        this.transparent = transparent;
     }
 }

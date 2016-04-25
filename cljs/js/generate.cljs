@@ -17,8 +17,12 @@
         convert-kvp (fn [[k v]] (str (convert-key k) ": " (convert v)))]
        (str "{" (str/join ", " (map convert-kvp m)) "}")))
 
+(defn convert-set [s]
+  (str "new Set([" (str/join ", " (map convert s)) "])"))
+
 (defn convert [x]
   (cond (map? x)      (convert-map x)
+        (set? x)      (convert-set x)
         (seq? x)      (convert-list x)
         (string? x)   (convert-string x)
         (keyword? x)  (convert-keyword x)
