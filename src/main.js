@@ -21,6 +21,8 @@ import {assert} from 'utils/assert';
 
 import {renderText, HelpText, WinText} from 'text';
 
+import {Tiles} from 'tiles';
+
 function initRng() {
     let seed;
     if (Config.RNG_SEED === null) {
@@ -53,8 +55,7 @@ export async function main() {
 
     await initGlobals();
 
-
-    var terrailStringArray = [
+    var terrainStringArray = [
 
         "..............................................................**~~~~~~~~~~",
         "..........................&.......................&.........**~~~~~~~~~~~~",
@@ -70,7 +71,7 @@ export async function main() {
         "............&..........&............................*~~~~~~~~~~~~~~~~~~~~~",
         ".........................&..........................*~~~~~~~~~~~~~~~~~~~~~",
         "........&.............................&.............*~~~~~~~~~~~~~~~~~~~~~",
-        "............................&.......................*~~~~~~~~~~~~~~~~~~~~~",
+        "........................@...&.......................*~~~~~~~~~~~~~~~~~~~~~",
         "....&....&.........&................................*~~~~~~~~~~~~~~~~~~~~~",
         "....................&....&..........................*~~~~~~~~~~~~~~~~~~~~~",
         ".........&..........................................*~~~~~~~~~~~~~~~~~~~~~",
@@ -122,23 +123,6 @@ export async function main() {
         var currentEcsContext;
         while (true) {
             currentEcsContext = playerCharacter.ecsContext;
-            if (playerCharacter.get(Components.Health).value <= 0) {
-                currentEcsContext.updatePlayer();
-                currentEcsContext.drawer.fill('rgba(255, 0, 0, 0.25)');
-                hud.message = "You died (press any key to restart)"
-                break;
-            }
-            if (playerCharacter.has(Components.StuckInSpace)) {
-                currentEcsContext.updatePlayer();
-                currentEcsContext.drawer.fill('rgba(255, 0, 0, 0.25)');
-                hud.message = "You drift in space forever (press any key to restart)"
-                break;
-            }
-            if (playerCharacter.has(Components.Won)) {
-                hud.overlay = renderText(WinText);
-                hud.showOverlay();
-                break;
-            }
             await currentEcsContext.progressSchedule();
         }
 

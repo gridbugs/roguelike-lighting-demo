@@ -8,4 +8,8 @@ export class Sprite {
         this.family = family;
         this.debug = debug;
     }
+
+    get canvas() {
+        return this.tileStore.canvas;
+    }
 }

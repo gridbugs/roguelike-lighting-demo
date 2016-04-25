@@ -7,7 +7,7 @@ export const MAX_VISIBILITY = MAX_OPACITY;
 export const MIN_VISIBILITY = MIN_OPACITY;
 
 export function opacityFromFloat(f) {
-    return parseInt(f * MAX_OPACITY);
+    return Math.floor(f * MAX_OPACITY);
 }
 
 class VisionCellDescription {

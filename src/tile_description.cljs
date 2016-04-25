@@ -23,10 +23,10 @@
 (build/task #(jsfile/create "tile_description.js" "TileDescription" {
   :tiles {
 
-    :PlayerCharacter  (character "@" ibm-font colour/black)
+    :PlayerCharacter  (character "@" ibm-font colour/white)
 
-    :Ground           (character "." ibm-font (rgb 0x2d 0x80 0x3b) (rgb 0x06 0x31 0x0d))
-    :Tree             (character "&" ibm-font (rgb 0x2d 0x80 0x3b))
+    :Ground           (character "." ibm-font (rgb 0x2d 0x80 0x10) (rgb 0x06 0x31 0x0d))
+    :Tree             (character "&" ibm-font (rgb 0x2d 0x80 0x10))
     :Water            (character "~" ibm-font (rgb 0x22 0x88 0xcc) (rgb 0x00 0x44 0x88))
     :Rock             (character "*" ibm-font (rgb 0x22 0x22 0x22) (rgb 0x44 0x44 0x44))
 

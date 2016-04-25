@@ -7,6 +7,9 @@ export class Teleport extends ReactiveSystem {
         super(ecsContext);
 
         this.on(Actions.Walk, (action) => {
+            if (!action.success) {
+                return;
+            }
             let destination = this.getCell(action.destination);
 
             if (destination.has(Components.Teleport)) {

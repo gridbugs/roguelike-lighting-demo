@@ -20,7 +20,7 @@ export class TileStore {
             $('#canvas').after(this.canvas);
             this.canvas.style.backgroundColor = 'pink';
             this.canvas.style.position = 'absolute';
-            this.canvas.style.top = '0px';
+            this.canvas.style.top = '800px';
             this.canvas.style.left = '0px';
         }
 

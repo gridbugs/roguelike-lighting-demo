@@ -68,32 +68,16 @@ export class KnowledgeRenderer extends System {
 
     drawTile(cell, grid) {
         let tile = this.getMainTile(cell, true, grid);
-        if (tile.transparentBackground) {
+        if (tile.transparent) {
             let backgroundTile = this.getBackgroundTile(cell, true);
-            this.drawer.drawTile(backgroundTile, cell.x, cell.y);
-            if (cell.is(Components.Burning)) {
-                this.drawer.drawTile(Tiles.FireBackground, cell.x, cell.y);
-            }
+            this.drawer.drawTile(backgroundTile.main, cell.x, cell.y);
         }
-        this.drawer.drawTile(tile, cell.x, cell.y);
-
-        let entity = cell.find(Components.MaxHealth);
-        if (entity !== null) {
-            this.drawer.drawTile(this.getHealthBarTile(entity), cell.x, cell.y);
-        }
-
-        let atmosphereCell = this.ecsContext.atmosphere.grid.get(cell.coord);
-        if (atmosphereCell.atmosphere === 0 && !cell.is(Components.Void)) {
-            this.drawer.drawTile(Tiles.VacuumOverlay, cell.x, cell.y);
-        }
-        if (atmosphereCell.venting) {
-            this.drawer.drawTile(Tiles.VentingOverlay, cell.x, cell.y);
-        }
+        this.drawer.drawTile(tile.main, cell.x, cell.y);
     }
 
     drawGreyTile(cell, grid) {
         let tile = this.getMainTile(cell, false, grid);
-        if (tile.transparentBackground) {
+        if (tile.transparent) {
             let backgroundTile = this.getBackgroundTile(cell, false);
             this.drawer.drawTile(backgroundTile.greyScale, cell.x, cell.y);
         }
@@ -111,7 +95,7 @@ export class KnowledgeRenderer extends System {
             let grid = observer.knowledge.getGrid(this.ecsContext);
             for (let cell of grid) {
                 if (!cell.known) {
-                    this.drawer.drawTile(Tiles.Unseen, cell.x, cell.y);
+                    this.drawer.drawTile(Tiles.Unseen.main, cell.x, cell.y);
                 } else if (cell.visible) {
                     this.drawTile(cell, grid);
                 } else {

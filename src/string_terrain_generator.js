@@ -44,97 +44,24 @@ export class StringTerrainGenerator {
         }
 
         switch (character) {
+        case '@':
+            add('PlayerCharacter');
+            add('Ground');
+            break;
         case '.':
-            add('Floor');
+            add('Ground');
             break;
-        case '>': {
-            let stairs = add('DownStairs');
-            stairs.get(Components.DownStairs).level = this.nextLevel;
-            this.nextGenerator.addStairsFromAbove(stairs);
-            add('IceFloor');
+        case '&':
+            add('Tree');
+            add('Ground');
             break;
-        }
-        case '<': {
-            let stairs = add('UpStairs');
-            stairs.get(Components.UpStairs).level = this.aboveLevel;
-            stairs.get(Components.UpStairs).downStairs = this.stairsFromAbove;
-            this.stairsFromAbove.get(Components.DownStairs).upStairs = stairs;
-            if (this.nextStringArray === null) {
-                add('StoneFloor');
-            } else {
-                add('IceFloor');
-            }
-            break;
-        }
-        case '+':
-            add('Door');
-            add('Floor');
-            break;
-        case ' ':
-            add('Void');
+        case '*':
+            add('Rock');
+            add('Ground');
             break;
         case '~':
             add('Water');
-            add('Floor');
             break;
-        case '#':
-        case '%':
-            add('Wall');
-            add('Floor');
-            break;
-        case '=':
-            add('Window');
-            add('Floor');
-            break;
-        case 'z':
-            add('Zombie');
-            add('Floor');
-            break;
-        case 's':
-            add('Skeleton');
-            add('Floor');
-            break;
-        case 'b':
-            add('Bloat');
-            add('Floor');
-            break;
-        case '&':
-            add('PileOfBones');
-            add('Floor');
-            break;
-        case '1':
-            add('Pistol').get(Components.Weapon).weapon.ammo = 20;
-            add('Floor');
-            break;
-        case '2':
-            add('Shotgun').get(Components.Weapon).weapon.ammo = 20;
-            add('Floor');
-            break;
-        case '3':
-            add('MachineGun').get(Components.Weapon).weapon.ammo = 200;
-            add('Floor');
-            break;
-        case '4':
-            add('Flamethrower').get(Components.Weapon).weapon.ammo = 20;
-            add('Floor');
-            break;
-        case '5':
-            add('RocketLauncher').get(Components.Weapon).weapon.ammo = 5;
-            add('Floor');
-            break;
-        case '$':
-            add('HealthKit');
-            add('Floor');
-            break;
-        case '@': {
-            let pc = add('PlayerCharacter');
-            let gun = add('RocketLauncher');
-            gun.get(Components.Weapon).weapon.ammo = 5;
-            pc.get(Components.WeaponInventory).addWeapon(gun);
-            gun.remove(Components.Position);
-            add('Floor');
-            break;
-        }
         }
     }
 }

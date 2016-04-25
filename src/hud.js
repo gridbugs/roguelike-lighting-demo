@@ -52,57 +52,6 @@ export class Hud {
     }
 
     update(entity) {
-        let health = Math.ceil(entity.get(Components.Health).value); // ceil so 0.5 doesn't look like 0
-        let maxHealth = Math.floor(entity.get(Components.MaxHealth).value);
-        let oxygen = Math.floor(entity.get(Components.Oxygen).value);
-        let maxOxygen = Math.floor(entity.get(Components.MaxOxygen).value);
-        let atmosphereCell = entity.ecsContext.atmosphere.grid.get(entity.cell.coord);
-        if (atmosphereCell.venting) {
-            this.atmosphere = "<span style='color:#ff0000'>Venting</span>";
-        } else if (atmosphereCell.atmosphere === 0) {
-            this.atmosphere = "<span style='color:#8888ff'>Vacuum</span>";
-        } else {
-            this.atmosphere = "<span style='color:#ffffff'>Pressurized</span>";
-        }
-
-        let depth = entity.ecsContext.level.depth;
-
-        this.stats = `Floor:${depth} O₂:${oxygen}/${maxOxygen} HP:${health}/${maxHealth}`;
-
-        let weaponInventory =entity.get(Components.WeaponInventory);
-        let weaponEntity = weaponInventory.currentWeapon;
-        let currentWeaponName = "";
-        if (weaponEntity !== null) {
-            let weapon = weaponEntity.get(Components.Weapon).weapon;
-            let name = weaponEntity.get(Components.Name).value;
-            if (typeof name === 'function') {
-                currentWeaponName = name(weaponEntity);
-            } else {
-                currentWeaponName = name;
-            }
-        }
-        let weaponSummary = '[';
-        for (let i = 1; i < weaponInventory.slots.length; ++i) {
-            let slot = weaponInventory.slots[i];
-            if (slot === null) {
-                weaponSummary += `<span style='color:#444444'>${i}</span>`;
-            } else if (i === weaponInventory.index) {
-                weaponSummary += `<span style='color:#ff0000'>${i}</span>`;
-            } else {
-                weaponSummary += `<span style='color:#ffffff'>${i}</span>`;
-            }
-        }
-        weaponSummary += ']';
-        this.weapon = `${weaponSummary} ${currentWeaponName}`;
-
-        if (!this.messageChanged) {
-            let item = entity.cell.find(Components.Getable);
-            if (item === null) {
-                this.message = "";
-            } else {
-                this.message = `Here: ${item.get(Components.Name).value}`;
-            }
-        }
     }
 
 }

@@ -49,13 +49,13 @@ class EntityMemory extends InvalidatingComponentTable {
             return true;
         }
         if (this.has(Components.Tile)) {
-            return !this.get(Components.Tile).tile.transparentBackground;
+            return !this.get(Components.Tile).tile.transparent;
         }
         if (this.has(Components.RandomlyAnimatedTile)) {
-            return !this.get(Components.RandomlyAnimatedTile).tile.transparentBackground;
+            return !this.get(Components.RandomlyAnimatedTile).tile.transparent;
         }
         if (this.has(Components.RandomlyChosenTile)) {
-            return !this.get(Components.RandomlyChosenTile).tile.transparentBackground;
+            return !this.get(Components.RandomlyChosenTile).tile.transparent;
         }
         return false;
     }
