@@ -12,7 +12,7 @@ export class TileFamily {
 
         this.lightLevels = new Array(NUM_LIGHT_LEVELS);
         for (let i = 0; i < NUM_LIGHT_LEVELS; ++i) {
-            this.lightLevels[i] = this.tileStore.createLightLevelSprite(this.main, i/NUM_LIGHT_LEVELS);
+//            this.lightLevels[i] = this.tileStore.createLightLevelSprite(this.main, i/NUM_LIGHT_LEVELS);
         }
     }
 }

@@ -1,6 +1,5 @@
 import {TileStore} from 'tiles/tile_store';
 import {loadImage} from 'utils/image_loader';
-import {Transparent} from 'utils/colour';
 import {Config} from 'config';
 import {resolvePromiseStructure} from 'utils/async';
 
@@ -72,19 +71,32 @@ function loadTiles(description, tileStore) {
 }
 
 function initDebugTiles(tileStore) {
+
+    let font = {
+        name: "IBM-BIOS",
+        size: 16,
+        xOffset: 1,
+        yOffset: -1
+    };
+
+    let colour = "rgb(0, 0, 0)";
+
+    tileStore.newLine();
+    tileStore.newLine();
+
     Tiles.debugArray = [];
     for (var i = 0; i <= 9; ++i) {
-        Tiles.debugArray.push(tileStore.allocateCharacterTile('' + i, '#000000', 'rgba(255, 255, 255, 0.25)'));
+        Tiles.debugArray.push(tileStore.createCharacterTile('' + i, font, colour, 'rgba(255, 255, 255, 0.25)'));
     }
     for (var i = 0; i < 26; ++i) {
         var c = String.fromCharCode('a'.charCodeAt(0) + i);
-        Tiles.debugArray.push(tileStore.allocateCharacterTile(c, '#000000', 'rgba(255, 255, 255, 0.25)'));
+        Tiles.debugArray.push(tileStore.createCharacterTile(c, font, colour, 'rgba(255, 255, 255, 0.25)'));
     }
     for (var i = 0; i < 26; ++i) {
         var c = String.fromCharCode('A'.charCodeAt(0) + i);
-        Tiles.debugArray.push(tileStore.allocateCharacterTile(c, '#000000', 'rgba(255, 255, 255, 0.25)'));
+        Tiles.debugArray.push(tileStore.createCharacterTile(c, font, colour, 'rgba(255, 255, 255, 0.25)'));
     }
-    Tiles.debugExtra = tileStore.allocateCharacterTile('?', '#000000', 'rgba(255, 255, 255, 0.25)');
+    Tiles.debugExtra = tileStore.createCharacterTile('?', font, colour, 'rgba(255, 255, 255, 0.25)');
 }
 
 export function getDebugTile(i) {
