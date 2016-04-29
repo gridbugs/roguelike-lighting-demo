@@ -1,11 +1,11 @@
 import {CellGrid, Cell} from 'utils/cell_grid';
 import {Components} from 'components';
-import {InvalidatingComponentTable} from 'engine/invalidating_component_table';
 import {ComponentTable} from 'engine/component_table';
 import {ObjectPool} from 'utils/object_pool';
 import {BestTracker} from 'utils/best_tracker';
 import {getTileComponentDepth} from 'components/tile_component';
 import {Config} from 'config';
+import {InvalidatingComponentTable} from 'engine/invalidating_component_table';
 
 class EntityMemory extends InvalidatingComponentTable {
     constructor(cell) {

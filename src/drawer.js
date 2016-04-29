@@ -53,6 +53,9 @@ export class Drawer {
 
     storeTile(tile, x, y) {
         let cell = this.grid.get(x, y);
+        if (cell === null) {
+            return; // TODO disconnect the dimensions of the screen from the dimensions of this grid
+        }
         if (cell.stack.empty) {
             let dirtyCoord = this.dirtyList.allocate();
             dirtyCoord.set(x, y);

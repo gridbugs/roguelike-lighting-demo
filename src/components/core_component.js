@@ -76,6 +76,10 @@ export class Observer extends Component {
     clone() {
         return new Observer(this.observe, this.viewDistance, this.familiar);
     }
+
+    onAdd(entity) {
+        this.knowledge.maybeAddEcsContext(entity.ecsContext);
+    }
 }
 
 export class Health extends ValueComponent {}

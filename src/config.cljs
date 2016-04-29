@@ -10,7 +10,7 @@
   :DEPTH        3
   :DEBUG        true
   :RNG_SEED     nil
-  :OMNISCIENT   false
+  :OMNISCIENT   true
   :DEMO         true
   :AI           true
 

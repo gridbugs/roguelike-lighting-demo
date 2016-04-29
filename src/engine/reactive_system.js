@@ -5,8 +5,8 @@ export class ReactiveSystem extends System {
     constructor(ecsContext) {
         super(ecsContext);
 
-        this.width = this.spacialHash.width;
-        this.height = this.spacialHash.height;
+        this.width = this.ecsContext.width;
+        this.height = this.ecsContext.height;
 
         this.actionTable = new Array(Actions.length);
         for (let i = 0; i < Actions.length; ++i) {

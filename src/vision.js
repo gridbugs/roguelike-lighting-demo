@@ -49,6 +49,9 @@ export class VisionCellList {
 
     add(cell, visibility) {
         let visionCell = this.seen.get(cell);
+        if (visionCell === null) {
+            return; // TODO disconnect the dimensions of the screen from the dimensions of this grid
+        }
         if (visionCell.last !== this.current) {
             visionCell.last = this.current;
             this._add(cell, visibility);

@@ -92,9 +92,6 @@ export class GameContext extends EcsContext(GameCell) {
 
     addEntity(entity) {
         super.addEntity(entity);
-        entity.with(Components.Observer, (observer) => {
-            observer.knowledge.maybeAddEcsContext(this);
-        });
     }
 
     removeEntity(entity) {

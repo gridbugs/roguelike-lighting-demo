@@ -1,7 +1,10 @@
 export class System {
     constructor(ecsContext) {
         this.ecsContext = ecsContext;
-        this.spacialHash = this.ecsContext.spacialHash;
+    }
+
+    get spacialHash() {
+        return this.ecsContext.spacialHash;
     }
 
     getCell(x, y) {

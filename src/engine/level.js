@@ -2,7 +2,6 @@ import {Vec2} from 'utils/vec2';
 
 export class Level {
     constructor(generator) {
-        console.debug(this);
         this.dimensions = new Vec2(0, 0);
         this.generator = generator;
         this._ecsContext = new Level.EcsContext(this);

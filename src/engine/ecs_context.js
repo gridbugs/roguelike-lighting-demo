@@ -55,21 +55,19 @@ export class SpacialHashCell extends Cell {
     }
 }
 
+let instanceCount = 0;
+
 export function EcsContext(CellType) {
     class SpacialHash extends CellGrid(CellType) {}
 
-    let instanceCount = 0;
 
     class EcsContextInstance {
         constructor(level) {
-            this.level = level;
-            this.entities = new Set();
-
-            this.initSystems();
-
             this.id = instanceCount;
             ++instanceCount;
-
+            this.level = level;
+            this.entities = new Set();
+            this.finalized = false;
             this.playerCharacter = null;
         }
 
@@ -86,7 +84,12 @@ export function EcsContext(CellType) {
         }
 
         finalize() {
+            this.initSystems();
             this.spacialHash = new SpacialHash(this.width, this.height);
+            for (let entity of this.entities) {
+                entity.onAdd(this);
+            }
+            this.finalize = true;
         }
 
         emplaceEntity(components = []) {
@@ -98,7 +101,9 @@ export function EcsContext(CellType) {
         addEntity(entity) {
             assert(entity.ecsContext === null);
             this.entities.add(entity);
-            entity.onAdd(this);
+            if (this.finalized) {
+                entity.onAdd(this);
+            }
 
             if (entity.has(PlayerCharacter)) {
                 this.playerCharacter = entity;
