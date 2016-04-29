@@ -3,7 +3,6 @@ import {Entity} from 'engine/entity';
 import {CellGrid, Cell} from 'utils/cell_grid';
 import {ComponentCountingEntitySet} from 'engine/entity_set';
 
-import {Config} from 'config';
 import {assert} from 'utils/assert';
 
 import {TurnTaker, PlayerCharacter} from 'engine/engine_components';
@@ -65,9 +64,6 @@ export function EcsContext(CellType) {
         constructor(level) {
             this.level = level;
             this.entities = new Set();
-            this.width = Config.GRID_WIDTH;
-            this.height = Config.GRID_HEIGHT;
-            this.spacialHash = new SpacialHash(this.width, this.height);
 
             this.initSystems();
 
@@ -77,12 +73,20 @@ export function EcsContext(CellType) {
             this.playerCharacter = null;
         }
 
+        get width() {
+            return this.level.width;
+        }
+
+        get height() {
+            return this.level.height;
+        }
+
         initSystems() {
             this.schedule = new Schedule();
         }
 
         finalize() {
-
+            this.spacialHash = new SpacialHash(this.width, this.height);
         }
 
         emplaceEntity(components = []) {

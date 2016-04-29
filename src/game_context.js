@@ -10,6 +10,7 @@ import {PathPlanner} from 'path_planner';
 import {Collision} from 'systems/collision';
 import {Observation} from 'systems/observation';
 import {KnowledgeRenderer} from 'systems/knowledge_renderer';
+import {Scroll} from 'systems/scroll';
 
 /* Components */
 import {Components} from 'components';
@@ -48,12 +49,14 @@ export class GameContext extends EcsContext(GameCell) {
         this.collision = new Collision(this);
         this.observation = new Observation(this);
         this.knowledgeRenderer = new KnowledgeRenderer(this, this.drawer);
+        this.scroll = new Scroll(this);
     }
 
     runReactiveSystems(action) {
         super.runReactiveSystems(action);
 
         this.collision.run(action);
+        this.scroll.run(action);
     }
 
     finalize() {

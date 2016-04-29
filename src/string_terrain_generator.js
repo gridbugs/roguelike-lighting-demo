@@ -24,8 +24,11 @@ export class StringTerrainGenerator {
             this.nextLevel = new Level(this.nextGenerator);
         }
 
-        for (let i = 0; i < Config.GRID_HEIGHT; ++i) {
-            for (let j = 0; j < Config.GRID_WIDTH; ++j) {
+        level.height = this.stringArray.length;
+        level.width = this.stringArray[0].length;
+
+        for (let i = 0; i < level.height; ++i) {
+            for (let j = 0; j < level.width; ++j) {
                 let ch = ' ';
                 if (this.stringArray[i]) {
                     if (this.stringArray[i][j]) {
