@@ -25,6 +25,5 @@ export function PlayerCharacter(x, y) {
         new Components.PlayerCharacter(),
         new Components.Observer(observe, 15),
         new Components.Unfamiliar(),
-        new Components.Scroll(10, 0, 0)
     ];
 }

@@ -4,11 +4,21 @@ import {ObjectPool} from 'utils/object_pool';
 import {Vec2} from 'utils/vec2';
 
 const INITIAL_STACK_SIZE = 4;
+const INITIAL_DIRTY_LIST_SIZE = 32;
 
 class DrawerCell extends Cell {
-    constructor(x, y, grid) {
+    constructor(x, y, grid, drawer) {
         super(x, y, grid);
+        this.drawer = drawer;
         this.stack = new Stack(INITIAL_STACK_SIZE);
+    }
+
+    drawTile(tile) {
+        this.drawer.drawTile(tile, this.x, this.y);
+    }
+
+    drawTileUnstored(tile) {
+        this.drawer.drawTileUnstored(tile, this.x, this.y);
     }
 }
 
@@ -24,9 +34,9 @@ export class Drawer {
 
         this.width = Math.floor(this.canvas.width / this.tileWidth);
         this.height = Math.floor(this.canvas.height / this.tileHeight);
-        this.grid = new DrawerGrid(this.width, this.height);
+        this.grid = new DrawerGrid(this.width, this.height, this);
 
-        this.dirtyList = new ObjectPool(Vec2);
+        this.dirtyList = new ObjectPool(Vec2, INITIAL_DIRTY_LIST_SIZE, 0, 0);
     }
 
     clear() {

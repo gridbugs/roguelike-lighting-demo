@@ -27,10 +27,10 @@ class VisionCell extends Cell {
 class VisionGrid extends CellGrid(VisionCell) {}
 
 export class VisionCellList {
-    constructor(width, height) {
-        this.size = width * height;
+    constructor(ecsContext) {
+        this.size = ecsContext.width * ecsContext.height;
         this.pool = new ObjectPool(VisionCellDescription, this.size);
-        this.seen = new VisionGrid(width, height);
+        this.seen = new VisionGrid(ecsContext.width, ecsContext.height);
         this.current = 0;
     }
 
@@ -49,9 +49,6 @@ export class VisionCellList {
 
     add(cell, visibility) {
         let visionCell = this.seen.get(cell);
-        if (visionCell === null) {
-            return; // TODO disconnect the dimensions of the screen from the dimensions of this grid
-        }
         if (visionCell.last !== this.current) {
             visionCell.last = this.current;
             this._add(cell, visibility);

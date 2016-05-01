@@ -4,12 +4,13 @@ import {Components} from 'components';
 import {VisionCellList} from 'vision';
 import {Config} from 'config';
 
-const visionCells = new VisionCellList(Config.GRID_WIDTH, Config.GRID_HEIGHT);
-const visionCellsArray = visionCells.array;
 
 export class Observation extends System {
     constructor(ecsContext) {
         super(ecsContext);
+
+        this.visionCells = new VisionCellList(ecsContext);
+        this.visionCellsArray = this.visionCells.array;
     }
 
     run(entity) {
@@ -20,11 +21,11 @@ export class Observation extends System {
             let eyePosition = entity.get(Components.Position).vector;
             let viewDistance = observer.viewDistance;
 
-            visionCells.clear();
-            observer.observe(eyePosition, viewDistance, grid, visionCells);
+            this.visionCells.clear();
+            observer.observe(eyePosition, viewDistance, grid, this.visionCells);
 
-            for (let i = 0; i < visionCells.length; ++i) {
-                let cell =  visionCellsArray[i].cell;
+            for (let i = 0; i < this.visionCells.length; ++i) {
+                let cell =  this.visionCellsArray[i].cell;
                 let knowledgeCell = knowledgeGrid.get(cell.coord);
                 if (knowledgeCell.dirty) {
                     knowledgeCell.clear();

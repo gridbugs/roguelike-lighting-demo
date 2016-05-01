@@ -30,7 +30,10 @@
     :Water            (character "~" ibm-font (rgb 0x22 0x88 0xcc) (rgb 0x00 0x44 0x88))
     :Rock             (character "*" ibm-font (rgb 0x22 0x22 0x22) (rgb 0x44 0x44 0x44))
 
-    :Unseen           (solid (rgb 0 0 0) :opaque #{})
+    :Unknown          (solid (rgb 0 0 255) :opaque #{})
+    :OutOfBounds      (solid (rgb 0 255 0) :opaque #{})
+    :NoTile           (solid (rgb 255 0 0) :opaque #{})
+
     :Yellow           (solid (rgba 0xff 0xff 0x00 0.25) :transparent #{:TRANSPARENCY_LEVELS})
   }
 }))

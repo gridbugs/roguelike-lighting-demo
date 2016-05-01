@@ -135,10 +135,10 @@ export class Cell {
  * neighbours together for convenient navigation. */
 export function CellGrid(T) {
     return class CellGridInstance extends Grid {
-        constructor(width, height) {
+        constructor(width, height, ...args) {
             super(width, height);
             for (let coord of super.coords()) {
-                this.set(coord.x, coord.y, new T(coord.x, coord.y, this));
+                this.set(coord.x, coord.y, new T(coord.x, coord.y, this, ...args));
             }
             if (T.prototype.initNeighbours !== undefined) {
                 for (let cell of this) {

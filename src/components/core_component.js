@@ -163,12 +163,3 @@ export class Name extends Component {
 }
 
 export class Description extends ValueComponent {}
-
-export class Scroll extends Component {
-    constructor(padding, initialX, initialY) {
-        super();
-        this.padding = padding;
-        this.x = initialX;
-        this.y = initialY;
-    }
-}
