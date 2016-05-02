@@ -3,6 +3,8 @@ import {Knowledge} from 'knowledge';
 
 import {Components} from 'components';
 import {Weapons} from 'weapons';
+import {Light as LightImpl} from 'lighting';
+import {Vec2} from 'utils/vec2';
 
 class ValueComponent extends Component {
     constructor(value) {
@@ -163,3 +165,38 @@ export class Name extends Component {
 }
 
 export class Description extends ValueComponent {}
+
+export class Light extends Component {
+    constructor(intensity, height) {
+        super();
+        this.light = new LightImpl(new Vec2(0, 0), intensity, height);
+    }
+
+    get intensity() {
+        return this.light.intensity;
+    }
+
+    set intensity(value) {
+        this.light.intensity = intensity;
+    }
+
+    get height() {
+        return this.light.height;
+    }
+
+    set height(value) {
+        this.light.height = value;
+    }
+
+    updateLight() {
+        this.entity.with(Components.Position, (position) => {
+            this.light.coord.set(position.vector);
+        });
+    }
+
+    onAdd(entity) {
+        super.onAdd(entity);
+        this.updateLight();
+        this.light.lightContext = this.ecsContext.lightContext;
+    }
+}

@@ -14,6 +14,8 @@ import {KnowledgeRenderer} from 'systems/knowledge_renderer';
 /* Components */
 import {Components} from 'components';
 
+import {LightContext} from 'lighting';
+
 class GameCell extends SpacialHashCell {
     constructor(x, y, grid) {
         super(x, y, grid);
@@ -34,6 +36,7 @@ class GameCell extends SpacialHashCell {
 export class GameContext extends EcsContext(GameCell) {
     constructor(level) {
         super(level);
+
         this.victory = false;
     }
 
@@ -57,6 +60,7 @@ export class GameContext extends EcsContext(GameCell) {
     }
 
     finalize() {
+        this.lightContext = new LightContext(this);
         super.finalize();
         for (let entity of this.entities) {
             entity.with(Components.Observer, (observer) => {

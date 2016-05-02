@@ -32,3 +32,11 @@ export function Rock(x, y) {
         new Components.Tile(Tiles.Rock, 2)
     ];
 }
+
+export function Lamp(x, y) {
+    return [
+        new Components.Position(x, y),
+        new Components.Tile(Tiles.Lamp, 2),
+        new Components.Light(10, 1)
+    ];
+}

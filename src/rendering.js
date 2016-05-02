@@ -24,7 +24,7 @@ function drawVisibleKnowledgeCell(knowledgeCell, drawerCell) {
     let foregroundTile = getForegroundTile(knowledgeCell);
     if (foregroundTile.transparent) {
         let backgroundTile = getBackgroundTile(knowledgeCell);
-        drawerCell.drawTile(backgroundTile.main);
+        drawerCell.drawTile(backgroundTile.background.main);
     }
     drawerCell.drawTile(foregroundTile.main);
 }
@@ -33,7 +33,7 @@ function drawRememberedKnowledgeCell(knowledgeCell, drawerCell) {
     let foregroundTile = getForegroundTile(knowledgeCell);
     if (foregroundTile.transparent) {
         let backgroundTile = getBackgroundTile(knowledgeCell);
-        drawerCell.drawTile(backgroundTile.greyScale);
+        drawerCell.drawTile(backgroundTile.background.greyScale);
     }
     drawerCell.drawTile(foregroundTile.greyScale);
 }

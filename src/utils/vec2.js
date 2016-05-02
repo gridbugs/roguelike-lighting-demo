@@ -1,5 +1,9 @@
-export class Vec2 {
+import {Vec} from 'utils/vec';
+
+export class Vec2 extends Vec {
     constructor(x, y) {
+        super();
+
         this.x = x;
         this.y = y;
     }
@@ -76,27 +80,14 @@ export class Vec2 {
         return new Vec2(this.x / s, this.y / s);
     }
 
-    dotInPlace(v, result) {
-        result.x = this.x * v.x;
-        result.y = this.y * v.y;
-    }
-
     dot(v) {
         return this.x * v.x + this.y * v.y;
-    }
-
-    get length() {
-        return Math.sqrt(this.dot(this));
     }
 
     getDistanceSquared(v) {
         var dx = this.x - v.x;
         var dy = this.y - v.y;
         return dx * dx + dy * dy;
-    }
-
-    getDistance(v) {
-        return Math.sqrt(this.getDistanceSquared(v));
     }
 
     getManhattenDistance(v) {

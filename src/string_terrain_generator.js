@@ -65,6 +65,10 @@ export class StringTerrainGenerator {
         case '~':
             add('Water');
             break;
+        case '£':
+            add('Lamp');
+            add('Ground');
+            break;
         }
     }
 }
