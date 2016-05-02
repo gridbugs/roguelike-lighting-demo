@@ -22,8 +22,8 @@ function drawUnknownKnowledgeCell(knowledgeCell, drawerCell) {
 }
 
 function drawLitTile(tileFamily, lightCell, drawerCell) {
-    let intensity = Math.floor(lightCell.totalBackgroundIntensity);
-    intensity = constrain(0, intensity, tileFamily.lightLevels.length - 1);
+    let intensity = Math.floor(lightCell.intensity);
+    intensity = constrain(4, intensity, tileFamily.lightLevels.length - 1);
     drawerCell.drawTile(tileFamily.lightLevels[intensity]);
 }
 
@@ -51,7 +51,7 @@ function drawKnowledgeCell(knowledgeCell, lightCell, drawerCell) {
     } else if (knowledgeCell.visible) {
         drawVisibleKnowledgeCell(knowledgeCell, lightCell, drawerCell);
     } else {
-        drawRememberedKnowledgeCell(knowledgeCell, drawerCell);
+        drawUnknownKnowledgeCell(knowledgeCell, drawerCell);
     }
 }
 

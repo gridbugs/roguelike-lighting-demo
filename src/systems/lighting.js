@@ -15,5 +15,6 @@ export class Lighting extends System {
                 light.light.updateLitCells();
             });
         }
+
     }
 }

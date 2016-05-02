@@ -23,7 +23,7 @@ export function PlayerCharacter(x, y) {
         new Components.TurnTaker(new PlayerTurnTaker()),
         new Components.Collider(),
         new Components.PlayerCharacter(),
-        new Components.Observer(observe, 15),
+        new Components.Observer(observe, 40),
         new Components.Unfamiliar(),
     ];
 }

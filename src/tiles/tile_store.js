@@ -132,6 +132,8 @@ export class TileStore {
         for (let i = 0; i < data.length; i += 4) {
             let total = data[i] + data[i+1] + data[i+2];
             let average = total / 3;
+            /* darken the greyscale tiles */
+            average *= 0.5;
             data[i] = average;
             data[i+1] = average;
             data[i+2] = average;

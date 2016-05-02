@@ -3,8 +3,6 @@ import {VisionCellList} from 'vision';
 import {detectVisibleArea} from 'shadowcast';
 import {Vec3} from 'utils/vec3.js';
 
-const BACKGROUND_HEIGHT = 0;
-const FOREGROUND_HEIGHT = 0.5;
 const SURFACE_NORMAL = new Vec3(0, 0, 1);
 
 const WORKING_VEC3 = new Vec3(0, 0, 0);
@@ -13,8 +11,8 @@ class LightDescription {
     constructor(light, cell) {
         this.light = light;
         this.cell = cell;
-        this.foregroundIntensity = 0;
-        this.backgroundIntensity = 0;
+        this.intensity = 0;
+        this.sequence = 0;
     }
 
     getIntensity(point) {
@@ -25,8 +23,8 @@ class LightDescription {
     }
 
     update() {
-        this.foregroundIntensity = this.getIntensity(this.cell.centreForeground);
-        this.backgroundIntensity = this.getIntensity(this.cell.centreBackground);
+        this.intensity = this.getIntensity(this.cell.lightingCentre);
+        this.sequence = this.light.sequence;
     }
 }
 
@@ -66,6 +64,7 @@ export class Light {
     updateLitCells() {
         ++this.sequence;
 
+        this.lightContext.visionCells.clear();
         detectVisibleArea(this.coord, 100, this.lightContext.ecsContext.spacialHash,
                 this.lightContext.visionCells);
 
@@ -79,12 +78,10 @@ export class Light {
 class LightCell extends Cell {
     constructor(x, y, grid) {
         super(x, y, grid);
-        this.centreBackground = new Vec3(this.centre.x, this.centre.y, BACKGROUND_HEIGHT);
-        this.centreForeground = new Vec3(this.centre.x, this.centre.y, FOREGROUND_HEIGHT);
+        this.lightingCentre = new Vec3(this.centre.x, this.centre.y, 0);
         this.lights = new Map();
 
-        this.totalForegroundIntensity = 0;
-        this.totalBackgroundIntensity = 0;
+        this.intensity = 0;
     }
 
     updateLight(light) {
@@ -101,12 +98,11 @@ class LightCell extends Cell {
     }
 
     updateTotals() {
-        this.totalForegroundIntensity = 0;
-        this.totalBackgroundIntensity = 0;
-
+        this.intensity = 0;
         for (let description of this.lights.values()) {
-            this.totalForegroundIntensity += description.foregroundIntensity;
-            this.totalBackgroundIntensity += description.backgroundIntensity;
+            if (description.light.sequence === description.sequence) {
+                this.intensity += description.intensity;
+            }
         }
 
     }
