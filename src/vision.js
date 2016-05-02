@@ -42,6 +42,10 @@ export class VisionCellList {
         return this.pool.array;
     }
 
+    *[Symbol.iterator]() {
+        yield* this.pool;
+    }
+
     clear() {
         ++this.current;
         this.pool.flush();

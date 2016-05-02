@@ -41,4 +41,15 @@ export class Vec3 extends Vec {
         var dz = this.z - v.z;
         return dx * dx + dy * dy + dz * dz;
     }
+
+    // this - v === result
+    subtractInPlace(v, result) {
+        result.x = this.x - v.x;
+        result.y = this.y - v.y;
+        result.z = this.z - v.z;
+    }
+
+    subtract(v) {
+        return new Vec2(this.x - v.x, this.y - v.y, this.z - v.z);
+    }
 }

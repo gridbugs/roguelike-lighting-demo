@@ -15,6 +15,7 @@ const HALF_HEIGHT = Math.floor(Config.GRID_HEIGHT / 2);
 export class KnowledgeRenderer extends System {
     constructor(ecsContext, drawer) {
         super(ecsContext);
+        this.lightContext = ecsContext.lightContext;
         this.drawer = drawer;
     }
 
@@ -33,7 +34,7 @@ export class KnowledgeRenderer extends System {
 
         if (observer !== null) {
             let grid = observer.knowledge.getGrid(this.ecsContext);
-            renderKnowledgeGrid(grid, this.drawer, xOffset, yOffset);
+            renderKnowledgeGrid(grid, this.lightContext, this.drawer, xOffset, yOffset);
         }
     }
 }

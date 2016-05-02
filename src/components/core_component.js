@@ -166,10 +166,14 @@ export class Name extends Component {
 
 export class Description extends ValueComponent {}
 
-export class Light extends Component {
+export class Light extends SetComponent {
     constructor(intensity, height) {
         super();
         this.light = new LightImpl(new Vec2(0, 0), intensity, height);
+    }
+
+    get set() {
+        return this.ecsContext.lighting.entities;
     }
 
     get intensity() {
@@ -190,13 +194,13 @@ export class Light extends Component {
 
     updateLight() {
         this.entity.with(Components.Position, (position) => {
-            this.light.coord.set(position.vector);
+            this.light.setCoord(position.vector);
         });
     }
 
     onAdd(entity) {
+        this.light.lightContext = entity.ecsContext.lightContext;
         super.onAdd(entity);
         this.updateLight();
-        this.light.lightContext = this.ecsContext.lightContext;
     }
 }

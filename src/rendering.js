@@ -1,5 +1,6 @@
 import {Tiles} from 'tiles';
 import {Components} from 'components';
+import {constrain} from 'utils/math';
 
 function getEntityTile(entity) {
     if (entity.has(Components.Tile)) {
@@ -20,13 +21,19 @@ function drawUnknownKnowledgeCell(knowledgeCell, drawerCell) {
     drawerCell.drawTile(Tiles.Unknown.main);
 }
 
-function drawVisibleKnowledgeCell(knowledgeCell, drawerCell) {
+function drawLitTile(tileFamily, lightCell, drawerCell) {
+    let intensity = Math.floor(lightCell.totalBackgroundIntensity);
+    intensity = constrain(0, intensity, tileFamily.lightLevels.length - 1);
+    drawerCell.drawTile(tileFamily.lightLevels[intensity]);
+}
+
+function drawVisibleKnowledgeCell(knowledgeCell, lightCell, drawerCell) {
     let foregroundTile = getForegroundTile(knowledgeCell);
     if (foregroundTile.transparent) {
         let backgroundTile = getBackgroundTile(knowledgeCell);
-        drawerCell.drawTile(backgroundTile.background.main);
+        drawLitTile(backgroundTile.background, lightCell, drawerCell);
     }
-    drawerCell.drawTile(foregroundTile.main);
+    drawLitTile(foregroundTile, lightCell, drawerCell);
 }
 
 function drawRememberedKnowledgeCell(knowledgeCell, drawerCell) {
@@ -38,25 +45,25 @@ function drawRememberedKnowledgeCell(knowledgeCell, drawerCell) {
     drawerCell.drawTile(foregroundTile.greyScale);
 }
 
-function drawKnowledgeCell(knowledgeCell, drawerCell) {
+function drawKnowledgeCell(knowledgeCell, lightCell, drawerCell) {
     if (!knowledgeCell.known) {
         drawUnknownKnowledgeCell(knowledgeCell, drawerCell);
     } else if (knowledgeCell.visible) {
-        drawVisibleKnowledgeCell(knowledgeCell, drawerCell);
+        drawVisibleKnowledgeCell(knowledgeCell, lightCell, drawerCell);
     } else {
         drawRememberedKnowledgeCell(knowledgeCell, drawerCell);
     }
 }
 
-function maybeDrawKnowledgeCell(knowledgeCell, drawerCell) {
+function maybeDrawKnowledgeCell(knowledgeCell, lightCell, drawerCell) {
     if (knowledgeCell === null) {
         drawerCell.drawTile(Tiles.OutOfBounds.main);
     } else {
-        drawKnowledgeCell(knowledgeCell, drawerCell);
+        drawKnowledgeCell(knowledgeCell, lightCell, drawerCell);
     }
 }
 
-export function renderKnowledgeGrid(knowledgeGrid, drawer, xOffset = 0, yOffset = 0) {
+export function renderKnowledgeGrid(knowledgeGrid, lightContext, drawer, xOffset = 0, yOffset = 0) {
     let width = drawer.width;
     let height = drawer.height;
 
@@ -67,6 +74,7 @@ export function renderKnowledgeGrid(knowledgeGrid, drawer, xOffset = 0, yOffset 
         let yKnowledgeIndex = drawerCell.y + yOffset;
 
         let knowledgeCell = knowledgeGrid.get(xKnowledgeIndex, yKnowledgeIndex);
-        maybeDrawKnowledgeCell(knowledgeCell, drawerCell);
+        let lightCell = lightContext.grid.get(xKnowledgeIndex, yKnowledgeIndex);
+        maybeDrawKnowledgeCell(knowledgeCell, lightCell, drawerCell);
    }
 }
