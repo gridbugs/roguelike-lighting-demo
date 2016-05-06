@@ -1,5 +1,4 @@
 import {System} from 'engine/system';
-
 import {Components} from 'components';
 
 export class Lighting extends System {

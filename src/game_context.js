@@ -11,6 +11,7 @@ import {Collision} from 'systems/collision';
 import {Observation} from 'systems/observation';
 import {KnowledgeRenderer} from 'systems/knowledge_renderer';
 import {Lighting} from 'systems/lighting';
+import {LightMove} from 'systems/light_move';
 
 /* Components */
 import {Components} from 'components';
@@ -53,12 +54,19 @@ export class GameContext extends EcsContext(GameCell) {
         this.observation = new Observation(this);
         this.knowledgeRenderer = new KnowledgeRenderer(this, this.drawer);
         this.lighting = new Lighting(this);
+        this.lightMove = new LightMove(this);
     }
 
     runReactiveSystems(action) {
         super.runReactiveSystems(action);
 
         this.collision.run(action);
+    }
+
+    runRetroactiveSystems(action) {
+        super.runRetroactiveSystems(action);
+
+        this.lightMove.run(action);
     }
 
     finalize() {

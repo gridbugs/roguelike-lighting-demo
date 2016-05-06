@@ -127,9 +127,7 @@ export function EcsContext(CellType) {
 
             if (action.success) {
                 action.commit(this);
-                return true;
-            } else {
-                return false;
+                this.runRetroactiveSystems(action);
             }
         }
 
@@ -146,6 +144,7 @@ export function EcsContext(CellType) {
         }
 
         runReactiveSystems(action) {}
+        runRetroactiveSystems(actionn) {}
 
         runContinuousSystems(timeDelta) {}
 
