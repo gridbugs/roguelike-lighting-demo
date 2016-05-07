@@ -34,7 +34,7 @@
     :Ground           (character "." ibm-font (rgb 0x2d 0x80 0x10) (rgb 0x06 0x31 0x0d))
     :StoneFloor       (character "." ibm-font (rgb 0x22 0x22 0x22) (rgb 0x44 0x44 0x44))
     :WoodWall         (character "#" ibm-font wood-foreground wood-background)
-    :Window           (character "%" ibm-font (rgb 0xff 0xff 0xff) (rgb 0x50 0xe7 0xd3))
+    :Window           (character "#" ibm-font (rgb 0xff 0xff 0xff) (rgb 0x50 0xe7 0xd3))
     :ClosedWoodenDoor (character "+" ibm-font wood-foreground wood-background)
     :OpenWoodenDoor   (character "-" ibm-font wood-foreground)
     :Tree             (character "&" ibm-font (rgb 0x2d 0x80 0x10))

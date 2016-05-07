@@ -8,7 +8,7 @@ export function Tree(x, y) {
     return [
         new Components.Position(x, y),
         new Components.Tile(Tiles.Tree, 2),
-        new Components.Opacity(opacityFromFloat(0.25))
+        new Components.Opacity(opacityFromFloat(0.49))
     ];
 }
 
@@ -67,6 +67,6 @@ export function Lamp(x, y) {
     return [
         new Components.Position(x, y),
         new Components.Tile(Tiles.Lamp, 2),
-        new Components.Light(40, 4)
+        new Components.Light(30, 4)
     ];
 }
