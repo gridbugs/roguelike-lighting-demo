@@ -25,6 +25,6 @@ export function PlayerCharacter(x, y) {
         new Components.PlayerCharacter(),
         new Components.Observer(observe, 40),
         new Components.Unfamiliar(),
-        new Components.Light(30, 3)
+        new Components.Light(20, 4)
     ];
 }

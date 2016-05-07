@@ -1,5 +1,5 @@
 import {CellGrid, Cell} from 'utils/cell_grid';
-import {VisionCellList} from 'vision';
+import {VisionCellList, MAX_VISIBILITY} from 'vision';
 import {detectVisibleArea} from 'shadowcast';
 import {Vec3} from 'utils/vec3.js';
 
@@ -13,6 +13,7 @@ class LightDescription {
         this.cell = cell;
         this.intensity = 0;
         this.sequence = 0;
+        this.sides = new Array(4);
     }
 
     getIntensity(point) {
@@ -22,9 +23,12 @@ class LightDescription {
         return dot * this.light.intensity;
     }
 
-    update() {
-        this.intensity = this.getIntensity(this.cell.lightingCentre);
+    update(intensity, sides) {
+        this.intensity = intensity * this.getIntensity(this.cell.lightingCentre);
         this.sequence = this.light.sequence;
+        for (let i = 0; i < this.sides.length; ++i) {
+            this.sides[i] = sides[i];
+        }
     }
 }
 
@@ -70,7 +74,7 @@ export class Light {
 
         for (let description of this.lightContext.visionCells) {
             let lightCell = this.lightContext.grid.get(description.cell);
-            lightCell.updateLight(this);
+            lightCell.updateLight(this, description.visibility / MAX_VISIBILITY, description.sides);
         }
     }
 }
@@ -80,11 +84,18 @@ class LightCell extends Cell {
         super(x, y, grid);
         this.lightingCentre = new Vec3(this.centre.x, this.centre.y, 0);
         this.lights = new Map();
-
+        this.sides = new Array(4);
         this.intensity = 0;
+        this.clearSides();
     }
 
-    updateLight(light) {
+    clearSides() {
+        for (let i = 0; i < this.sides.length; ++i) {
+            this.sides[i] = 0;
+        }
+    }
+
+    updateLight(light, intensity, sides) {
         let description;
         if (this.lights.has(light)) {
             description = this.lights.get(light);
@@ -93,15 +104,23 @@ class LightCell extends Cell {
             this.lights.set(light, description);
         }
 
-        description.update();
+        description.update(intensity, sides);
         this.updateTotals();
     }
 
     updateTotals() {
         this.intensity = 0;
+        this.clearSides();
+
         for (let description of this.lights.values()) {
             if (description.light.sequence === description.sequence) {
                 this.intensity += description.intensity;
+
+                for (let i = 0; i < this.sides.length; ++i) {
+                    if (description.sides[i]) {
+                        this.sides[i] += description.intensity;
+                    }
+                }
             }
         }
 

@@ -77,6 +77,7 @@ class KnowledgeCell extends Cell {
         this.topBackgroundEntityMemory = new BestTracker(compare);
         this.componentTable = new ComponentTable();
         this.realCell = null;
+        this.sides = new Array(4);
     }
 
     *[Symbol.iterator]() {

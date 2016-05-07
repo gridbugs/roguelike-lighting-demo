@@ -8,7 +8,7 @@ export function Tree(x, y) {
     return [
         new Components.Position(x, y),
         new Components.Tile(Tiles.Tree, 2),
-        new Components.Opacity(MAX_OPACITY)
+        new Components.Opacity(opacityFromFloat(0.25))
     ];
 }
 
@@ -33,10 +33,40 @@ export function Rock(x, y) {
     ];
 }
 
+export function StoneFloor(x, y) {
+    return [
+        new Components.Position(x, y),
+        new Components.Tile(Tiles.StoneFloor, 1)
+    ];
+}
+
+export function WoodWall(x, y) {
+    return [
+        new Components.Position(x, y),
+        new Components.Tile(Tiles.WoodWall, 2),
+        new Components.Opacity(MAX_OPACITY)
+    ];
+}
+
+export function ClosedWoodenDoor(x, y) {
+    return [
+        new Components.Position(x, y),
+        new Components.Tile(Tiles.ClosedWoodenDoor, 2),
+        new Components.Opacity(MAX_OPACITY)
+    ];
+}
+
+export function Window(x, y) {
+    return [
+        new Components.Position(x, y),
+        new Components.Tile(Tiles.Window, 2)
+    ];
+}
+
 export function Lamp(x, y) {
     return [
         new Components.Position(x, y),
         new Components.Tile(Tiles.Lamp, 2),
-        new Components.Light(30, 3)
+        new Components.Light(40, 4)
     ];
 }

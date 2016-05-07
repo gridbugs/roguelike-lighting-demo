@@ -8,7 +8,7 @@
   :GRID_WIDTH   64
   :GRID_HEIGHT  40
   :DEPTH        3
-  :DEBUG        false
+  :DEBUG        true
   :RNG_SEED     nil
   :OMNISCIENT   false
   :DEMO         true

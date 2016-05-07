@@ -69,6 +69,21 @@ export class StringTerrainGenerator {
             add('Lamp');
             add('Ground');
             break;
+        case ',':
+            add('StoneFloor');
+            break;
+        case '#':
+            add('WoodWall');
+            add('StoneFloor');
+            break;
+        case '%':
+            add('Window');
+            add('StoneFloor');
+            break;
+        case '+':
+            add('ClosedWoodenDoor');
+            add('StoneFloor');
+            break;
         }
     }
 }

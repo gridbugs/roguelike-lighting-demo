@@ -21,8 +21,14 @@ function drawUnknownKnowledgeCell(knowledgeCell, drawerCell) {
     drawerCell.drawTile(Tiles.Unknown.main);
 }
 
-function drawLitTile(tileFamily, lightCell, drawerCell) {
-    let intensity = Math.floor(lightCell.intensity);
+function drawLitTile(knowledgeCell, tileFamily, lightCell, drawerCell) {
+    let intensity = 0;
+
+    for (let i = 0; i < knowledgeCell.sides.length; ++i) {
+        if (knowledgeCell.sides[i]) {
+            intensity = Math.max(intensity, Math.floor(lightCell.sides[i]));
+        }
+    }
     intensity = constrain(4, intensity, tileFamily.lightLevels.length - 1);
     drawerCell.drawTile(tileFamily.lightLevels[intensity]);
 }
@@ -31,9 +37,9 @@ function drawVisibleKnowledgeCell(knowledgeCell, lightCell, drawerCell) {
     let foregroundTile = getForegroundTile(knowledgeCell);
     if (foregroundTile.transparent) {
         let backgroundTile = getBackgroundTile(knowledgeCell);
-        drawLitTile(backgroundTile.background, lightCell, drawerCell);
+        drawLitTile(knowledgeCell, backgroundTile.background, lightCell, drawerCell);
     }
-    drawLitTile(foregroundTile, lightCell, drawerCell);
+    drawLitTile(knowledgeCell, foregroundTile, lightCell, drawerCell);
 }
 
 function drawRememberedKnowledgeCell(knowledgeCell, drawerCell) {

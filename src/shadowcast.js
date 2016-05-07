@@ -28,55 +28,56 @@ export function detectVisibleArea(eyePosition, viewDistance, grid, visionCells) 
     let squareViewDistance = SQRT2 * viewDistance;
     let viewDistanceSquared = viewDistance * viewDistance;
 
-    visionCells.add(eyeCell, MAX_VISIBILITY);
+    visionCells.addAllSides(eyeCell, MAX_VISIBILITY);
 
     //  \|
     detectVisibleAreaOctant( eyeCell, viewDistance, grid, -1, 0,
                              Direction.NorthWest.subIndex, Direction.SouthWest.subIndex,
                              -1, Vec2.X_IDX, xMax, yMax, squareViewDistance, viewDistanceSquared,
-                             visionCells
+                             visionCells, Direction.SouthEast.subIndex, Direction.South, Direction.East
     );
+
     //  |/
     detectVisibleAreaOctant( eyeCell, viewDistance, grid, 0, 1,
                              Direction.SouthWest.subIndex, Direction.NorthWest.subIndex,
                              -1, Vec2.X_IDX, xMax, yMax, squareViewDistance, viewDistanceSquared,
-                             visionCells
+                             visionCells, Direction.SouthWest.subIndex, Direction.South, Direction.West
     );
     //  /|
     detectVisibleAreaOctant( eyeCell, viewDistance, grid, -1, 0,
                              Direction.SouthWest.subIndex, Direction.NorthWest.subIndex,
                              1, Vec2.X_IDX, xMax, yMax, squareViewDistance, viewDistanceSquared,
-                             visionCells
+                             visionCells, Direction.NorthEast.subIndex, Direction.North, Direction.East
     );
     //  |\
     detectVisibleAreaOctant( eyeCell, viewDistance, grid, 0, 1,
                              Direction.NorthWest.subIndex, Direction.SouthWest.subIndex,
                              1, Vec2.X_IDX, xMax, yMax, squareViewDistance, viewDistanceSquared,
-                             visionCells
+                             visionCells, Direction.NorthWest.subIndex, Direction.North, Direction.West
     );
     //  _\
     detectVisibleAreaOctant( eyeCell, viewDistance, grid, -1, 0,
                              Direction.NorthWest.subIndex, Direction.NorthEast.subIndex,
                              -1, Vec2.Y_IDX, yMax, xMax, squareViewDistance, viewDistanceSquared,
-                             visionCells
+                             visionCells, Direction.SouthEast.subIndex, Direction.East, Direction.South
     );
     //  "/
     detectVisibleAreaOctant( eyeCell, viewDistance, grid, 0, 1,
                              Direction.NorthEast.subIndex, Direction.NorthWest.subIndex,
                              -1, Vec2.Y_IDX, yMax, xMax, squareViewDistance, viewDistanceSquared,
-                             visionCells
+                             visionCells, Direction.NorthEast.subIndex, Direction.East, Direction.North
     );
     //  /_
     detectVisibleAreaOctant( eyeCell, viewDistance, grid, -1, 0,
                              Direction.NorthEast.subIndex, Direction.NorthWest.subIndex,
                              1, Vec2.Y_IDX, yMax, xMax, squareViewDistance, viewDistanceSquared,
-                             visionCells
+                             visionCells, Direction.SouthWest.subIndex, Direction.West, Direction.South
     );
     //  \"
     detectVisibleAreaOctant( eyeCell, viewDistance, grid, 0, 1,
                              Direction.NorthWest.subIndex, Direction.NorthEast.subIndex,
                              1, Vec2.Y_IDX, yMax, xMax, squareViewDistance, viewDistanceSquared,
-                             visionCells
+                             visionCells, Direction.NorthWest.subIndex, Direction.West, Direction.North
     );
 }
 
@@ -94,7 +95,10 @@ function detectVisibleAreaOctant(
     depthMax,
     squareViewDistance,
     viewDistanceSquared,
-    visionCells
+    visionCells,
+    betweenDirection,
+    facingDirection,
+    sideFacingDirection
 ) {
 
     let depthIndex = Vec2.getOtherIndex(lateralIndex);
@@ -158,23 +162,65 @@ function detectVisibleAreaOctant(
         let firstIteration = true;
         let previousOpaque = false;
         let previousVisibility = -1;
+        let previousDescription = null;
 
         COORD_IDX.arraySet(depthIndex, depthAbsoluteIndex);
+
+
+        COORD_IDX.arraySet(lateralIndex, startIndex);
+        let startCell = grid.get(COORD_IDX);
+        COORD_IDX.arraySet(lateralIndex, stopIndex);
+        let stopCell = grid.get(COORD_IDX);
+
+        let startSlope = computeSlope(eyeCell.centre, startCell.corners[betweenDirection],
+                        lateralIndex, depthIndex);
+
+        let startDescription = visionCells.getDescription(startCell);
+        if (initialMaxSlope == 0) {
+            if (Math.abs(minSlope) < Math.abs(startSlope)) {
+                startDescription.setSide(facingDirection, true);
+            }
+        } else {
+            startDescription.setSide(facingDirection, true);
+        }
+
+        let stopSlope = computeSlope(eyeCell.centre, stopCell.corners[betweenDirection],
+                        lateralIndex, depthIndex);
+
+        let stopDescription = visionCells.getDescription(stopCell);
+        if (initialMaxSlope == 1) {
+            if (Math.abs(maxSlope) < Math.abs(stopSlope)) {
+                stopDescription.setSide(facingDirection, true);
+            }
+        } else {
+            stopDescription.setSide(facingDirection, true);
+        }
+
+
 
         for (let i = startIndex; i <= stopIndex; ++i) {
             let lastIteration = i === stopIndex;
 
             COORD_IDX.arraySet(lateralIndex, i);
             let cell = grid.get(COORD_IDX);
+            let description = visionCells.getDescription(cell);
 
             if (COORD_IDX.getDistanceSquared(eyeCell.coord) < viewDistanceSquared) {
-                visionCells.add(cell, visibility);
+                description.visibility = Math.max(description.visibility, visibility);
             }
 
             let currentVisibility = Math.max(visibility - cell.opacity, 0);
 
             previousOpaque = previousVisibility === 0;
             let currentOpaque = currentVisibility === 0;
+
+            if (currentOpaque) {
+                if (!(firstIteration || lastIteration)) {
+                    description.setSide(facingDirection, true);
+                }
+            } else {
+                description.setAllSides(true);
+            }
 
             let nextMinSlope = minSlope;
             let change = !firstIteration && currentVisibility != previousVisibility;
@@ -184,6 +230,10 @@ function detectVisibleAreaOctant(
                 nextMinSlope = computeSlope(eyeCell.centre, cell.corners[direction],
                                             lateralIndex, depthIndex
                                 ) * depthDirection;
+
+                if (initialMaxSlope == 0 && previousOpaque) {
+                    previousDescription.setSide(sideFacingDirection, true);
+                }
             }
 
             if (change && !previousOpaque) {
@@ -195,6 +245,10 @@ function detectVisibleAreaOctant(
                 frame.maxSlope = newMaxSlope;
                 frame.depth = depth + 1;
                 frame.visibility = previousVisibility;
+
+                if (initialMaxSlope == 1 && currentOpaque) {
+                    description.setSide(sideFacingDirection, true);
+                }
             }
 
             minSlope = nextMinSlope;
@@ -208,7 +262,9 @@ function detectVisibleAreaOctant(
             }
 
             previousVisibility = currentVisibility;
+            previousDescription = description;
             firstIteration = false;
         }
     }
+
 }

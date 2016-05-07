@@ -14,6 +14,23 @@ class VisionCellDescription {
     constructor() {
         this.cell = null;
         this.visibility = 0;
+        this.sides = new Array(4);
+        this.setAllSides(false);
+    }
+
+    setAllSides(value) {
+        for (let i = 0; i < this.sides.length; ++i) {
+            this.sides[i] = value;
+        }
+    }
+
+    clear() {
+        this.visibility = 0;
+        this.setAllSides(false);
+    }
+
+    setSide(direction, value) {
+        this.sides[direction.subIndex] = value;
     }
 }
 
@@ -21,6 +38,7 @@ class VisionCell extends Cell {
     constructor(x, y, grid) {
         super(x, y, grid);
         this.last = -1;
+        this.description = null;
     }
 }
 
@@ -51,17 +69,26 @@ export class VisionCellList {
         this.pool.flush();
     }
 
-    add(cell, visibility) {
-        let visionCell = this.seen.get(cell);
-        if (visionCell.last !== this.current) {
-            visionCell.last = this.current;
-            this._add(cell, visibility);
+    getDescription(coord) {
+        let cell = this.seen.get(coord);
+        if (cell.last !== this.current) {
+            cell.last = this.current;
+            let description = this.allocateDescription(cell);
+            description.clear();
         }
+        return cell.description;
     }
 
-    _add(cell, visibility) {
-        let desc = this.pool.allocate();
-        desc.cell = cell;
-        desc.visibility = visibility;
+    allocateDescription(cell) {
+        let description = this.pool.allocate();
+        description.cell = cell;
+        cell.description = description;
+        return description;
+    }
+
+    addAllSides(coord, visibility) {
+        let description = this.getDescription(coord);
+        description.setAllSides(true);
+        description.visibility = visibility;
     }
 }
