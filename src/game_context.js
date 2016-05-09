@@ -8,6 +8,7 @@ import {PathPlanner} from 'path_planner';
 
 /* Systems */
 import {Collision} from 'systems/collision';
+import {Door} from 'systems/door';
 import {Observation} from 'systems/observation';
 import {KnowledgeRenderer} from 'systems/knowledge_renderer';
 import {Lighting} from 'systems/lighting';
@@ -51,6 +52,7 @@ export class GameContext extends EcsContext(GameCell) {
         this.pathPlanner = new PathPlanner(this);
 
         this.collision = new Collision(this);
+        this.door = new Door(this);
         this.observation = new Observation(this);
         this.knowledgeRenderer = new KnowledgeRenderer(this, this.drawer);
         this.lighting = new Lighting(this);
@@ -60,6 +62,7 @@ export class GameContext extends EcsContext(GameCell) {
     runReactiveSystems(action) {
         super.runReactiveSystems(action);
 
+        this.door.run(action);
         this.collision.run(action);
     }
 

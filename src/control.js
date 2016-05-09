@@ -17,6 +17,7 @@ export const ControlTypes = makeEnum([
     'SouthWest',
     'SouthEast',
     'Wait',
+    'Close',
 ], true);
 
 const ControlChars = substituteValues(ControlTypes, {
@@ -29,6 +30,7 @@ const ControlChars = substituteValues(ControlTypes, {
     b: 'SouthWest',
     n: 'SouthEast',
     '.': 'Wait',
+    'c': 'Close'
 });
 
 const ControlNonChars = substituteValues(ControlTypes, {
@@ -43,6 +45,22 @@ const ControlNonChars = substituteValues(ControlTypes, {
     [Input.NonChar.NUMPAD_5]: 'Wait',
 });
 
+function toggleDoor(entity) {
+    for (let neighbour of entity.cell.neighbours) {
+        let door = neighbour.find(Components.Door);
+        if (door !== null && door.get(Components.Door).open) {
+            return new Actions.CloseDoor(entity, door);
+        }
+    }
+    for (let neighbour of entity.cell.neighbours) {
+        let door = neighbour.find(Components.Door);
+        if (door !== null && !door.get(Components.Door).open) {
+            return new Actions.OpenDoor(entity, door);
+        }
+    }
+    return null;
+}
+
 export const ControlTable = makeTable(ControlTypes, {
     West:       entity => new Actions.Walk(entity, Direction.West),
     South:      entity => new Actions.Walk(entity, Direction.South),
@@ -52,7 +70,8 @@ export const ControlTable = makeTable(ControlTypes, {
     NorthEast:  entity => new Actions.Walk(entity, Direction.NorthEast),
     SouthWest:  entity => new Actions.Walk(entity, Direction.SouthWest),
     SouthEast:  entity => new Actions.Walk(entity, Direction.SouthEast),
-    Wait:       entity => new Actions.Wait(entity)
+    Wait:       entity => new Actions.Wait(entity),
+    Close:      toggleDoor
 });
 
 export function getControlTypeFromKey(key) {
