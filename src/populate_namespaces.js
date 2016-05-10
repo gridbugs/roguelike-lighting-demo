@@ -11,6 +11,7 @@ import * as CoreComponent from 'components/core_component';
 import * as Door from 'components/door';
 import * as StatComponent from 'components/stat_component';
 import * as TileComponent from 'components/tile_component';
+import * as GeneratedComponent from 'generated/components.js';
 
 import * as CoreEntityPrototype from 'entities/core_entity_prototype';
 import * as CharacterEntityPrototype from 'entities/character_entity_prototype';
@@ -48,6 +49,6 @@ function populateNamespace(sources, dest) {
 
 populateNamespace([StringTerrainGenerator], TerrainGenerators);
 populateNamespace([CoreEntityPrototype, CharacterEntityPrototype], EntityPrototypes);
-populateNamespace([CoreComponent, Door, EngineComponents, StatComponent, TileComponent], Components);
+populateNamespace([CoreComponent, Door, EngineComponents, StatComponent, TileComponent, GeneratedComponent], Components);
 populateNamespace([CoreAction], Actions);
 populateNamespace([Guns, Flamethrowers, RocketLauncher], Weapons);

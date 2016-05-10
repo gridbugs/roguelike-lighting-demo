@@ -26,7 +26,7 @@
 (def wood-foreground (rgb 0x33 0x23 0x01))
 (def wood-background (rgb 0x66 0x46 0x02))
 
-(build/task #(jsfile/create "tile_description.js" "TileDescription" {
+(build/task #(jsfile/create-single "tile_description.js" "TileDescription" {
   :tiles {
 
     :PlayerCharacter  (character "@" ibm-font colour/white)

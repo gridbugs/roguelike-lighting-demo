@@ -32,24 +32,6 @@ export function getTileComponentDepth(entity) {
     return null;
 }
 
-export class Tile extends Component {
-    constructor(tile, depth) {
-        super();
-        this.tile = tile;
-        this.depth = depth;
-    }
-
-    clone() {
-        return new Tile(this.tile, this.depth);
-    }
-
-    copyTo(dest) {
-        super.copyTo(dest);
-        dest.tile = this.tile;
-        dest.depth = this.depth;
-    }
-}
-
 export class WallTile extends Component {
     constructor(frontTile, topTile, depth) {
         super();

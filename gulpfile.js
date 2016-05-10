@@ -72,7 +72,14 @@ gulp.task('build', (callback) => {
 gulp.task('cljs', (callback) => {
     const CLJS_PATHS = [__dirname, path.join(__dirname, CONFIG.CLJS_LIB_DIR)];
     glob(`${CONFIG.SOURCE_DIR}/**/*.cljs`, (err, files) => {
-        let tasks = files.map(file => cljs(path.join(__dirname, file), CLJS_PATHS));
+        let tasks = files.map((file) => {
+            let fn = cljs(path.join(__dirname, file), CLJS_PATHS);
+            if (typeof fn === 'function') {
+                return fn;
+            } else {
+                return (cb) => {return cb()};
+            }
+        });
         async.parallel(tasks, callback);
     });
 });

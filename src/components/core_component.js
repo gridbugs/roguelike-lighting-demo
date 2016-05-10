@@ -44,27 +44,9 @@ class SetComponent extends Component {
     }
 }
 
-export class Solid extends Component {}
-
 export class Collider extends Component {}
 
 export class MoveThroughCombatant extends Component {}
-
-export class Opacity extends Component {
-    constructor(value) {
-        super();
-        this.value = value;
-    }
-
-    clone() {
-        return new Opacity(this.value);
-    }
-
-    copyTo(dest) {
-        super.copyTo(dest);
-        dest.value = this.value;
-    }
-}
 
 export class Observer extends Component {
     constructor(observe, viewDistance, familiar = false) {

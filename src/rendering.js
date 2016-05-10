@@ -4,7 +4,7 @@ import {constrain} from 'utils/math';
 
 function getEntityTile(entity) {
     if (entity.has(Components.Tile)) {
-        return entity.get(Components.Tile).tile;
+        return entity.get(Components.Tile).family;
     }
     return Tiles.NoTile;
 }

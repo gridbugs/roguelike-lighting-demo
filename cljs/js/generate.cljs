@@ -28,3 +28,8 @@
         (keyword? x)  (convert-keyword x)
         (nil? x)      "null"
         :else x))
+
+(defn arg-list [args]
+  (str/join ", " (map name args)))
+
+(defn block-comment [text] (str "/* " text " */"))

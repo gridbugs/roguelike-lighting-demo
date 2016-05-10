@@ -38,7 +38,7 @@ class EntityMemory extends InvalidatingComponentTable {
             return true;
         }
         if (this.has(Components.Tile)) {
-            return !this.get(Components.Tile).tile.transparent;
+            return !this.get(Components.Tile).family.transparent;
         }
         if (this.has(Components.RandomlyAnimatedTile)) {
             return !this.get(Components.RandomlyAnimatedTile).tile.transparent;

@@ -48,7 +48,7 @@
     :forOf true
     :templateLiterals true
     :arrayComprehension true
-;    :sourceMaps "inline"
+    :sourceMaps "inline"
     :modules "amd"
   }
 
