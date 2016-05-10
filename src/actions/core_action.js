@@ -26,7 +26,7 @@ export class OpenDoor extends Action {
 
     commit() {
         this.door.get(Components.Door).open = true;
-        this.door.get(Components.Tile).tile = this.door.get(Components.Door).openTile;
+        this.door.get(Components.Tile).family = this.door.get(Components.Door).openTileFamily;
         this.door.get(Components.Opacity).value = 0;
         this.door.remove(Components.Solid);
         this.door.cell.recompute();
@@ -42,7 +42,7 @@ export class CloseDoor extends Action {
 
     commit() {
         this.door.get(Components.Door).open = false;
-        this.door.get(Components.Tile).tile = this.door.get(Components.Door).closedTile;
+        this.door.get(Components.Tile).family = this.door.get(Components.Door).closedTileFamily;
         this.door.get(Components.Opacity).value = MAX_OPACITY;
         this.door.add(new Components.Solid());
         this.door.cell.recompute();
