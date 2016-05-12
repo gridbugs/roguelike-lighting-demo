@@ -1,17 +1,29 @@
 (ns js.ecs
   (:require [clojure.string :as str]
+            [utils.string :as util-str]
             [js.generate :as jsgen]
             [js.generate-file :as jsfile]))
 
 (def header-comment "Generated file. Do not edit.")
 
-(def header-includes "import {Component} from 'engine/component';")
+(def header-includes
+  (str "import {Component} from 'engine/component';"
+       "import {makeEnumInts} from 'utils/enum';"))
 
 (defn component-js-constructor [component-name args]
   (str "constructor(" (jsgen/arg-list args) "){"
        "super();"
        (apply str (map #(str "this." % "=" % ";") args))
        "}"))
+
+(defn component-js-wrapper [component-name arg]
+  (str "get " arg "(){return this.fields["
+       component-name ".Field."  (util-str/capitalise-first-letter arg) "];}"
+       "set " arg "(value){this.fields["
+       component-name ".Field."  (util-str/capitalise-first-letter arg) "]=value;}"))
+
+(defn component-js-wrappers [component-name args]
+  (apply str (map (partial component-js-wrapper component-name) args)))
 
 (defn component-js-clone [component-name args]
   (str "clone(){return new " component-name
@@ -25,9 +37,14 @@
 (defn component-js [component-name args]
   (str "export class " component-name " extends Component {"
        (component-js-constructor component-name args)
+       (component-js-wrappers component-name args)
        (component-js-clone component-name args)
        (component-js-copy-to component-name args)
-       "}"))
+       "}"
+       component-name ".Field=makeEnumInts("
+       (jsgen/arg-list (map #(str "'" % "'") (map util-str/capitalise-first-letter args)))
+       ");"
+       ))
 
 (defn components-map [component-list]
   (loop [remaining component-list

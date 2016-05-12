@@ -49,6 +49,14 @@ export function makeEnum(x, ints=false) {
     }
 }
 
+export function makeEnumInts(...args) {
+    if (isArray(args[0])) {
+        return makeEnum(args[0], true);
+    } else {
+        return makeEnum(args, true);
+    }
+}
+
 export function substituteValues(enumeration, object) {
     for (let key in object) {
         object[key] = enumeration[object[key]];

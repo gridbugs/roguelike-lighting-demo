@@ -5,6 +5,7 @@ import {Components} from 'components';
 import {Weapons} from 'weapons';
 import {Light as LightImpl} from 'lighting';
 import {Vec2} from 'utils/vec2';
+import {makeEnumInts} from 'utils/enum';
 
 class SetComponent extends Component {
     onAdd(entity) {
@@ -27,6 +28,22 @@ export class Observer extends Component {
         this.familiar = familiar;
     }
 
+    get observe() {
+        return this.fields[Observer.Field.Observe];
+    }
+
+    set observe(value) {
+        this.fields[Observer.Field.Observe] = value;
+    }
+
+    get viewDistance() {
+        return this.fields[Observer.Field.ViewDistance];
+    }
+
+    set viewDistance(value) {
+        this.fields[Observer.Field.ViewDistance] = value;
+    }
+
     clone() {
         return new Observer(this.observe, this.viewDistance, this.familiar);
     }
@@ -35,6 +52,7 @@ export class Observer extends Component {
         this.knowledge.maybeAddEcsContext(entity.ecsContext);
     }
 }
+Observer.Field = makeEnumInts('Observe', 'ViewDistance');
 
 export class Light extends SetComponent {
     constructor(intensity, height) {
@@ -74,3 +92,4 @@ export class Light extends SetComponent {
         this.updateLight();
     }
 }
+Light.Field = makeEnumInts();

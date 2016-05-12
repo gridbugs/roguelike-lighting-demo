@@ -1,6 +1,7 @@
 import {Component} from 'engine/component';
 import {Vec2} from 'utils/vec2';
 import {assert} from 'utils/assert';
+import {makeEnumInts} from 'utils/enum';
 
 export class TurnTaker extends Component {
     constructor(controller) {
@@ -30,12 +31,14 @@ export class TurnTaker extends Component {
         super.onRemove(entity);
     }
 }
+TurnTaker.Field = makeEnumInts();
 
 TurnTaker.prototype.takeTurn = async function() {
     return await this.controller.takeTurn();
 }
 
 export class PlayerCharacter extends Component {}
+PlayerCharacter.Field = makeEnumInts();
 
 export class Position extends Component {
     constructor(x, y) {
@@ -127,3 +130,4 @@ export class Position extends Component {
         super.onRemove(entity);
     }
 }
+Position.Field = makeEnumInts('Vector');

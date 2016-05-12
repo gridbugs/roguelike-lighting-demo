@@ -2,8 +2,9 @@ import {Typed} from 'engine/typed';
 import {assert} from 'utils/assert';
 
 export class Component extends Typed {
-    constructor(...args) {
+    constructor() {
         super();
+        this.fields = new Array(this.constructor.Field.length);
         this.valid = true;
         this.entity = null;
         this._ = this.name;
