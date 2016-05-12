@@ -1,5 +1,5 @@
 import {CellGrid, Cell} from 'utils/cell_grid';
-import {VisionCellList, MAX_VISIBILITY} from 'vision';
+import {VisionCellList} from 'vision';
 import {detectVisibleArea} from 'shadowcast';
 import {Vec3} from 'utils/vec3.js';
 
@@ -74,7 +74,7 @@ export class Light {
 
         for (let description of this.lightContext.visionCells) {
             let lightCell = this.lightContext.grid.get(description.cell);
-            lightCell.updateLight(this, description.visibility / MAX_VISIBILITY, description.sides);
+            lightCell.updateLight(this, description.visibility, description.sides);
         }
     }
 }

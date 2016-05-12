@@ -2,13 +2,12 @@ import {Components} from 'components';
 import {Tiles} from 'tiles';
 import {Weapons} from 'weapons';
 import {EntityPrototypes} from 'entity_prototypes';
-import {MAX_OPACITY, opacityFromFloat} from 'vision';
 
 export function Tree(x, y) {
     return [
         new Components.Position(x, y),
         new Components.Tile(Tiles.Tree, 2),
-        new Components.Opacity(opacityFromFloat(0.49)),
+        new Components.Opacity(0.49),
         new Components.Solid()
     ];
 }
@@ -45,7 +44,7 @@ export function WoodWall(x, y) {
     return [
         new Components.Position(x, y),
         new Components.Tile(Tiles.WoodWall, 2),
-        new Components.Opacity(MAX_OPACITY),
+        new Components.Opacity(1),
         new Components.Solid()
     ];
 }
@@ -54,7 +53,7 @@ export function ClosedWoodenDoor(x, y) {
     return [
         new Components.Position(x, y),
         new Components.Tile(Tiles.ClosedWoodenDoor, 2),
-        new Components.Opacity(MAX_OPACITY),
+        new Components.Opacity(1),
         new Components.Door(false, Tiles.OpenWoodenDoor, Tiles.ClosedWoodenDoor),
         new Components.Solid()
     ];

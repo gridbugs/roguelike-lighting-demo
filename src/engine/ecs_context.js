@@ -5,7 +5,7 @@ import {ComponentCountingEntitySet} from 'engine/entity_set';
 
 import {assert} from 'utils/assert';
 
-import {TurnTaker, PlayerCharacter} from 'engine/engine_components';
+import {Position, TurnTaker, PlayerCharacter} from 'engine/engine_components';
 
 import {Schedule} from 'engine/schedule';
 
@@ -121,12 +121,42 @@ export function EcsContext(CellType) {
             return this.schedule.sequenceNumber;
         }
 
+        applyAction(action) {
+            let changes = action.changes();
+            let cells = new Set();
+
+            for (let change of changes) {
+                let entity = change.entity;
+                if (entity.has(Position)) {
+                    let position = entity.get(Position);
+                    let fromCell = this.spacialHash.get(position.vector);
+                    change.apply(this);
+                    let toCell = this.spacialHash.get(position.vector);
+
+                    cells.add(fromCell);
+
+                    if (!fromCell.coord.equals(toCell.coord)) {
+                        fromCell.entities.delete(entity);
+                        toCell.entities.add(entity);
+                        entity.cell = toCell;
+
+                        cells.add(toCell);
+                    }
+                }
+            }
+
+            for (let cell of cells) {
+                cell.recompute();
+                cell.turn = this.turn;
+            }
+        }
+
         maybeApplyAction(action) {
 
             this.runReactiveSystems(action);
 
             if (action.success) {
-                action.commit(this);
+                this.applyAction(action);
                 this.runRetroactiveSystems(action);
             }
         }

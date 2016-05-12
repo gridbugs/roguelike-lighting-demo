@@ -1,6 +1,6 @@
 import {Action} from 'engine/action';
+import * as Change from 'engine/change';
 import {Components} from 'components';
-import {MAX_OPACITY, opacityFromFloat} from 'vision';
 
 export class Walk extends Action {
     constructor(entity, direction) {
@@ -12,8 +12,17 @@ export class Walk extends Action {
         this.destination = this.source.add(this.direction.vector);
     }
 
-    commit() {
-        this.position.vector = this.destination;
+    changes() {
+        return [
+            new Change.UpdateComponentFieldInPlace(
+                this.entity,
+                Components.Position,
+                Components.Position.Field.Vector,
+                (vector) => {
+                    vector.set(this.destination)
+                }
+            ),
+        ];
     }
 }
 
@@ -24,12 +33,14 @@ export class OpenDoor extends Action {
         this.door = door;
     }
 
-    commit() {
-        this.door.get(Components.Door).open = true;
-        this.door.get(Components.Tile).family = this.door.get(Components.Door).openTileFamily;
-        this.door.get(Components.Opacity).value = 0;
-        this.door.remove(Components.Solid);
-        this.door.cell.recompute();
+    changes() {
+        return [
+            new Change.SetComponentField(this.door, Components.Door, Components.Door.Field.Open, true),
+            new Change.SetComponentField(this.door, Components.Tile, Components.Tile.Field.Family,
+                this.door.get(Components.Door).openTileFamily),
+            new Change.SetComponentField(this.door, Components.Opacity, Components.Opacity.Field.Value, 0),
+            new Change.RemoveComponent(this.door, Components.Solid),
+        ];
     }
 }
 
@@ -40,11 +51,13 @@ export class CloseDoor extends Action {
         this.door = door;
     }
 
-    commit() {
-        this.door.get(Components.Door).open = false;
-        this.door.get(Components.Tile).family = this.door.get(Components.Door).closedTileFamily;
-        this.door.get(Components.Opacity).value = MAX_OPACITY;
-        this.door.add(new Components.Solid());
-        this.door.cell.recompute();
+    changes() {
+        return [
+            new Change.SetComponentField(this.door, Components.Door, Components.Door.Field.Open, false),
+            new Change.SetComponentField(this.door, Components.Tile, Components.Tile.Field.Family,
+                this.door.get(Components.Door).closedTileFamily),
+            new Change.SetComponentField(this.door, Components.Opacity, Components.Opacity.Field.Value, 1),
+            new Change.AddComponent(this.door, Components.Solid),
+        ];
     }
 }

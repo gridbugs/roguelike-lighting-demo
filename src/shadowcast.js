@@ -2,7 +2,6 @@ import {Vec2} from 'utils/vec2';
 import {Direction} from 'utils/direction';
 import {SQRT2, constrain} from 'utils/math';
 import {ObjectStack} from 'utils/object_stack';
-import {MAX_VISIBILITY} from 'vision';
 
 class StackFrame {
     constructor() {
@@ -28,7 +27,7 @@ export function detectVisibleArea(eyePosition, viewDistance, grid, visionCells) 
     let squareViewDistance = SQRT2 * viewDistance;
     let viewDistanceSquared = viewDistance * viewDistance;
 
-    visionCells.addAllSides(eyeCell, MAX_VISIBILITY);
+    visionCells.addAllSides(eyeCell, 1);
 
     //  \|
     detectVisibleAreaOctant( eyeCell, viewDistance, grid, -1, 0,
@@ -107,7 +106,7 @@ function detectVisibleAreaOctant(
     frame.minSlope = initialMinSlope;
     frame.maxSlope = initialMaxSlope;
     frame.depth = 1;
-    frame.visibility = MAX_VISIBILITY;
+    frame.visibility = 1;
 
     while (!STACK.empty) {
         let currentFrame = STACK.pop();
