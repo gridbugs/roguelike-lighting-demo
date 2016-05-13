@@ -23,6 +23,10 @@ import {renderText, HelpText, WinText} from 'text';
 
 import {Tiles} from 'tiles';
 
+/* jQuery entry point */
+jQuery(main);
+
+
 function initRng() {
     let seed;
     if (Config.RNG_SEED === null) {

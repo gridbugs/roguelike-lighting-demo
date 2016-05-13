@@ -3,7 +3,7 @@ import {isArray} from 'utils/array_utils';
 class Enumeration {
     constructor(object) {
         this.keys = Object.keys(object);
-        this.values = [for (key of this.keys) object[key]];
+        this.values = this.keys.map(key => object[key]);
 
         let count = 0;
         for (let key of this.keys) {
