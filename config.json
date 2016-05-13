@@ -1,0 +1,26 @@
+{
+  "JS_COMPILED_DIR": "js-compiled",
+  "OUTPUT_IMAGE_DIR": "images",
+  "ENTRY_FILE": "main.js",
+  "IMAGE_DIR": "images",
+  "OUTPUT_DIR": "out",
+  "INDEX_FILE": "index.html",
+  "STATIC_DIR": "static",
+  "CLJS_LIB_DIR": "cljs",
+  "STAGE_DIR": "stage",
+  "SOURCE_DIR": "src",
+  "TRACEUR_OPTS": {
+    "modules": "amd",
+    "asyncFunctions": true,
+    "blockBinding": true,
+    "templateLiterals": true,
+    "sourceMaps": "inline",
+    "forOf": true,
+    "arrowFunctions": true,
+    "arrayComprehension": true,
+    "classes": true,
+    "generators": true
+  },
+  "DEFAULT_SERVER_PORT": 8000,
+  "JS_SOURCE_DIR": "js-src"
+}

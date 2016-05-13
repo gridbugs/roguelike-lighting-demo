@@ -1,6 +1,5 @@
 'use strict';
 
-const cljs = require('clojurescript-nodejs');
 const gulp = require('gulp');
 const runSequence = require('run-sequence');
 
@@ -11,14 +10,13 @@ const requirejsOptimize = require('gulp-requirejs-optimize');
 const traceur = require('gulp-traceur');
 const webserver = require('gulp-webserver');
 
-const through = require('through2');
 const argv = require('yargs').argv;
 const path = require('path');
-const async = require('async');
 const glob = require('glob');
+const fs = require('fs');
 
-/* The build config file is config/build.cljs */
-const CONFIG = cljs(path.join(__dirname, 'config', 'buildjs.cljs'), [__dirname]);
+/* The build config file is config.json */
+const CONFIG = JSON.parse(fs.readFileSync('config.json'));
 
 /* Port for webserver */
 const SERVER_PORT = argv.port === undefined ? CONFIG.DEFAULT_SERVER_PORT : parseInt(argv.port);
@@ -65,23 +63,7 @@ gulp.task('stream-production', () => {
 
 /* Compile code and run build scripts, leaving result in stage directory */
 gulp.task('build', (callback) => {
-    runSequence(['static', 'stage'], 'cljs', 'images', 'compile', callback);
-});
-
-/* Run clojurescript build scripts which operate on the stage directory */
-gulp.task('cljs', (callback) => {
-    const CLJS_PATHS = [__dirname, path.join(__dirname, CONFIG.CLJS_LIB_DIR)];
-    glob(`${CONFIG.SOURCE_DIR}/**/*.cljs`, (err, files) => {
-        let tasks = files.map((file) => {
-            let fn = cljs(path.join(__dirname, file), CLJS_PATHS);
-            if (typeof fn === 'function') {
-                return fn;
-            } else {
-                return (cb) => {return cb()};
-            }
-        });
-        async.parallel(tasks, callback);
-    });
+    runSequence(['static', 'stage'], 'images', 'compile', callback);
 });
 
 /* Copy js source to stage directory */

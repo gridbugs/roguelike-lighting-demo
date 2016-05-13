@@ -6,8 +6,6 @@
   "license": "MIT",
   "main": "index.html",
   "devDependencies": {
-    "async": "*",
-    "clojurescript-nodejs": "*",
     "glob": "*",
     "gulp": "*",
     "gulp-plumber": "*",
@@ -18,7 +16,6 @@
     "gulp-webserver": "*",
     "js-beautify": "*",
     "run-sequence": "*",
-    "through2": "*",
     "yargs": "*"
   },
   "repository": {

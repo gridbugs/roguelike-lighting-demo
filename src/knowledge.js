@@ -3,7 +3,6 @@ import {Components} from 'components';
 import {ComponentTable} from 'engine/component_table';
 import {ObjectPool} from 'utils/object_pool';
 import {BestTracker} from 'utils/best_tracker';
-import {getTileComponentDepth} from 'components/tile_component';
 import {Config} from 'config';
 import {InvalidatingComponentTable} from 'engine/invalidating_component_table';
 
@@ -34,17 +33,8 @@ class EntityMemory extends InvalidatingComponentTable {
     }
 
     hasBackground() {
-        if (this.has(Components.WallTile)) {
-            return true;
-        }
         if (this.has(Components.Tile)) {
             return !this.get(Components.Tile).family.transparent;
-        }
-        if (this.has(Components.RandomlyAnimatedTile)) {
-            return !this.get(Components.RandomlyAnimatedTile).tile.transparent;
-        }
-        if (this.has(Components.RandomlyChosenTile)) {
-            return !this.get(Components.RandomlyChosenTile).tile.transparent;
         }
         return false;
     }
@@ -59,8 +49,8 @@ class EntityMemory extends InvalidatingComponentTable {
 EntityMemory.RememberedComponents = null;
 
 function compare(a, b) {
-    let aDepth = getTileComponentDepth(a);
-    let bDepth = getTileComponentDepth(b);
+    let aDepth = a.get(Components.Tile).depth;
+    let bDepth = b.get(Components.Tile).depth;
     if (aDepth === null || bDepth === null) {
         throw 'entity has no component with depth';
     }
