@@ -38,10 +38,4 @@ export class Component extends Typed {
         assert(entity.ecsContext !== null);
         this.entity = null;
     }
-
-    updateCellTurn() {
-        if (this.entity !== null) {
-            this.entity.updateCellTurn();
-        }
-    }
 }
