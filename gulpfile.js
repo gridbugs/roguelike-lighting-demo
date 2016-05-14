@@ -7,10 +7,12 @@ const rimraf = require('gulp-rimraf');
 const plumber = require('gulp-plumber');
 const webserver = require('gulp-webserver');
 const sourcemaps = require('gulp-sourcemaps');
+const sweetjs = require('gulp-sweetjs');
 const uglify = require('gulp-uglify');
 const webpack = require('webpack-stream');
 const babel = require('gulp-babel');
 
+const glob = require('glob');
 const argv = require('yargs').argv;
 const path = require('path');
 const fs = require('fs');
@@ -25,7 +27,7 @@ gulp.task('default', (callback) => {
 
 /* Watch the source directory, running development task after changes */
 gulp.task('stream', () => {
-    return gulp.watch(`{${CONFIG.SOURCE_DIR},${CONFIG.STATIC_DIR}}/**`, ['compile', 'static']);
+    return gulp.watch(`{${CONFIG.SOURCE_DIR},${CONFIG.STATIC_DIR},${CONFIG.MACRO_DIR}}/**`, ['compile', 'static']);
 });
 
 /* Compile code and run build scripts, leaving result in stage directory */
@@ -63,6 +65,10 @@ gulp.task('babel', () => {
         .pipe(babel({
             plugins: ["transform-async-to-generator"],
             presets: ['es2015']
+        }))
+        .pipe(sweetjs({
+            modules: glob.sync(`./${CONFIG.MACRO_DIR}/**/*.js`),
+            sourceMap: true
         }))
         .pipe(uglify())
         .pipe(sourcemaps.write())

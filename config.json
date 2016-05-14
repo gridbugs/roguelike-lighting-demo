@@ -5,6 +5,7 @@
   "STAGE_DIR": "stage",
   "STATIC_DIR": "static",
   "SOURCE_DIR": "src",
+  "MACRO_DIR": "macros",
   "INDEX_FILE": "index.html",
   "ENTRY_FILE": "main.js",
   "OUTPUT_FILE": "app.js",
