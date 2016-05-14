@@ -122,7 +122,7 @@ export function EcsContext(CellType) {
         }
 
         applyAction(action) {
-            let changes = action.changes();
+            let changes = action.getChanges();
             let cells = new Set();
 
             for (let change of changes) {

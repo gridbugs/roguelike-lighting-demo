@@ -12,7 +12,7 @@ export class Walk extends Action {
         this.destination = this.source.add(this.direction.vector);
     }
 
-    changes() {
+    getChanges() {
         return [
             new Change.UpdateComponentFieldInPlace(
                 this.entity,
@@ -33,7 +33,7 @@ export class OpenDoor extends Action {
         this.door = door;
     }
 
-    changes() {
+    getChanges() {
         return [
             new Change.SetComponentField(this.door, Components.Door, Components.Door.Field.Open, true),
             new Change.SetComponentField(this.door, Components.Tile, Components.Tile.Field.Family,
@@ -51,7 +51,7 @@ export class CloseDoor extends Action {
         this.door = door;
     }
 
-    changes() {
+    getChanges() {
         return [
             new Change.SetComponentField(this.door, Components.Door, Components.Door.Field.Open, false),
             new Change.SetComponentField(this.door, Components.Tile, Components.Tile.Field.Family,
