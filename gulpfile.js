@@ -49,11 +49,11 @@ gulp.task('images', () => {
 
 /* Turn multiple files of ES6 into a single js file */
 gulp.task('compile', (callback) => {
-    runSequence('babel', 'webpack', callback);
+    runSequence('transpile', 'resolve', callback);
 });
 
 /* Compile ES6 to javascript */
-gulp.task('babel', () => {
+gulp.task('transpile', () => {
     return gulp.src(`${CONFIG.SOURCE_DIR}/**/*.js`)
         .pipe(plumber({
             handleError: (err) => {
@@ -76,7 +76,7 @@ gulp.task('babel', () => {
 });
 
 /* Resolve commonjs dependencies produced by babel */
-gulp.task('webpack', () => {
+gulp.task('resolve', () => {
     return gulp.src(path.join(CONFIG.STAGE_DIR, CONFIG.ENTRY_FILE))
         .pipe(webpack({
             devtool: '#source-map',
