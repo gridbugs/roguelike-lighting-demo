@@ -24,8 +24,7 @@ import {renderText, HelpText, WinText} from 'text';
 import {Tiles} from 'tiles';
 
 /* jQuery entry point */
-jQuery(main);
-
+$(window).bind('load', main);
 
 function initRng() {
     let seed;
