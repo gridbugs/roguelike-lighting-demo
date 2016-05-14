@@ -54,6 +54,17 @@ gulp.task('compile', (callback) => {
 
 /* Compile ES6 to javascript */
 gulp.task('transpile', () => {
+
+    const babelStep = () => babel({
+        plugins: ["transform-async-to-generator"],
+        presets: ['es2015']
+    });
+
+    const sweetjsStep = () => sweetjs({
+        modules: glob.sync(`./${CONFIG.MACRO_DIR}/**/*.js`),
+        sourceMap: true
+    });
+
     return gulp.src(`${CONFIG.SOURCE_DIR}/**/*.js`)
         .pipe(plumber({
             handleError: (err) => {
@@ -62,15 +73,10 @@ gulp.task('transpile', () => {
             }
         }))
         .pipe(sourcemaps.init())
-        .pipe(babel({
-            plugins: ["transform-async-to-generator"],
-            presets: ['es2015']
-        }))
-        .pipe(sweetjs({
-            modules: glob.sync(`./${CONFIG.MACRO_DIR}/**/*.js`),
-            sourceMap: true
-        }))
-        .pipe(uglify())
+        .pipe(babelStep())      // turn es6 into es5, so the macro engine doesn't see es6
+        .pipe(sweetjsStep())    // resolve macros on resulting es5
+        .pipe(babelStep())      // turn es6 produced by macros into es5
+        .pipe(uglify())         // minify each file
         .pipe(sourcemaps.write())
         .pipe(gulp.dest(path.join(CONFIG.STAGE_DIR)));
 });
