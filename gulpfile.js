@@ -7,6 +7,7 @@ const rimraf = require('gulp-rimraf');
 const plumber = require('gulp-plumber');
 const webserver = require('gulp-webserver');
 const sourcemaps = require('gulp-sourcemaps');
+const uglify = require('gulp-uglify');
 const webpack = require('webpack-stream');
 const babel = require('gulp-babel');
 
@@ -63,6 +64,7 @@ gulp.task('babel', () => {
             plugins: ["transform-async-to-generator"],
             presets: ['es2015']
         }))
+        .pipe(uglify())
         .pipe(sourcemaps.write())
         .pipe(gulp.dest(path.join(CONFIG.STAGE_DIR)));
 });
