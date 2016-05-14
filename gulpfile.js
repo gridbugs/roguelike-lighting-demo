@@ -99,6 +99,7 @@ gulp.task('serve', () => {
 
     return gulp.src(CONFIG.OUTPUT_DIR)
     .pipe(webserver({
+        host: '0.0.0.0',
         port: port,
         fallback: CONFIG.INDEX_FILE,
         livereload: false
