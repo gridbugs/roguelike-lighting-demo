@@ -7,7 +7,7 @@ import {resolvePromiseStructure} from 'utils/async';
 export const Tiles = {};
 
 const TILE_STORE_WIDTH = 1024;
-const TILE_STORE_HEIGHT = 1024;
+const TILE_STORE_HEIGHT = 2048;
 
 const promiseConstructors = {
     image: (description, tileStore) => {
@@ -32,7 +32,7 @@ const promiseConstructors = {
         return new Promise((resolve, reject) => {
             resolve(tileStore.allocateDotTile(
                         description.size,
-                        description.colour,
+                        description.foregroundColour,
                         description.backgroundColour,
                         description.effects));
         });
@@ -42,7 +42,7 @@ const promiseConstructors = {
             resolve(tileStore.createCharacterTile(
                         description.character,
                         description.font,
-                        description.colour,
+                        description.foregroundColour,
                         description.backgroundColour,
                         description.transparent,
                         description.effects));
@@ -64,8 +64,8 @@ export async function initTiles(description) {
 
 function createTileStructure(description, tileStore) {
     let object = {};
-    for (let tileName in description.tiles) {
-        let tileDescription = description.tiles[tileName];
+    for (let tileName in description) {
+        let tileDescription = description[tileName];
         object[tileName] = promiseConstructors[tileDescription.type](tileDescription, tileStore);
     }
     for (let groupName in description.groups) {

@@ -9,6 +9,7 @@ const webserver = require('gulp-webserver');
 const sourcemaps = require('gulp-sourcemaps');
 const sweetjs = require('gulp-sweetjs');
 const uglify = require('gulp-uglify');
+const identity = require('gulp-identity');
 const webpack = require('webpack-stream');
 const babel = require('gulp-babel');
 
@@ -65,6 +66,8 @@ gulp.task('transpile', () => {
         sourceMap: true
     });
 
+    const minify = CONFIG.DEBUG ? identity() : uglify();
+
     return gulp.src(`${CONFIG.SOURCE_DIR}/**/*.js`)
         .pipe(plumber({
             handleError: (err) => {
@@ -76,7 +79,7 @@ gulp.task('transpile', () => {
         .pipe(babelStep())      // turn es6 into es5, so the macro engine doesn't see es6
         .pipe(sweetjsStep())    // resolve macros on resulting es5
         .pipe(babelStep())      // turn es6 produced by macros into es5
-        .pipe(uglify())         // minify each file
+        .pipe(minify)           // minify each file
         .pipe(sourcemaps.write())
         .pipe(gulp.dest(path.join(CONFIG.STAGE_DIR)));
 });

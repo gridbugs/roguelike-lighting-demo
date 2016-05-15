@@ -4,8 +4,10 @@ import {Effect} from 'effect';
 const NUM_LIGHT_LEVELS = 32;
 const NUM_TRANSPARENCY_LEVELS = 32;
 
+const defaultEffects = new Set([Effect.Greyscale, Effect.LightLevels]);
+
 export class TileFamily {
-    constructor(sprite, transparent, effects = Effect.Default) {
+    constructor(sprite, transparent, effects = defaultEffects) {
 
         this.tileStore = sprite.tileStore;
 
@@ -14,13 +16,13 @@ export class TileFamily {
 
         this.transparent = transparent;
 
-        if (effects.has(Effect.Type.GREYSCALE)) {
+        if (effects.has(Effect.Greyscale)) {
             this.greyScale = this.tileStore.createGreyscaleSprite(this.main);
         } else {
             this.greyScale = null;
         }
 
-        if (effects.has(Effect.Type.LIGHT_LEVELS)) {
+        if (effects.has(Effect.LightLevels)) {
             this.lightLevels = new Array(NUM_LIGHT_LEVELS);
             for (let i = 0; i < NUM_LIGHT_LEVELS; ++i) {
                 let litRatio = i * 2 / NUM_LIGHT_LEVELS;
@@ -35,7 +37,7 @@ export class TileFamily {
             this.lightLevels = null;
         }
 
-        if (effects.has(Effect.Type.TRANSPARENCY_LEVELS)) {
+        if (effects.has(Effect.TransparencyLevels)) {
             this.transparencyLevels = new Array(NUM_TRANSPARENCY_LEVELS);
             for (let i = 0; i < NUM_TRANSPARENCY_LEVELS; ++i) {
                 let alpha = i / NUM_TRANSPARENCY_LEVELS;

@@ -1,4 +1,5 @@
 {
+  "DEBUG": true,
   "COMPILED_DIR": "app",
   "IMAGE_DIR": "images",
   "OUTPUT_DIR": "out",

@@ -12,6 +12,7 @@
     "glob": "*",
     "gulp": "*",
     "gulp-babel": "*",
+    "gulp-identity": "*",
     "gulp-plumber": "*",
     "gulp-rimraf": "*",
     "gulp-sourcemaps": "*",
