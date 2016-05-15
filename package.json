@@ -12,6 +12,8 @@
     "glob": "*",
     "gulp": "*",
     "gulp-babel": "*",
+    "gulp-changed": "*",
+    "gulp-print": "*",
     "gulp-identity": "*",
     "gulp-plumber": "*",
     "gulp-rimraf": "*",

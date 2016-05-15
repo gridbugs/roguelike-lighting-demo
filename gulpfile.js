@@ -12,6 +12,8 @@ const uglify = require('gulp-uglify');
 const identity = require('gulp-identity');
 const webpack = require('webpack-stream');
 const babel = require('gulp-babel');
+const print = require('gulp-print');
+const changed = require('gulp-changed');
 
 const glob = require('glob');
 const argv = require('yargs').argv;
@@ -68,20 +70,25 @@ gulp.task('transpile', () => {
 
     const minify = CONFIG.DEBUG ? identity() : uglify();
 
-    return gulp.src(`${CONFIG.SOURCE_DIR}/**/*.js`)
+    let src = `${CONFIG.SOURCE_DIR}/**/*.js`;
+    let dest = path.join(CONFIG.STAGE_DIR);
+
+    return gulp.src(src)
         .pipe(plumber({
             handleError: (err) => {
                 console.log(err.toString())
                 this.emit('end')
             }
         }))
+        .pipe(changed(dest))
         .pipe(sourcemaps.init())
+        .pipe(print())
         .pipe(babelStep())      // turn es6 into es5, so the macro engine doesn't see es6
         .pipe(sweetjsStep())    // resolve macros on resulting es5
         .pipe(babelStep())      // turn es6 produced by macros into es5
         .pipe(minify)           // minify each file
         .pipe(sourcemaps.write())
-        .pipe(gulp.dest(path.join(CONFIG.STAGE_DIR)));
+        .pipe(gulp.dest(dest))
 });
 
 /* Resolve commonjs dependencies produced by babel */
