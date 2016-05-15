@@ -1,4 +1,3 @@
-import 'manual_types';
 import 'populate_namespaces';
 
 import {initConfigFromUrl} from 'options';
@@ -7,7 +6,6 @@ import {initGlobals} from 'globals';
 import {GlobalHud} from 'global_hud';
 
 import {StringTerrainGenerator} from 'string_terrain_generator';
-import {ShipGenerator} from 'ship_generator';
 
 import {Level} from 'engine/level';
 import {GameContext} from 'game_context';

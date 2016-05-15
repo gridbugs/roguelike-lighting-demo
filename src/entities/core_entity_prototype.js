@@ -1,6 +1,5 @@
 import {Components} from 'components';
 import {Tiles} from 'tiles';
-import {Weapons} from 'weapons';
 import {EntityPrototypes} from 'entity_prototypes';
 
 export function Tree(x, y) {

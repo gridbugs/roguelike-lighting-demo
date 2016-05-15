@@ -2,7 +2,6 @@ import {Component} from 'engine/component';
 import {Knowledge} from 'knowledge';
 
 import {Components} from 'components';
-import {Weapons} from 'weapons';
 import {Light as LightImpl} from 'lighting';
 import {Vec2} from 'utils/vec2';
 import {makeEnumInts} from 'utils/enum';
