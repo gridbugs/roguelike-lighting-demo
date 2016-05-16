@@ -23,11 +23,11 @@ class DirectionInfo {
     }
 
     get cardinal() {
-        return this.type === DirectionType.Cardinal;
+        return this.type == DirectionType.Cardinal;
     }
 
     get ordinal() {
-        return this.type === DirectionType.Ordinal;
+        return this.type == DirectionType.Ordinal;
     }
 }
 

@@ -18,7 +18,7 @@ export class BestSet {
     }
 
     get empty() {
-        return this.length === 0;
+        return this.length == 0;
     }
 
     insertToArray(x) {
@@ -42,7 +42,7 @@ export class BestSet {
             /* The new value is better than anything seen before */
             this.clear();
             this.insertFirst(x);
-        } else if (cmp === 0) {
+        } else if (cmp == 0) {
             /* The new value is as good as the current best */
             this.insertToArray(x);
         }

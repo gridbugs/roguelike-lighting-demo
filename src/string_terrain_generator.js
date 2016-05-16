@@ -18,7 +18,7 @@ export class StringTerrainGenerator {
 
     generate(level, ecsContext) {
 
-        if (this.nextStringArray !== null) {
+        if (this.nextStringArray != null) {
             this.nextGenerator = new StringTerrainGenerator(this.depth + 1, this.nextStringArray)
             this.nextGenerator.aboveLevel = level;
             this.nextLevel = new Level(this.nextGenerator);

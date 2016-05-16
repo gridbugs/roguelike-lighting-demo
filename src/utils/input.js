@@ -70,7 +70,7 @@ export async function getNonModifierKey() {
         key = await getKey();
         var code = key.keyCode;
 
-        if (!(code === KEYCODE_SHIFT || code === KEYCODE_CONTROL || code === KEYCODE_ALT)) {
+        if (!(code == KEYCODE_SHIFT || code == KEYCODE_CONTROL || code == KEYCODE_ALT)) {
             break;
         }
     }
@@ -86,7 +86,7 @@ export function keyIsDigit(key) {
 }
 
 export function keyIsSymbol(key) {
-    return charTable[key.keyCode] !== undefined;
+    return charTable[key.keyCode] != undefined;
 }
 
 export function getCharFromKey(key) {
@@ -117,7 +117,7 @@ export function keyIsChar(key) {
 }
 
 export function keyIsNonChar(key) {
-    return nonCharTable[key.keyCode] !== undefined;
+    return nonCharTable[key.keyCode] != undefined;
 }
 
 export async function getChar() {

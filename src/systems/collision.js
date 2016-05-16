@@ -9,7 +9,7 @@ export class Collision extends ReactiveSystem {
         this.on(Actions.Walk, (action) => {
             let destination = this.getCell(action.destination);
 
-            if (destination === null) {
+            if (destination == null) {
                 action.success = false;
                 return;
             }

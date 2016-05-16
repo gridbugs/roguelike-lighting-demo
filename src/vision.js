@@ -62,7 +62,7 @@ export class VisionCellList {
 
     getDescription(coord) {
         let cell = this.seen.get(coord);
-        if (cell.last !== this.current) {
+        if (cell.last != this.current) {
             cell.last = this.current;
             let description = this.allocateDescription(cell);
             description.clear();

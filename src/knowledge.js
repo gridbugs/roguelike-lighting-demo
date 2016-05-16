@@ -12,7 +12,7 @@ class EntityMemory extends InvalidatingComponentTable {
 
         this.cell = cell;
 
-        if (EntityMemory.RememberedComponents === null) {
+        if (EntityMemory.RememberedComponents == null) {
             EntityMemory.RememberedComponents = [
                 Components.Position,
                 Components.Tile,
@@ -49,7 +49,7 @@ EntityMemory.RememberedComponents = null;
 function compare(a, b) {
     let aDepth = a.get(Components.Tile).depth;
     let bDepth = b.get(Components.Tile).depth;
-    if (aDepth === null || bDepth === null) {
+    if (aDepth == null || bDepth == null) {
         throw 'entity has no component with depth';
     }
     return aDepth - bDepth;
@@ -73,7 +73,7 @@ class KnowledgeCell extends Cell {
     }
 
     get visible() {
-        return this.turn === this.grid.ecsContext.turn;
+        return this.turn == this.grid.ecsContext.turn;
     }
 
     get dirty() {
@@ -124,7 +124,7 @@ class KnowledgeCell extends Cell {
 
     withEntity(component, callback) {
         let entity = this.find(component);
-        if (entity !== null) {
+        if (entity != null) {
             callback(entity);
         }
     }
@@ -162,7 +162,7 @@ export class Knowledge {
     }
 
     maybeAddEcsContext(ecsContext) {
-        if (this.gridTable[ecsContext.id] === undefined) {
+        if (this.gridTable[ecsContext.id] == undefined) {
             this.gridTable[ecsContext.id] = new KnowledgeGrid(ecsContext, this);
         }
     }

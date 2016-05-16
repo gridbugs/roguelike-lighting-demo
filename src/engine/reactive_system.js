@@ -20,7 +20,7 @@ export class ReactiveSystem extends System {
 
     run(action) {
         let f = this.actionTable[action.type];
-        if (f !== null) {
+        if (f != null) {
             f(action);
         }
     }

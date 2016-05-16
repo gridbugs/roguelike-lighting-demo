@@ -1,7 +1,7 @@
 import * as Random from 'utils/random';
 
 export function isArray(obj) {
-    return Object.prototype.toString.call(obj) === '[object Array]';
+    return Object.prototype.toString.call(obj) == '[object Array]';
 }
 
 export function swapElements(array, i, j) {
@@ -22,7 +22,7 @@ export function shuffleInPlace(array) {
 }
 
 export function getBestIndex(array, compare = (a, b) => {return a - b}) {
-    if (array.length === 0) {
+    if (array.length == 0) {
         return null;
     }
     let best = array[0];

@@ -14,7 +14,7 @@ export class ComponentTable {
 
     *[Symbol.iterator]() {
         for (let component of this.components) {
-            if (component !== null) {
+            if (component != null) {
                 yield component;
             }
         }
@@ -38,13 +38,13 @@ export class ComponentTable {
     /* Associate a value with a given component */
     set(component, value) {
         let index;
-        if (typeof component === 'number') {
+        if (typeof component == 'number') {
             index = component;
         } else {
             index = component.type;
         }
 
-        assert(index !== undefined);
+        assert(index != undefined);
 
         this.components[index] = value;
     }
@@ -60,7 +60,7 @@ export class ComponentTable {
      * is stored
      */
     has(component) {
-        return this.components[component.type] !== null;
+        return this.components[component.type] != null;
     }
 
     is(component) {
@@ -79,7 +79,7 @@ export class ComponentTable {
      */
     with(component, f) {
         let c = this.components[component.type];
-        if (c !== null) {
+        if (c != null) {
             f(c);
         }
     }

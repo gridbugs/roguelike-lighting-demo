@@ -62,7 +62,7 @@ function drawKnowledgeCell(knowledgeCell, lightCell, drawerCell) {
 }
 
 function maybeDrawKnowledgeCell(knowledgeCell, lightCell, drawerCell) {
-    if (knowledgeCell === null) {
+    if (knowledgeCell == null) {
         drawerCell.drawTile(Tiles.OutOfBounds.main);
     } else {
         drawKnowledgeCell(knowledgeCell, lightCell, drawerCell);

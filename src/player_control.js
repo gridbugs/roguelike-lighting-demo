@@ -12,12 +12,12 @@ async function getControlAction(entity) {
     while (true) {
         var fn = await Control.getControl();
 
-        if (fn === null) {
+        if (fn == null) {
             continue;
         }
 
         var action = await fn(entity);
-        if (action === null) {
+        if (action == null) {
             continue;
         }
 

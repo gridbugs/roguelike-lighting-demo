@@ -25,7 +25,7 @@ export class ObjectStack extends ObjectPool {
     }
 
     get empty() {
-        return this.index === 0;
+        return this.index == 0;
     }
 
     get length() {

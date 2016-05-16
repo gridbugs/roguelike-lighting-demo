@@ -9,7 +9,7 @@ export class Door extends ReactiveSystem {
         this.on(Actions.Walk, (action) => {
             let destination = this.getCell(action.destination);
 
-            if (destination === null) {
+            if (destination == null) {
                 return;
             }
 

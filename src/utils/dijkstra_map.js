@@ -99,7 +99,7 @@ export function DijkstraMap(T) {
 
                 for (let direction of Directions) {
                     let neighbour = cell.getNeighbour(direction);
-                    if (neighbour === null) {
+                    if (neighbour == null) {
                         continue;
                     }
                     if (neighbour.visited) {

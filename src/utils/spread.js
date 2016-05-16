@@ -13,13 +13,13 @@ export function *spread(a, b, nA, nB) {
     }
 
     // simple case - just interleave
-    if (nA === nB) {
+    if (nA == nB) {
         yield* interleave(a, b, nA);
         return;
     }
 
     // simple case - yield all a
-    if (nB === 0) {
+    if (nB == 0) {
         for (let i = 0; i < nA; ++i) {
             yield a;
         }

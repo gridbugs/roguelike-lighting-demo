@@ -32,7 +32,7 @@ export class KnowledgeRenderer extends System {
         let xOffset = constrain(0, xRealOffset, xMaxOffset);
         let yOffset = constrain(0, yRealOffset, yMaxOffset);
 
-        if (observer !== null) {
+        if (observer != null) {
             let grid = observer.knowledge.getGrid(this.ecsContext);
             renderKnowledgeGrid(grid, this.lightContext, this.drawer, xOffset, yOffset);
         }

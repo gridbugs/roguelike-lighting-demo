@@ -18,7 +18,7 @@ export class Heap {
     }
 
     get empty() {
-        return this.nextIndex === 1;
+        return this.nextIndex == 1;
     }
 
     get length() {
@@ -88,7 +88,7 @@ export class Heap {
                     index = nextIndex;
                     continue;
                 }
-            } else if (leftChildIndex === maxIndex && this.compare(this.array[leftChildIndex], this.array[index]) > 0) {
+            } else if (leftChildIndex == maxIndex && this.compare(this.array[leftChildIndex], this.array[index]) > 0) {
                 swapElements(this.array, index, leftChildIndex);
             }
 

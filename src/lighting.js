@@ -113,7 +113,7 @@ class LightCell extends Cell {
         this.clearSides();
 
         for (let description of this.lights.values()) {
-            if (description.light.sequence === description.sequence) {
+            if (description.light.sequence == description.sequence) {
                 this.intensity += description.intensity;
 
                 for (let i = 0; i < this.sides.length; ++i) {

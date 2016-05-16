@@ -11,8 +11,8 @@ export class Component extends Typed {
     }
 
     get ecsContext() {
-        assert(this.entity !== null);
-        assert(this.entity.ecsContext !== null);
+        assert(this.entity != null);
+        assert(this.entity.ecsContext != null);
         return this.entity.ecsContext;
     }
 
@@ -26,16 +26,16 @@ export class Component extends Typed {
     }
 
     is(ctor) {
-        return this.type === ctor.type;
+        return this.type == ctor.type;
     }
 
     onAdd(entity) {
-        assert(entity.ecsContext !== null);
+        assert(entity.ecsContext != null);
         this.entity = entity;
     }
 
     onRemove(entity) {
-        assert(entity.ecsContext !== null);
+        assert(entity.ecsContext != null);
         this.entity = null;
     }
 }

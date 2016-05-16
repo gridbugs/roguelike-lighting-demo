@@ -198,7 +198,7 @@ function detectVisibleAreaOctant(
 
 
         for (let i = startIndex; i <= stopIndex; ++i) {
-            let lastIteration = i === stopIndex;
+            let lastIteration = i == stopIndex;
 
             COORD_IDX.arraySet(lateralIndex, i);
             let cell = grid.get(COORD_IDX);
@@ -210,8 +210,8 @@ function detectVisibleAreaOctant(
 
             let currentVisibility = Math.max(visibility - cell.opacity, 0);
 
-            previousOpaque = previousVisibility === 0;
-            let currentOpaque = currentVisibility === 0;
+            previousOpaque = previousVisibility == 0;
+            let currentOpaque = currentVisibility == 0;
 
             if (currentOpaque) {
                 if (!(firstIteration || lastIteration)) {

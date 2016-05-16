@@ -19,7 +19,7 @@ export class Stack {
     }
 
     get empty() {
-        return this.index === 0;
+        return this.index == 0;
     }
 
     get length() {

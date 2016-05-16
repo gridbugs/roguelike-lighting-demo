@@ -48,13 +48,13 @@ const ControlNonChars = substituteValues(ControlTypes, {
 function toggleDoor(entity) {
     for (let neighbour of entity.cell.neighbours) {
         let door = neighbour.find(Components.Door);
-        if (door !== null && door.get(Components.Door).open) {
+        if (door != null && door.get(Components.Door).open) {
             return new Actions.CloseDoor(entity, door);
         }
     }
     for (let neighbour of entity.cell.neighbours) {
         let door = neighbour.find(Components.Door);
-        if (door !== null && !door.get(Components.Door).open) {
+        if (door != null && !door.get(Components.Door).open) {
             return new Actions.OpenDoor(entity, door);
         }
     }
@@ -81,7 +81,7 @@ export function getControlTypeFromKey(key) {
     } else if (Input.keyIsNonChar(key)) {
         type = ControlNonChars[Input.getNonCharFromKey(key)];
     }
-    if (type === undefined) {
+    if (type == undefined) {
         return null;
     }
     return type;
@@ -90,7 +90,7 @@ export function getControlTypeFromKey(key) {
 export function getControlFromKey(key) {
     let type = getControlTypeFromKey(key);
     let control = ControlTable[type];
-    if (control === undefined) {
+    if (control == undefined) {
         return null;
     }
     return control;

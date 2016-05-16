@@ -9,7 +9,7 @@ import {ComponentTable} from 'engine/component_table';
 export class InvalidatingComponentTable extends ComponentTable {
     get(component) {
         let ret = super.get(component);
-        if (ret !== null && ret.valid) {
+        if (ret != null && ret.valid) {
             return ret;
         } else {
             return null;
@@ -18,7 +18,7 @@ export class InvalidatingComponentTable extends ComponentTable {
 
     add(component) {
         let c = this.components[component.type];
-        if (c === null) {
+        if (c == null) {
             c = component.clone();
             this.components[component.type] = c;
         } else {
@@ -29,19 +29,19 @@ export class InvalidatingComponentTable extends ComponentTable {
 
     has(component) {
         let c = this.components[component.type];
-        return c !== null && c.valid;
+        return c != null && c.valid;
     }
 
     remove(component) {
         let c = this.components[component.type];
-        if (c !== null) {
+        if (c != null) {
             c.valid = false;
         }
     }
 
     with(component, f) {
         let c = this.components[component.type];
-        if (c !== null && c.valid) {
+        if (c != null && c.valid) {
             f(c);
         }
     }
@@ -49,7 +49,7 @@ export class InvalidatingComponentTable extends ComponentTable {
     invalidate() {
         for (let i = 0; i < this.length; ++i) {
             let c = this.components[i];
-            if (c !== null) {
+            if (c != null) {
                 c.valid = false;
             }
         }

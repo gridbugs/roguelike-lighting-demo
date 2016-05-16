@@ -45,7 +45,7 @@ export class SpacialHashCell extends Cell {
 
     withEntity(component, callback) {
         let entity = this.find(component);
-        if (entity !== null) {
+        if (entity != null) {
             callback(entity);
         }
     }
@@ -99,7 +99,7 @@ export function EcsContext(CellType) {
         }
 
         addEntity(entity) {
-            assert(entity.ecsContext === null);
+            assert(entity.ecsContext == null);
             this.entities.add(entity);
             if (this.finalized) {
                 entity.onAdd(this);
@@ -111,7 +111,7 @@ export function EcsContext(CellType) {
         }
 
         removeEntity(entity) {
-            if (entity.ecsContext === this) {
+            if (entity.ecsContext == this) {
                 this.entities.delete(entity);
                 entity.onRemove(this);
             }
@@ -190,7 +190,7 @@ export function EcsContext(CellType) {
 
                 var turnTaker = entity.get(TurnTaker);
 
-                assert(turnTaker.nextTurn !== null);
+                assert(turnTaker.nextTurn != null);
                 turnTaker.nextTurn = null;
 
                 await this.takeTurn(entity);

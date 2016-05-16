@@ -11,7 +11,7 @@ export class TurnTaker extends Component {
     }
 
     get scheduled() {
-        return this.nextTurn !== null;
+        return this.nextTurn != null;
     }
 
     clone() {
@@ -25,7 +25,7 @@ export class TurnTaker extends Component {
     }
 
     onRemove(entity) {
-        if (this.nextTurn !== null) {
+        if (this.nextTurn != null) {
             this.nextTurn.enabled = false;
         }
         super.onRemove(entity);
@@ -46,7 +46,7 @@ export class Position extends Component {
 
         this.vector = new Vec2(0, 0);
 
-        if (typeof x === 'number') {
+        if (typeof x == 'number') {
             this.vector.set(x, y);
         } else {
             x.copyTo(this.vector);
@@ -77,7 +77,7 @@ export class Position extends Component {
 
         /* add the entity to its spacial hash */
         entity.cell = this.ecsContext.spacialHash.get(this.vector);
-        assert(entity.cell !== null);
+        assert(entity.cell != null);
         entity.cell.entities.add(entity);
 
         entity.cell.recompute();

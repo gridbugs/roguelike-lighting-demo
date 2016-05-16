@@ -27,7 +27,7 @@ export class DoublyLinkedList {
     }
 
     get empty() {
-        return this._head === null;
+        return this._head == null;
     }
 
     clear() {
@@ -43,9 +43,9 @@ export class DoublyLinkedList {
         node.prev = this._tail;
         node.next = null;
 
-        if (this._tail === null) {
-            assert(this.length === 0);
-            assert(this._head === null);
+        if (this._tail == null) {
+            assert(this.length == 0);
+            assert(this._head == null);
             this._head = node;
         } else {
             this._tail.next = node;
@@ -62,12 +62,12 @@ export class DoublyLinkedList {
 
         this._tail = node.prev;
 
-        if (this._tail === null) {
-            assert(this._head === node);
-            assert(this.length === 1);
+        if (this._tail == null) {
+            assert(this._head == node);
+            assert(this.length == 1);
             this._head = null;
         } else {
-            assert(this._tail.next === node);
+            assert(this._tail.next == node);
             this._tail.next = null;
         }
 
@@ -83,9 +83,9 @@ export class DoublyLinkedList {
         node.next = this._head;
         node.prev = null;
 
-        if (this._head === null) {
-            assert(this.length === 0);
-            assert(this._tail === null);
+        if (this._head == null) {
+            assert(this.length == 0);
+            assert(this._tail == null);
             this._tail = node;
         } else {
             this._head.prev = node;
@@ -102,12 +102,12 @@ export class DoublyLinkedList {
 
         this._head = node.next;
 
-        if (this._head === null) {
-            assert(this._tail === node);
-            assert(this.length === 1);
+        if (this._head == null) {
+            assert(this._tail == node);
+            assert(this.length == 1);
             this._tail = null;
         } else {
-            assert(this._head.prev === node);
+            assert(this._head.prev == node);
             this._head.prev = null;
         }
 
@@ -117,13 +117,13 @@ export class DoublyLinkedList {
     }
 
     *forwards() {
-        for (let node = this._head; node !== null; node = node.next) {
+        for (let node = this._head; node != null; node = node.next) {
             yield node.value;
         }
     }
 
     *backwards() {
-        for (let node = this._tail; node !== null; node = node.prev) {
+        for (let node = this._tail; node != null; node = node.prev) {
             yield node.value;
         }
     }

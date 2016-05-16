@@ -116,7 +116,7 @@ function initDebugTiles(tileStore) {
 
 export function getDebugTile(i) {
     let tile = Tiles.debugArray[i];
-    if (tile === undefined) {
+    if (tile == undefined) {
         return Tiles.debugExtra;
     }
     return tile;

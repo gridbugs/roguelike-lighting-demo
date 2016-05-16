@@ -11,18 +11,18 @@ export class BestTracker {
     }
 
     get empty() {
-        return this.length === 0;
+        return this.length == 0;
     }
 
     insert(x) {
-        if (this.length === 0 || this.compare(x, this._best) > 0) {
+        if (this.length == 0 || this.compare(x, this._best) > 0) {
             this._best = x;
         }
         ++this.length;
     }
 
     get best() {
-        if (this.length !== 0) {
+        if (this.length != 0) {
             return this._best;
         }
         throw new Error();

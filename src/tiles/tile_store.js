@@ -37,7 +37,7 @@ export class TileStore {
     }
 
     getNextOffset() {
-        if (this.nextColumn === this.maxColumns) {
+        if (this.nextColumn == this.maxColumns) {
             this.newLine();
         }
         this.xOffset = this.nextColumn * this.tileWidth;
@@ -179,7 +179,7 @@ export class TileStore {
     createCharacterTile(character, font, colour, backgroundColour, transparent, effects = Effect.Default) {
         let foregroundSprite = this.createCharacterSprite(character, font, colour);
 
-        if (backgroundColour === Colour.Transparent) {
+        if (backgroundColour == Colour.Transparent) {
             return new TileFamily(foregroundSprite, transparent, effects);
         } else {
             let backgroundSprite = this.createSolidSprite(backgroundColour);

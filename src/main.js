@@ -26,7 +26,7 @@ $(window).bind('load', main);
 
 function initRng() {
     let seed;
-    if (Config.RNG_SEED === null) {
+    if (Config.RNG_SEED == null) {
         seed = Date.now();
     } else {
         seed = Config.RNG_SEED;

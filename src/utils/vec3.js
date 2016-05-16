@@ -10,7 +10,7 @@ export class Vec3 extends Vec {
     }
 
     set(x, y, z) {
-        if (typeof x === 'number') {
+        if (typeof x == 'number') {
             this.x = x;
             this.y = y;
             this.z = z;
@@ -42,7 +42,7 @@ export class Vec3 extends Vec {
         return dx * dx + dy * dy + dz * dz;
     }
 
-    // this - v === result
+    // this - v == result
     subtractInPlace(v, result) {
         result.x = this.x - v.x;
         result.y = this.y - v.y;

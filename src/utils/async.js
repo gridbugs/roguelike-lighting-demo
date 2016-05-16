@@ -11,7 +11,7 @@ export function resolvePromiseStructure(structure, results) {
 function resolvePromiseArray(array, results) {
     return new Promise((resolve, reject) => {
         let count = array.length;
-        if (results === undefined) {
+        if (results == undefined) {
             results = new Array(array.length);
         }
         for (let i = 0; i < array.length; ++i) {
@@ -23,7 +23,7 @@ function resolvePromiseArray(array, results) {
                 promise.then((result) => {
                     --count;
                     results[index] = result;
-                    if (count === 0) {
+                    if (count == 0) {
                         resolve(results);
                     }
                 });
@@ -34,7 +34,7 @@ function resolvePromiseArray(array, results) {
 
 function resolvePromiseObject(object, results) {
     return new Promise((resolve, reject) => {
-        if (results === undefined) {
+        if (results == undefined) {
             results = {};
         }
         let keys = Object.keys(object);
@@ -48,7 +48,7 @@ function resolvePromiseObject(object, results) {
                 promise.then((result) => {
                     --count;
                     results[key] = result;
-                    if (count === 0) {
+                    if (count == 0) {
                         resolve(results);
                     }
                 });

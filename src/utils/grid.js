@@ -17,7 +17,7 @@ export class Grid {
     }
 
     isValid(x, y) {
-        if (typeof x === 'number') {
+        if (typeof x == 'number') {
             return x >= 0 && y >= 0 && x < this.width && y < this.height;
         } else {
             return x.x >= 0 && x.y >= 0 && x.x < this.width && x.y < this.height;
@@ -25,15 +25,15 @@ export class Grid {
     }
 
     isBorder(x, y) {
-        if (typeof x === 'number') {
-            return x === 0 || y === 0 || x === this.limits.x || y === this.limits.y;
+        if (typeof x == 'number') {
+            return x == 0 || y == 0 || x == this.limits.x || y == this.limits.y;
         } else {
-            return x.x === 0 || x.y === 0 || x.x === this.limits.x || x.y === this.limits.y;
+            return x.x == 0 || x.y == 0 || x.x == this.limits.x || x.y == this.limits.y;
         }
     }
 
     getDistanceToEdge(x, y) {
-        if (typeof x === 'number') {
+        if (typeof x == 'number') {
             return Math.min(x, y, this.limits.x - x, this.limits.y - y);
         } else {
             return Math.min(x.x, x.y, this.limits.x - x.x, this.limits.y - x.y);
@@ -51,19 +51,19 @@ export class Grid {
             return null;
         }
         let ret;
-        if (typeof x === 'number') {
+        if (typeof x == 'number') {
             ret = this.array[this._toIndex(x, y)];
         } else {
             ret = this.array[this._toIndex(x.x, x.y)];
         }
-        if (ret === undefined) {
+        if (ret == undefined) {
             return null;
         }
         return ret;
     }
 
     set(x, y, value) {
-        if (typeof x === 'number') {
+        if (typeof x == 'number') {
             this.array[this._toIndex(x, y)] = value;
         } else {
             this.array[this._toIndex(x.x, x.y)] = y;

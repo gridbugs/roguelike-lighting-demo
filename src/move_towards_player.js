@@ -112,8 +112,8 @@ export class MoveTowardsPlayer extends Controller {
     getAction() {
         let playerCell = this.getPlayerCell();
 
-        if (playerCell === null) {
-            if (this.lastKnownPosition === null) {
+        if (playerCell == null) {
+            if (this.lastKnownPosition == null) {
                 return new Actions.Wait(this.entity);
             } else {
                 playerCell = this.lastKnownPosition;

@@ -23,8 +23,8 @@ function populateNamespace(sources, dest) {
         for (let name in src) {
             let exported = src[name];
 
-            if (typeof exported === 'function') {
-                if (exported.type === undefined) {
+            if (typeof exported == 'function') {
+                if (exported.type == undefined) {
                     exported.type = count;
                     ++count;
                 } else {

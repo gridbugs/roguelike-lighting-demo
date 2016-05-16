@@ -59,15 +59,15 @@ PathPlanner.prototype.processInput = async function(accept) {
         }
         default: {
             var controlType = Control.getControlTypeFromKey(key);
-            if (controlType === accept) {
+            if (controlType == accept) {
                 return InputType.ACCEPT;
             }
-            if (controlType === null) {
+            if (controlType == null) {
                 return InputType.CONTINUE;
             }
 
             var direction = DirectionTable[controlType];
-            if (direction === undefined) {
+            if (direction == undefined) {
                 return InputType.CONTINUE;
             }
 
@@ -86,7 +86,7 @@ PathPlanner.prototype.getCoord = async function(start, accept, fn = null) {
 
     while (true) {
 
-        if (fn !== null) {
+        if (fn != null) {
             fn(this.coord);
         }
 
@@ -112,7 +112,7 @@ PathPlanner.prototype.getLine = async function(start, accept, fn = null) {
 
         var line = new Line(start, this.coord);
 
-        if (fn !== null) {
+        if (fn != null) {
             fn(line);
         }
 
