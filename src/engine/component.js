@@ -4,7 +4,6 @@ import {assert} from 'utils/assert';
 export class Component extends Typed {
     constructor() {
         super();
-        this.fields = new Array(this.constructor.Field.length);
         this.valid = true;
         this.entity = null;
         this._ = this.name;
@@ -37,5 +36,23 @@ export class Component extends Typed {
     onRemove(entity) {
         assert(entity.ecsContext != null);
         this.entity = null;
+    }
+}
+
+export class ArrayComponent extends Component {
+    constructor(n) {
+        super();
+        this.fields = new Array(n);
+    }
+
+    clone() {
+        return new this.constructor(...this.fields);
+    }
+
+    copyTo(dest) {
+        super.copyTo(dest);
+        for (let i = 0; i < this.fields.length; ++i) {
+            dest.fields[i] = this.fields[i];
+        }
     }
 }

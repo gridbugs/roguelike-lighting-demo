@@ -1,4 +1,4 @@
-import {Component} from 'engine/component';
+import {Component, ArrayComponent} from 'engine/component';
 import {Knowledge} from 'knowledge';
 
 import {Components} from 'components';
@@ -18,9 +18,9 @@ class SetComponent extends Component {
     }
 }
 
-export class Observer extends Component {
+export class Observer extends ArrayComponent {
     constructor(observe, viewDistance, familiar = false) {
-        super();
+        super(2);
         this.observe = observe;
         this.viewDistance = viewDistance;
         this.knowledge = new Knowledge(familiar);
@@ -28,19 +28,19 @@ export class Observer extends Component {
     }
 
     get observe() {
-        return this.fields[Observer.Field.Observe];
+        return this.fields[Observer.Observe];
     }
 
     set observe(value) {
-        this.fields[Observer.Field.Observe] = value;
+        this.fields[Observer.Observe] = value;
     }
 
     get viewDistance() {
-        return this.fields[Observer.Field.ViewDistance];
+        return this.fields[Observer.ViewDistance];
     }
 
     set viewDistance(value) {
-        this.fields[Observer.Field.ViewDistance] = value;
+        this.fields[Observer.ViewDistance] = value;
     }
 
     clone() {
@@ -51,7 +51,8 @@ export class Observer extends Component {
         this.knowledge.maybeAddEcsContext(entity.ecsContext);
     }
 }
-Observer.Field = makeEnumInts('Observe', 'ViewDistance');
+Observer.Observe = 0;
+Observer.ViewDistance = 1;
 
 export class Light extends SetComponent {
     constructor(intensity, height) {
@@ -91,4 +92,3 @@ export class Light extends SetComponent {
         this.updateLight();
     }
 }
-Light.Field = makeEnumInts();

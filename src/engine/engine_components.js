@@ -1,4 +1,4 @@
-import {Component} from 'engine/component';
+import {Component, ArrayComponent} from 'engine/component';
 import {Vec2} from 'utils/vec2';
 import {assert} from 'utils/assert';
 import {makeEnumInts} from 'utils/enum';
@@ -31,18 +31,16 @@ export class TurnTaker extends Component {
         super.onRemove(entity);
     }
 }
-TurnTaker.Field = makeEnumInts();
 
 TurnTaker.prototype.takeTurn = async function() {
     return await this.controller.takeTurn();
 }
 
 export class PlayerCharacter extends Component {}
-PlayerCharacter.Field = makeEnumInts();
 
-export class Position extends Component {
+export class Position extends ArrayComponent {
     constructor(x, y) {
-        super();
+        super(1);
 
         this.vector = new Vec2(0, 0);
 
@@ -65,11 +63,11 @@ export class Position extends Component {
     }
 
     get vector() {
-        return this.fields[Position.Field.Vector];
+        return this.fields[Position.Vector];
     }
 
     set vector(value) {
-        this.fields[Position.Field.Vector] = value;
+        this.fields[Position.Vector] = value;
     }
 
     onAdd(entity) {
@@ -90,4 +88,4 @@ export class Position extends Component {
         super.onRemove(entity);
     }
 }
-Position.Field = makeEnumInts('Vector');
+Position.Vector = 0;

@@ -32,27 +32,52 @@ macro CAPITALISE_ID {
 }
 
 macro ARRAY_TUPLE {
-    rule { ( $param:PARAM (,) ... ) } => {
+    rule { ( EXTENDS ( $parent:expr ) ) } => {
+        class ArrayTuple extends $parent {
+            constructor() {
+                super();
+                this.fields = new Array(0);
+            }
+        }
+    }
+    rule { ( EXTENDS ( $parent:expr ) ,  $param:PARAM (,) ... ) } => {
         (function(fieldNames) {
             return (function(cl) {
                 for (var i = 0; i < fieldNames.length; ++i) {
-                    console.debug(fieldNames[i], i);
                     cl[fieldNames[i]] = i;
                 }
                 return cl;
             })(
-                class ArrayTuple {
+                class ArrayTuple extends $parent {
                     constructor($param$param (,) ...) {
+                        super();
                         this.fields = new Array(fieldNames.length);
                         $(this.$param$name = $param$name;) ...
                     }
 
-                    $(get $param$name() {return this.fields[ArrayTuple.CAPITALISE_ID($param$name)];}) ...
-                    $(set $param$name(value) {this.fields[ArrayTuple.CAPITALISE_ID($param$name)] = value;}) ...
+                    $(get $param$name() {
+                        return this.fields[ArrayTuple.CAPITALISE_ID($param$name)];
+                    }) ...
+
+                    $(set $param$name(value) {
+                        this.fields[ArrayTuple.CAPITALISE_ID($param$name)] = value;
+                    }) ...
+
+                    clone() {
+                        return new ArrayTuple($[...]this.fields);
+                    }
+
+                    copyTo(dest) {
+                        super.copyTo(dest);
+                        for (var i = 0; i < this.fields.length; ++i) {
+                            dest.fields[i] = this.fields[i];
+                        }
+                    }
                 }
             )
         })([$(CAPITALISE_STR($param$name)) (,) ...])
     }
+    rule { ( $param (,) ... ) } => { ARRAY_TUPLE ( EXTENDS ( Object ) , $($param) (,) ... ) }
 }
 
 export ARRAY_TUPLE;
