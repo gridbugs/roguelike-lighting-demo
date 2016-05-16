@@ -34,7 +34,6 @@ macro CAPITALISE_ID {
 macro ARRAY_TUPLE {
     rule { ( $param:PARAM (,) ... ) } => {
         (function(fieldNames) {
-            console.debug(fieldNames);
             return (function(cl) {
                 for (var i = 0; i < fieldNames.length; ++i) {
                     console.debug(fieldNames[i], i);
