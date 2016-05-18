@@ -24,7 +24,6 @@ export function detectVisibleArea(eyePosition, viewDistance, grid, visionCells) 
     let eyeCell = grid.get(eyePosition);
     let xMax = grid.width - 1;
     let yMax = grid.height - 1;
-    let squareViewDistance = SQRT2 * viewDistance;
     let viewDistanceSquared = viewDistance * viewDistance;
 
     visionCells.addAllSides(eyeCell, 1);
@@ -32,50 +31,50 @@ export function detectVisibleArea(eyePosition, viewDistance, grid, visionCells) 
     //  \|
     detectVisibleAreaOctant( eyeCell, viewDistance, grid, -1, 0,
                              Direction.NorthWest.subIndex, Direction.SouthWest.subIndex,
-                             -1, Vec2.X_IDX, xMax, yMax, squareViewDistance, viewDistanceSquared,
+                             -1, Vec2.X_IDX, xMax, yMax, viewDistanceSquared,
                              visionCells, Direction.SouthEast.subIndex, Direction.South, Direction.East
     );
 
     //  |/
     detectVisibleAreaOctant( eyeCell, viewDistance, grid, 0, 1,
                              Direction.SouthWest.subIndex, Direction.NorthWest.subIndex,
-                             -1, Vec2.X_IDX, xMax, yMax, squareViewDistance, viewDistanceSquared,
+                             -1, Vec2.X_IDX, xMax, yMax, viewDistanceSquared,
                              visionCells, Direction.SouthWest.subIndex, Direction.South, Direction.West
     );
     //  /|
     detectVisibleAreaOctant( eyeCell, viewDistance, grid, -1, 0,
                              Direction.SouthWest.subIndex, Direction.NorthWest.subIndex,
-                             1, Vec2.X_IDX, xMax, yMax, squareViewDistance, viewDistanceSquared,
+                             1, Vec2.X_IDX, xMax, yMax, viewDistanceSquared,
                              visionCells, Direction.NorthEast.subIndex, Direction.North, Direction.East
     );
     //  |\
     detectVisibleAreaOctant( eyeCell, viewDistance, grid, 0, 1,
                              Direction.NorthWest.subIndex, Direction.SouthWest.subIndex,
-                             1, Vec2.X_IDX, xMax, yMax, squareViewDistance, viewDistanceSquared,
+                             1, Vec2.X_IDX, xMax, yMax, viewDistanceSquared,
                              visionCells, Direction.NorthWest.subIndex, Direction.North, Direction.West
     );
     //  _\
     detectVisibleAreaOctant( eyeCell, viewDistance, grid, -1, 0,
                              Direction.NorthWest.subIndex, Direction.NorthEast.subIndex,
-                             -1, Vec2.Y_IDX, yMax, xMax, squareViewDistance, viewDistanceSquared,
+                             -1, Vec2.Y_IDX, yMax, xMax, viewDistanceSquared,
                              visionCells, Direction.SouthEast.subIndex, Direction.East, Direction.South
     );
     //  "/
     detectVisibleAreaOctant( eyeCell, viewDistance, grid, 0, 1,
                              Direction.NorthEast.subIndex, Direction.NorthWest.subIndex,
-                             -1, Vec2.Y_IDX, yMax, xMax, squareViewDistance, viewDistanceSquared,
+                             -1, Vec2.Y_IDX, yMax, xMax, viewDistanceSquared,
                              visionCells, Direction.NorthEast.subIndex, Direction.East, Direction.North
     );
     //  /_
     detectVisibleAreaOctant( eyeCell, viewDistance, grid, -1, 0,
                              Direction.NorthEast.subIndex, Direction.NorthWest.subIndex,
-                             1, Vec2.Y_IDX, yMax, xMax, squareViewDistance, viewDistanceSquared,
+                             1, Vec2.Y_IDX, yMax, xMax, viewDistanceSquared,
                              visionCells, Direction.SouthWest.subIndex, Direction.West, Direction.South
     );
     //  \"
     detectVisibleAreaOctant( eyeCell, viewDistance, grid, 0, 1,
                              Direction.NorthWest.subIndex, Direction.NorthEast.subIndex,
-                             1, Vec2.Y_IDX, yMax, xMax, squareViewDistance, viewDistanceSquared,
+                             1, Vec2.Y_IDX, yMax, xMax, viewDistanceSquared,
                              visionCells, Direction.NorthWest.subIndex, Direction.West, Direction.North
     );
 }
@@ -92,7 +91,6 @@ function detectVisibleAreaOctant(
     lateralIndex,
     lateralMax,
     depthMax,
-    squareViewDistance,
     viewDistanceSquared,
     visionCells,
     betweenDirection,
@@ -117,7 +115,7 @@ function detectVisibleAreaOctant(
         /* last usage of currentFrame */
 
         /* Don't scan further out than the observer's view distance */
-        if (depth > squareViewDistance) {
+        if (depth > viewDistance) {
             continue;
         }
 
