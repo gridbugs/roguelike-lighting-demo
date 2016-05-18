@@ -8,7 +8,7 @@ export const DirectionType = makeEnum([
 ]);
 
 class DirectionInfo {
-    constructor(x, y, name, type, index, subIndex, multiplier) {
+    constructor(x, y, name, type, index, subIndex, multiplier, vec2Index) {
         this.vector = new Vec2(x, y);
         this.name = name;
         this.type = type;
@@ -20,6 +20,7 @@ class DirectionInfo {
         this.right45 = null;
         this.right90 = null;
         this.multiplier = multiplier;
+        this.vec2Index = vec2Index;
     }
 
     get cardinal() {
@@ -31,23 +32,54 @@ class DirectionInfo {
     }
 }
 
-function d(x, y, name, type, index, subIndex, multiplier) {
-    return new DirectionInfo(x, y, name, type, index, subIndex, multiplier);
+function d(x, y, name, type, index, subIndex, multiplier, vec2Index = -1) {
+    return new DirectionInfo(x, y, name, type, index, subIndex, multiplier, vec2Index);
 }
 
 const C = DirectionType.Cardinal;
 const O = DirectionType.Ordinal;
 
 export const Direction = makeEnum({
-    North:      d(+0, -1, 'North', C, 0, 0, 1),
-    East:       d(+1, +0, 'East', C, 1, 1, 1),
-    South:      d(+0, +1, 'South', C, 2, 2, 1),
-    West:       d(-1, +0, 'West', C, 3, 3, 1),
-    NorthEast:  d(+1, -1, 'NorthEast', O, 4, 0, SQRT2),
-    SouthEast:  d(+1, +1, 'SouthEast', O, 5, 1, SQRT2),
-    SouthWest:  d(-1, +1, 'SouthWest', O, 6, 2, SQRT2),
-    NorthWest:  d(-1, -1, 'NorthWest', O, 7, 3, SQRT2)
+    North:      d(+0, -1, 'North',      C, 0, 0, 1, Vec2.Y_IDX),
+    East:       d(+1, +0, 'East',       C, 1, 1, 1, Vec2.X_IDX),
+    South:      d(+0, +1, 'South',      C, 2, 2, 1, Vec2.Y_IDX),
+    West:       d(-1, +0, 'West',       C, 3, 3, 1, Vec2.X_IDX),
+    NorthEast:  d(+1, -1, 'NorthEast',  O, 4, 0, SQRT2),
+    SouthEast:  d(+1, +1, 'SouthEast',  O, 5, 1, SQRT2),
+    SouthWest:  d(-1, +1, 'SouthWest',  O, 6, 2, SQRT2),
+    NorthWest:  d(-1, -1, 'NorthWest',  O, 7, 3, SQRT2)
 });
+
+const Combinations = [
+    /* North */ [
+        /* North */ null,
+        /* East */  Direction.NorthEast,
+        /* South */ null,
+        /* West */  Direction.NorthWest
+    ],
+    /* East */ [
+        /* North */ Direction.NorthEast,
+        /* East */  null,
+        /* South */ Direction.SouthEast,
+        /* West */  null
+    ],
+    /* South */ [
+        /* North */ null,
+        /* East */  Direction.SouthEast,
+        /* South */ null,
+        /* West */  Direction.SouthWest
+    ],
+    /* West */ [
+        /* North */ Direction.NorthWest,
+        /* East */  null,
+        /* South */ Direction.SouthWest,
+        /* West */  null
+    ]
+];
+
+export function combine(a, b) {
+    return Combinations[a.subIndex][b.subIndex];
+}
 
 /* Opposite Directions */
 Direction.North.opposite = Direction.South;

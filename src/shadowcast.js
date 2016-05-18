@@ -1,7 +1,8 @@
 import {Vec2} from 'utils/vec2';
-import {Direction} from 'utils/direction';
+import {Direction, combine} from 'utils/direction';
 import {SQRT2, constrain} from 'utils/math';
 import {ObjectStack} from 'utils/object_stack';
+import {assert} from 'utils/assert';
 
 class StackFrame {
     constructor() {
@@ -12,101 +13,113 @@ class StackFrame {
     }
 }
 
+function exclusiveFloor(x) {
+    return Math.ceil(x - 1);
+}
+
+class Octant {
+    constructor(depthDirection, lateralDirection) {
+
+        /* Direction to proceed in with each successive scan */
+        this.depthDirection = depthDirection;
+
+        /* Direction to scan */
+        this.lateralDirection = lateralDirection;
+
+        /* Vec2 index associated with the depth direction */
+        this.depthIndex = depthDirection.vec2Index;
+
+        /* Vec2 index associated with the lateral direction */
+        this.lateralIndex = lateralDirection.vec2Index;
+
+        /* Change to coord's depth component as depth increases */
+        this.depthStep = depthDirection.vector.arrayGet(this.depthIndex);
+
+        /* Change to coord's lateral component as depth increases */
+        this.lateralStep = lateralDirection.vector.arrayGet(this.lateralIndex);
+
+        /* During a scan, if the current cell has more opacity than the
+         * previous cell, use the gradient through this corner of the
+         * CURRENT cell to split the visible area. */
+        this.opacityIncreaseCorner = combine(depthDirection, lateralDirection.opposite);
+
+        /* As above, but to be used when the current cell has less opacity
+         * than the previous cell. */
+        this.opacityDecreaseCorner = combine(depthDirection.opposite, lateralDirection.opposite);
+
+        /* Rounding functions to use to convert floating point positions
+         * into coordinates. */
+        if (this.lateralStep == 1) {
+            this.roundStart = Math.floor;
+            this.roundStop = exclusiveFloor;
+        } else {
+            assert(this.lateralStep == -1);
+            this.roundStart = exclusiveFloor;
+            this.roundStop = Math.floor;
+        }
+    }
+}
+
 const COORD_IDX = new Vec2(0, 0);
 const STACK = new ObjectStack(StackFrame, 64);
 
+const OCTANTS = [
+    new Octant(Direction.North, Direction.West),
+    new Octant(Direction.North, Direction.East),
+    new Octant(Direction.East, Direction.North),
+    new Octant(Direction.East, Direction.South),
+    new Octant(Direction.South, Direction.East),
+    new Octant(Direction.South, Direction.West),
+    new Octant(Direction.West, Direction.South),
+    new Octant(Direction.West, Direction.North)
+];
+
 function computeSlope(fromVec, toVec, lateralIndex, depthIndex) {
-    return  (toVec.arrayGet(lateralIndex) - fromVec.arrayGet(lateralIndex)) /
-            (toVec.arrayGet(depthIndex) - fromVec.arrayGet(depthIndex));
+    return Math.abs((toVec.arrayGet(lateralIndex) - fromVec.arrayGet(lateralIndex)) /
+                    (toVec.arrayGet(depthIndex) - fromVec.arrayGet(depthIndex)));
 }
 
 export function detectVisibleArea(eyePosition, viewDistance, grid, visionCells) {
     let eyeCell = grid.get(eyePosition);
-    let xMax = grid.width - 1;
-    let yMax = grid.height - 1;
     let viewDistanceSquared = viewDistance * viewDistance;
 
     visionCells.addAllSides(eyeCell, 1);
 
-    //  \|
-    detectVisibleAreaOctant( eyeCell, viewDistance, grid, -1, 0,
-                             Direction.NorthWest.subIndex, Direction.SouthWest.subIndex,
-                             -1, Vec2.X_IDX, xMax, yMax, viewDistanceSquared,
-                             visionCells, Direction.SouthEast.subIndex, Direction.South, Direction.East
-    );
-
-    //  |/
-    detectVisibleAreaOctant( eyeCell, viewDistance, grid, 0, 1,
-                             Direction.SouthWest.subIndex, Direction.NorthWest.subIndex,
-                             -1, Vec2.X_IDX, xMax, yMax, viewDistanceSquared,
-                             visionCells, Direction.SouthWest.subIndex, Direction.South, Direction.West
-    );
-    //  /|
-    detectVisibleAreaOctant( eyeCell, viewDistance, grid, -1, 0,
-                             Direction.SouthWest.subIndex, Direction.NorthWest.subIndex,
-                             1, Vec2.X_IDX, xMax, yMax, viewDistanceSquared,
-                             visionCells, Direction.NorthEast.subIndex, Direction.North, Direction.East
-    );
-    //  |\
-    detectVisibleAreaOctant( eyeCell, viewDistance, grid, 0, 1,
-                             Direction.NorthWest.subIndex, Direction.SouthWest.subIndex,
-                             1, Vec2.X_IDX, xMax, yMax, viewDistanceSquared,
-                             visionCells, Direction.NorthWest.subIndex, Direction.North, Direction.West
-    );
-    //  _\
-    detectVisibleAreaOctant( eyeCell, viewDistance, grid, -1, 0,
-                             Direction.NorthWest.subIndex, Direction.NorthEast.subIndex,
-                             -1, Vec2.Y_IDX, yMax, xMax, viewDistanceSquared,
-                             visionCells, Direction.SouthEast.subIndex, Direction.East, Direction.South
-    );
-    //  "/
-    detectVisibleAreaOctant( eyeCell, viewDistance, grid, 0, 1,
-                             Direction.NorthEast.subIndex, Direction.NorthWest.subIndex,
-                             -1, Vec2.Y_IDX, yMax, xMax, viewDistanceSquared,
-                             visionCells, Direction.NorthEast.subIndex, Direction.East, Direction.North
-    );
-    //  /_
-    detectVisibleAreaOctant( eyeCell, viewDistance, grid, -1, 0,
-                             Direction.NorthEast.subIndex, Direction.NorthWest.subIndex,
-                             1, Vec2.Y_IDX, yMax, xMax, viewDistanceSquared,
-                             visionCells, Direction.SouthWest.subIndex, Direction.West, Direction.South
-    );
-    //  \"
-    detectVisibleAreaOctant( eyeCell, viewDistance, grid, 0, 1,
-                             Direction.NorthWest.subIndex, Direction.NorthEast.subIndex,
-                             1, Vec2.Y_IDX, yMax, xMax, viewDistanceSquared,
-                             visionCells, Direction.NorthWest.subIndex, Direction.West, Direction.North
-    );
+    for (let octant of OCTANTS) {
+        detectVisibleAreaOctant(octant, eyeCell, viewDistance, viewDistanceSquared, grid, visionCells);
+    }
 }
 
 function detectVisibleAreaOctant(
+    octant,
     eyeCell,
     viewDistance,
-    grid,
-    initialMinSlope,
-    initialMaxSlope,
-    innerDirection,
-    outerDirection,
-    depthDirection,
-    lateralIndex,
-    lateralMax,
-    depthMax,
     viewDistanceSquared,
-    visionCells,
-    betweenDirection,
-    facingDirection,
-    sideFacingDirection
+    grid,
+    visionCells
 ) {
 
-    let depthIndex = Vec2.getOtherIndex(lateralIndex);
+    /* Maximum coordinates of the grid */
+    let depthMax = grid.limits.arrayGet(octant.depthIndex);
+    let lateralMax = grid.limits.arrayGet(octant.lateralIndex);
 
+    /* Eye centre coordinates using depth and lateral directions of octant */
+    let eyeCellDepthPosition = eyeCell.centre.arrayGet(octant.depthIndex);
+    let eyeCellLateralPosition = eyeCell.centre.arrayGet(octant.lateralIndex);
+
+    /* Eye coordinates using depth and lateral directions of octant */
+    let eyeCellDepthIndex = eyeCell.coord.arrayGet(octant.depthIndex);
+    let eyeCellLateralIndex = eyeCell.coord.arrayGet(octant.lateralIndex);
+
+    /* Create initial stack frame */
     let frame = STACK.push();
-    frame.minSlope = initialMinSlope;
-    frame.maxSlope = initialMaxSlope;
+    frame.minSlope = 0;
+    frame.maxSlope = 1;
     frame.depth = 1;
     frame.visibility = 1;
 
     while (!STACK.empty) {
+        /* Get next stack frame */
         let currentFrame = STACK.pop();
         let minSlope = currentFrame.minSlope;
         let maxSlope = currentFrame.maxSlope;
@@ -114,141 +127,102 @@ function detectVisibleAreaOctant(
         let visibility = currentFrame.visibility;
         /* last usage of currentFrame */
 
+        assert(minSlope >= 0 && minSlope <= 1);
+        assert(maxSlope >= 0 && maxSlope <= 1);
+
         /* Don't scan further out than the observer's view distance */
         if (depth > viewDistance) {
             continue;
         }
 
-        let depthAbsoluteIndex = eyeCell.coord.arrayGet(depthIndex) + (depth * depthDirection);
+        /* Absolute grid index in depth direction of current row */
+        let depthAbsoluteIndex = eyeCellDepthIndex + depth * octant.depthStep;
+
+        /* Don't scan to a depth that's off the grid */
         if (depthAbsoluteIndex < 0 || depthAbsoluteIndex > depthMax) {
             continue;
         }
 
-        let eyeCellLateralPosition = eyeCell.centre.arrayGet(lateralIndex);
-
+        /* Distance from centre of eye to inner-side of row */
         let innerDepthOffset = depth - 0.5;
+
+        /* Distance from centre of eye to outer-side of row */
         let outerDepthOffset = innerDepthOffset + 1;
 
-        /* Find minimum indices for scanning */
-        let minInnerLateralPosition = eyeCellLateralPosition + (minSlope * innerDepthOffset);
-        let minOuterLateralPosition = eyeCellLateralPosition + (minSlope * outerDepthOffset);
+        /* Index to start scan */
+        let relativeScanStartIndex = minSlope * innerDepthOffset;
+        let absoluteScanStartIndex =
+            octant.roundStart(eyeCellLateralPosition + relativeScanStartIndex * octant.lateralStep);
 
-        let partialStartIndex =
-            Math.floor(Math.min(minInnerLateralPosition, minOuterLateralPosition));
-
-        /* Stop if we're off the edge of the grid */
-        if (partialStartIndex > lateralMax) {
+        /* Make sure start index is in the grid. The scan always moves away from
+         * the eye in the lateral direction, so if it starts off the grid, it will
+         * also end off the grid. Thus it's safe to skip this scan if the start is
+         * off the grid. */
+        if (absoluteScanStartIndex < 0 || absoluteScanStartIndex > lateralMax) {
             continue;
         }
 
-        /* Find maximum indices for scanning */
-        let maxInnerLateralPosition = eyeCellLateralPosition + (maxSlope * innerDepthOffset) - 1;
-        let maxOuterLateralPosition = eyeCellLateralPosition + (maxSlope * outerDepthOffset) - 1;
+        /* Index to stop scan */
+        let relativeScanStopIndex = maxSlope * outerDepthOffset;
+        let absoluteScanStopIndex =
+            octant.roundStop(eyeCellLateralPosition + relativeScanStopIndex * octant.lateralStep);
 
-        let partialStopIndex =
-            Math.ceil(Math.max(maxInnerLateralPosition, maxOuterLateralPosition));
-
-        /* Stop if we're off the edge of the grid */
-        if (partialStopIndex < 0) {
-            continue;
-        }
-
-        let startIndex = constrain(0, partialStartIndex, lateralMax);
-        let stopIndex = constrain(0, partialStopIndex, lateralMax);
+        /* Constrain the stop index within the grid. It's possible that a scan will
+         * start inside the grid and end outside. Constaining the stop index will
+         * prevent scanning off the grid in the lateral direction. */
+        absoluteScanStopIndex = constrain(0, absoluteScanStopIndex, lateralMax);
 
         let firstIteration = true;
+
+        /* Information about the previous cell */
         let previousOpaque = false;
         let previousVisibility = -1;
         let previousDescription = null;
 
-        COORD_IDX.arraySet(depthIndex, depthAbsoluteIndex);
+        /* Set the depth component of the coord index */
+        COORD_IDX.arraySet(octant.depthIndex, depthAbsoluteIndex);
 
+        /* The index to stop iterating when reached */
+        let finalIndex = absoluteScanStopIndex + octant.lateralStep;
 
-        COORD_IDX.arraySet(lateralIndex, startIndex);
-        let startCell = grid.get(COORD_IDX);
-        COORD_IDX.arraySet(lateralIndex, stopIndex);
-        let stopCell = grid.get(COORD_IDX);
+        for (let i = absoluteScanStartIndex; i != finalIndex; i += octant.lateralStep) {
+            let lastIteration = i == absoluteScanStopIndex;
 
-        let startSlope = computeSlope(eyeCell.centre, startCell.corners[betweenDirection],
-                        lateralIndex, depthIndex);
+            COORD_IDX.arraySet(octant.lateralIndex, i);
 
-        let startDescription = visionCells.getDescription(startCell);
-        if (initialMaxSlope == 0) {
-            if (Math.abs(minSlope) < Math.abs(startSlope)) {
-                startDescription.setSide(facingDirection, true);
-            }
-        } else {
-            startDescription.setSide(facingDirection, true);
-        }
-
-        let stopSlope = computeSlope(eyeCell.centre, stopCell.corners[betweenDirection],
-                        lateralIndex, depthIndex);
-
-        let stopDescription = visionCells.getDescription(stopCell);
-        if (initialMaxSlope == 1) {
-            if (Math.abs(maxSlope) < Math.abs(stopSlope)) {
-                stopDescription.setSide(facingDirection, true);
-            }
-        } else {
-            stopDescription.setSide(facingDirection, true);
-        }
-
-
-
-        for (let i = startIndex; i <= stopIndex; ++i) {
-            let lastIteration = i == stopIndex;
-
-            COORD_IDX.arraySet(lateralIndex, i);
             let cell = grid.get(COORD_IDX);
             let description = visionCells.getDescription(cell);
 
             if (COORD_IDX.getDistanceSquared(eyeCell.coord) < viewDistanceSquared) {
                 description.visibility = Math.max(description.visibility, visibility);
-            }
-
-            let currentVisibility = Math.max(visibility - cell.opacity, 0);
-
-            previousOpaque = previousVisibility == 0;
-            let currentOpaque = currentVisibility == 0;
-
-            if (currentOpaque) {
-                if (!(firstIteration || lastIteration)) {
-                    description.setSide(facingDirection, true);
-                }
-            } else {
                 description.setAllSides(true);
             }
 
-            let nextMinSlope = minSlope;
-            let change = !firstIteration && currentVisibility != previousVisibility;
+            let currentVisibility = Math.max(visibility - cell.opacity, 0);
+            let currentOpaque = currentVisibility == 0;
 
-            if (change && !currentOpaque) {
-                let direction = previousOpaque ? innerDirection : outerDirection;
-                nextMinSlope = computeSlope(eyeCell.centre, cell.corners[direction],
-                                            lateralIndex, depthIndex
-                                ) * depthDirection;
+            if (!firstIteration) {
+                let corner = null;
+                if (currentVisibility > previousVisibility) {
+                    corner = cell.corners[octant.opacityDecreaseCorner.subIndex];
+                } else if (currentVisibility < previousVisibility) {
+                    corner = cell.corners[octant.opacityIncreaseCorner.subIndex];
+                }
+                if (corner != null) {
+                    let slope = computeSlope(eyeCell.centre, corner, octant.lateralIndex, octant.depthIndex);
 
-                if (initialMaxSlope == 0 && previousOpaque) {
-                    previousDescription.setSide(sideFacingDirection, true);
+                    assert(slope >= 0 && slope <= 1);
+
+                    if (!previousOpaque) {
+                        let frame = STACK.push();
+                        frame.minSlope = minSlope;
+                        frame.maxSlope = slope;
+                        frame.depth = depth + 1;
+                        frame.visibility = previousVisibility;
+                    }
+                    minSlope = slope;
                 }
             }
-
-            if (change && !previousOpaque) {
-                let newMaxSlope = computeSlope(eyeCell.centre, cell.corners[outerDirection],
-                                            lateralIndex, depthIndex
-                                    ) * depthDirection;
-                let frame = STACK.push();
-                frame.minSlope = minSlope;
-                frame.maxSlope = newMaxSlope;
-                frame.depth = depth + 1;
-                frame.visibility = previousVisibility;
-
-                if (initialMaxSlope == 1 && currentOpaque) {
-                    description.setSide(sideFacingDirection, true);
-                }
-            }
-
-            minSlope = nextMinSlope;
 
             if (!currentOpaque && lastIteration) {
                 let frame = STACK.push();
@@ -258,10 +232,10 @@ function detectVisibleAreaOctant(
                 frame.visibility = currentVisibility;
             }
 
+            previousOpaque = currentOpaque;
             previousVisibility = currentVisibility;
             previousDescription = description;
             firstIteration = false;
         }
     }
-
 }

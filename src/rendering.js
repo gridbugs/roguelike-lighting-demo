@@ -29,7 +29,7 @@ function drawLitTile(knowledgeCell, tileFamily, lightCell, drawerCell) {
             intensity = Math.max(intensity, Math.floor(lightCell.sides[i]));
         }
     }
-    intensity = constrain(4, intensity, tileFamily.lightLevels.length - 1);
+    intensity = constrain(20, intensity, tileFamily.lightLevels.length - 1);
     drawerCell.drawTile(tileFamily.lightLevels[intensity]);
 }
 
