@@ -26,6 +26,10 @@ export class Observation extends System {
 
             for (let i = 0; i < this.visionCells.length; ++i) {
                 let visionCell =  this.visionCellsArray[i].cell;
+                if (visionCell.description.visibility == 0) {
+                    continue;
+                }
+
                 let cell = grid.get(visionCell);
                 let knowledgeCell = knowledgeGrid.get(cell.coord);
                 for (let j = 0; j < knowledgeCell.sides.length; ++j) {
