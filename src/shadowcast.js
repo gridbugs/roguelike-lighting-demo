@@ -4,6 +4,9 @@ import {SQRT2, constrain} from 'utils/math';
 import {ObjectStack} from 'utils/object_stack';
 import {assert} from 'utils/assert';
 
+const COORD_IDX = new Vec2(0, 0);
+const FRAME_STACK_INITIAL_SIZE = 64;
+
 class StackFrame {
     constructor() {
         this.minSlope = 0;
@@ -12,6 +15,8 @@ class StackFrame {
         this.visibility = 0;
     }
 }
+
+const STACK = new ObjectStack(StackFrame, FRAME_STACK_INITIAL_SIZE);
 
 function exclusiveFloor(x) {
     return Math.ceil(x - 1);
@@ -57,11 +62,17 @@ class Octant {
             this.roundStart = exclusiveFloor;
             this.roundStop = Math.floor;
         }
+
+        /* Side of a cell facing the eye */
+        this.facingSide = depthDirection.opposite;
+
+        /* Side facing across eye */
+        this.acrossSide = lateralDirection.opposite;
+
+        /* Corner of a cell closest to the eye in this octant */
+        this.facingCorner = combine(this.facingSide, this.acrossSide);
     }
 }
-
-const COORD_IDX = new Vec2(0, 0);
-const STACK = new ObjectStack(StackFrame, 64);
 
 const OCTANTS = [
     new Octant(Direction.North, Direction.West),
@@ -195,11 +206,18 @@ function detectVisibleAreaOctant(
 
             if (COORD_IDX.getDistanceSquared(eyeCell.coord) < viewDistanceSquared) {
                 description.visibility = Math.max(description.visibility, visibility);
-                description.setAllSides(true);
             }
 
             let currentVisibility = Math.max(visibility - cell.opacity, 0);
             let currentOpaque = currentVisibility == 0;
+
+            if (currentOpaque) {
+                if (!lastIteration) {
+                    description.setSide(octant.facingSide, true);
+                }
+            } else {
+                description.setAllSides(true);
+            }
 
             if (!firstIteration) {
                 let corner = null;
@@ -221,15 +239,27 @@ function detectVisibleAreaOctant(
                         frame.visibility = previousVisibility;
                     }
                     minSlope = slope;
+
+                    if (currentOpaque) {
+                        description.setSide(octant.acrossSide, true);
+                    }
                 }
             }
 
-            if (!currentOpaque && lastIteration) {
-                let frame = STACK.push();
-                frame.minSlope = minSlope;
-                frame.maxSlope = maxSlope;
-                frame.depth = depth + 1;
-                frame.visibility = currentVisibility;
+            if (lastIteration) {
+                if (currentOpaque) {
+                    let corner = cell.corners[octant.facingCorner.subIndex];
+                    let slope = computeSlope(eyeCell.centre, corner, octant.lateralIndex, octant.depthIndex);
+                    if (maxSlope > slope) {
+                        description.setSide(octant.facingSide, true);
+                    }
+                } else {
+                    let frame = STACK.push();
+                    frame.minSlope = minSlope;
+                    frame.maxSlope = maxSlope;
+                    frame.depth = depth + 1;
+                    frame.visibility = currentVisibility;
+                }
             }
 
             previousOpaque = currentOpaque;
