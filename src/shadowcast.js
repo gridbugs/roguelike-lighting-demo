@@ -101,14 +101,7 @@ export function detectVisibleArea(eyePosition, viewDistance, grid, visionCells) 
     }
 }
 
-function detectVisibleAreaOctant(
-    octant,
-    eyeCell,
-    viewDistance,
-    viewDistanceSquared,
-    grid,
-    visionCells
-) {
+function detectVisibleAreaOctant(octant, eyeCell, viewDistance, viewDistanceSquared, grid, visionCells) {
 
     /* Maximum coordinates of the grid */
     let depthMax = grid.limits.arrayGet(octant.depthIndex);
