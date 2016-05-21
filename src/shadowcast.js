@@ -118,7 +118,10 @@ export function detectVisibleArea(eyePosition, viewDistance, grid, visionCells) 
 
 export function detectVisibleAreaConstrained(eyePosition, viewDistance, grid, visionCells,
                                              startAngle, stopAngle) {
-    console.debug(r2d(startAngle), r2d(stopAngle));
+    let eyeCell = grid.get(eyePosition);
+    let viewDistanceSquared = viewDistance * viewDistance;
+
+    visionCells.addAllSides(eyeCell, 1);
 
     /* Empty the octant table entry pool */
     OCTANT_TABLE_ENTRY_POOL.flush();
@@ -127,8 +130,10 @@ export function detectVisibleAreaConstrained(eyePosition, viewDistance, grid, vi
      * of angles within the visible area. */
     OCTANT_TABLE.getRange(startAngle, stopAngle, OCTANT_TABLE_ENTRY_POOL);
 
-    for (let entry of OCTANT_TABLE_ENTRY_POOL) {
-        console.debug(entry);
+    for (let entry of OCTANTS) {
+        let octant = entry;
+        detectVisibleAreaOctant(octant, eyeCell, viewDistance, viewDistanceSquared, grid,
+                                visionCells, 0, 1);
     }
 }
 
