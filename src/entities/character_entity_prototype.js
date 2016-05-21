@@ -9,6 +9,8 @@ import * as Omniscient from 'omniscient';
 import {PlayerTurnTaker} from 'player_control';
 import {MoveTowardsPlayer} from 'move_towards_player';
 
+import {degreesToRadians as d2r} from 'utils/angle';
+
 export function PlayerCharacter(x, y) {
     let observe;
     if (Config.OMNISCIENT) {
@@ -25,6 +27,6 @@ export function PlayerCharacter(x, y) {
         new Components.PlayerCharacter(),
         new Components.Observer(observe, 40),
         new Components.Unfamiliar(),
-        new Components.DirectionalLight(20, 3, Math.PI/2, Math.PI/3)
+        new Components.DirectionalLight(20, 3, d2r(90), d2r(60)),
     ];
 }

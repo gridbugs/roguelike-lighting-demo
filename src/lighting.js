@@ -2,6 +2,9 @@ import {CellGrid, Cell} from 'utils/cell_grid';
 import {VisionCellList} from 'vision';
 import {detectVisibleArea, detectVisibleAreaConstrained} from 'shadowcast';
 import {Vec3} from 'utils/vec3.js';
+import {normalize} from 'utils/angle';
+
+const LIGHT_DISTANCE = 100;
 
 const SURFACE_NORMAL = new Vec3(0, 0, 1);
 
@@ -66,7 +69,7 @@ export class Light {
     }
 
     detectVisibleArea() {
-        detectVisibleArea(this.coord, 100, this.lightContext.ecsContext.spacialHash,
+        detectVisibleArea(this.coord, LIGHT_DISTANCE, this.lightContext.ecsContext.spacialHash,
                 this.lightContext.visionCells);
     }
 
@@ -91,8 +94,11 @@ export class DirectionalLight extends Light {
     }
 
     detectVisibleArea() {
-        detectVisibleArea(this.coord, 100, this.lightContext.ecsContext.spacialHash,
-                this.lightContext.visionCells);
+        let halfWidth = this.width / 2;
+        let startAngle = normalize(this.angle - halfWidth);
+        let endAngle = normalize(this.angle + halfWidth);
+        detectVisibleAreaConstrained(this.coord, LIGHT_DISTANCE, this.lightContext.ecsContext.spacialHash,
+                this.lightContext.visionCells, startAngle, endAngle);
     }
 }
 

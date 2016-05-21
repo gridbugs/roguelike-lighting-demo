@@ -7,7 +7,7 @@ import {Direction} from 'utils/direction';
 
 import {renderKnowledgeGrid} from 'rendering';
 import {Config} from 'config';
-import {constrain} from 'utils/math';
+import {constrain} from 'utils/arith';
 
 const HALF_WIDTH = Math.floor(Config.GRID_WIDTH / 2);
 const HALF_HEIGHT = Math.floor(Config.GRID_HEIGHT / 2);

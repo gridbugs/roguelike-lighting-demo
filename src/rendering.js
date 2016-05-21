@@ -1,6 +1,6 @@
 import {Tiles} from 'tiles';
 import {Components} from 'components';
-import {constrain} from 'utils/math';
+import {constrain} from 'utils/arith';
 
 function getEntityTile(entity) {
     if (entity.has(Components.Tile)) {

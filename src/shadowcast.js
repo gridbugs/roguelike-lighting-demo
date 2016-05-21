@@ -1,8 +1,9 @@
 import {Vec2} from 'utils/vec2';
 import {Direction, combine} from 'utils/direction';
-import {SQRT2, constrain} from 'utils/math';
+import {constrain} from 'utils/arith';
 import {ObjectStack} from 'utils/object_stack';
 import {assert} from 'utils/assert';
+import {radiansToDegrees as r2d} from 'utils/angle';
 
 const COORD_IDX = new Vec2(0, 0);
 const FRAME_STACK_INITIAL_SIZE = 64;
@@ -103,8 +104,8 @@ export function detectVisibleArea(eyePosition, viewDistance, grid, visionCells) 
 }
 
 export function detectVisibleAreaConstrained(eyePosition, viewDistance, grid, visionCells,
-                                             minAngle, maxAngle) {
-    console.debug('hi');
+                                             startAngle, stopAngle) {
+    console.debug(r2d(startAngle), r2d(stopAngle));
 }
 
 function detectVisibleAreaOctant(octant, eyeCell, viewDistance, viewDistanceSquared, grid,
