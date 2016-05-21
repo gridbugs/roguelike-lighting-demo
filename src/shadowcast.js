@@ -2,9 +2,13 @@ import {Vec2} from 'utils/vec2';
 import {Direction, combine} from 'utils/direction';
 import {constrain} from 'utils/arith';
 import {ObjectStack} from 'utils/object_stack';
+import {ObjectPool} from 'utils/object_pool';
 import {assert} from 'utils/assert';
 import {radiansToDegrees as r2d} from 'utils/angle';
+import {RangeTable, RangeTableEntry} from 'utils/range_table';
+import {PI, NEGATIVE_PI} from 'utils/constants';
 
+const NUM_OCTANTS = 8;
 const COORD_IDX = new Vec2(0, 0);
 const FRAME_STACK_INITIAL_SIZE = 64;
 
@@ -75,16 +79,25 @@ class Octant {
     }
 }
 
+/* Array containing all octants.
+ * The order octants appear in this array is the order one would
+ * visit an octant if they started at -PI radians, and moved in
+ * the positive (or anticlockwise) direction.
+ */
 const OCTANTS = [
-    new Octant(Direction.North, Direction.West),
-    new Octant(Direction.North, Direction.East),
-    new Octant(Direction.East, Direction.North),
-    new Octant(Direction.East, Direction.South),
-    new Octant(Direction.South, Direction.East),
-    new Octant(Direction.South, Direction.West),
     new Octant(Direction.West, Direction.South),
-    new Octant(Direction.West, Direction.North)
+    new Octant(Direction.South, Direction.West),
+    new Octant(Direction.South, Direction.East),
+    new Octant(Direction.East, Direction.South),
+    new Octant(Direction.East, Direction.North),
+    new Octant(Direction.North, Direction.East),
+    new Octant(Direction.North, Direction.West),
+    new Octant(Direction.West, Direction.North),
 ];
+
+/* Lookup table mapping an angle to the octant that angle appears in */
+let OCTANT_TABLE = new RangeTable(NEGATIVE_PI, PI, OCTANTS);
+let OCTANT_TABLE_ENTRY_POOL = new ObjectPool(RangeTableEntry, NUM_OCTANTS);
 
 function computeSlope(fromVec, toVec, lateralIndex, depthIndex) {
     return Math.abs((toVec.arrayGet(lateralIndex) - fromVec.arrayGet(lateralIndex)) /
@@ -106,6 +119,17 @@ export function detectVisibleArea(eyePosition, viewDistance, grid, visionCells) 
 export function detectVisibleAreaConstrained(eyePosition, viewDistance, grid, visionCells,
                                              startAngle, stopAngle) {
     console.debug(r2d(startAngle), r2d(stopAngle));
+
+    /* Empty the octant table entry pool */
+    OCTANT_TABLE_ENTRY_POOL.flush();
+
+    /* Populate the octant table entry pool with octants making up the range
+     * of angles within the visible area. */
+    OCTANT_TABLE.getRange(startAngle, stopAngle, OCTANT_TABLE_ENTRY_POOL);
+
+    for (let entry of OCTANT_TABLE_ENTRY_POOL) {
+        console.debug(entry);
+    }
 }
 
 function detectVisibleAreaOctant(octant, eyeCell, viewDistance, viewDistanceSquared, grid,
