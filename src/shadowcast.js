@@ -97,11 +97,18 @@ export function detectVisibleArea(eyePosition, viewDistance, grid, visionCells) 
     visionCells.addAllSides(eyeCell, 1);
 
     for (let octant of OCTANTS) {
-        detectVisibleAreaOctant(octant, eyeCell, viewDistance, viewDistanceSquared, grid, visionCells);
+        detectVisibleAreaOctant(octant, eyeCell, viewDistance, viewDistanceSquared, grid,
+                                visionCells, 0, 1);
     }
 }
 
-function detectVisibleAreaOctant(octant, eyeCell, viewDistance, viewDistanceSquared, grid, visionCells) {
+export function detectVisibleAreaConstrained(eyePosition, viewDistance, grid, visionCells,
+                                             minAngle, maxAngle) {
+    console.debug('hi');
+}
+
+function detectVisibleAreaOctant(octant, eyeCell, viewDistance, viewDistanceSquared, grid,
+                                 visionCells, initialMinSlope, initialMaxSlope) {
 
     /* Maximum coordinates of the grid */
     let depthMax = grid.limits.arrayGet(octant.depthIndex);
@@ -117,8 +124,8 @@ function detectVisibleAreaOctant(octant, eyeCell, viewDistance, viewDistanceSqua
 
     /* Create initial stack frame */
     let frame = STACK.push();
-    frame.minSlope = 0;
-    frame.maxSlope = 1;
+    frame.minSlope = initialMinSlope;
+    frame.maxSlope = initialMaxSlope;
     frame.depth = 1;
     frame.visibility = 1;
 

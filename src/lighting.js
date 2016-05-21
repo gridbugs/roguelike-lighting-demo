@@ -1,6 +1,6 @@
 import {CellGrid, Cell} from 'utils/cell_grid';
 import {VisionCellList} from 'vision';
-import {detectVisibleArea} from 'shadowcast';
+import {detectVisibleArea, detectVisibleAreaConstrained} from 'shadowcast';
 import {Vec3} from 'utils/vec3.js';
 
 const SURFACE_NORMAL = new Vec3(0, 0, 1);
@@ -65,17 +65,34 @@ export class Light {
         this.vector.y = coord.y + 0.5;
     }
 
+    detectVisibleArea() {
+        detectVisibleArea(this.coord, 100, this.lightContext.ecsContext.spacialHash,
+                this.lightContext.visionCells);
+    }
+
     updateLitCells() {
         ++this.sequence;
 
         this.lightContext.visionCells.clear();
-        detectVisibleArea(this.coord, 100, this.lightContext.ecsContext.spacialHash,
-                this.lightContext.visionCells);
+        this.detectVisibleArea();
 
         for (let description of this.lightContext.visionCells) {
             let lightCell = this.lightContext.grid.get(description.cell);
             lightCell.updateLight(this, description.visibility, description.sides);
         }
+    }
+}
+
+export class DirectionalLight extends Light {
+    constructor(coord, intensity, height, angle, width) {
+        super(coord, intensity, height);
+        this.angle = angle;
+        this.width = width;
+    }
+
+    detectVisibleArea() {
+        detectVisibleArea(this.coord, 100, this.lightContext.ecsContext.spacialHash,
+                this.lightContext.visionCells);
     }
 }
 

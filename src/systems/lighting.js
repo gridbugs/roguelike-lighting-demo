@@ -13,6 +13,9 @@ export class Lighting extends System {
             entity.with(Components.Light, (light) => {
                 light.light.updateLitCells();
             });
+            entity.with(Components.DirectionalLight, (light) => {
+                light.light.updateLitCells();
+            });
         }
 
     }

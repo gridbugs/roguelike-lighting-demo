@@ -10,6 +10,9 @@ export class LightMove extends ReactiveSystem {
             action.entity.with(Components.Light, (light) => {
                 light.updateLight();
             });
+            action.entity.with(Components.DirectionalLight, (light) => {
+                light.updateLight();
+            });
         });
     }
 }
