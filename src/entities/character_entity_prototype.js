@@ -27,6 +27,7 @@ export function PlayerCharacter(x, y) {
         new Components.PlayerCharacter(),
         new Components.Observer(observe, 40),
         new Components.Unfamiliar(),
-        new Components.DirectionalLight(20, 3, d2r(90), d2r(60)),
+        new Components.Light(15, 2),
+        new Components.DirectionalLight(30, 2, d2r(90), d2r(60)),
     ];
 }

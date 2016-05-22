@@ -1,6 +1,7 @@
 import {Action} from 'engine/action';
 import * as Change from 'engine/change';
 import {Components} from 'components';
+import {normalize} from 'utils/angle';
 
 export class Walk extends Action {
     constructor(entity, direction) {
@@ -58,6 +59,22 @@ export class CloseDoor extends Action {
                 this.door.get(Components.Door).closedTileFamily),
             new Change.SetComponentField(this.door, Components.Opacity, Components.Opacity.Value, 1),
             new Change.AddComponent(this.door, Components.Solid),
+        ];
+    }
+}
+
+export class DirectionalLightTurn extends Action {
+    constructor(entity, angle) {
+        super();
+        this.entity = entity;
+        this.angle = angle;
+    }
+
+    getChanges() {
+        return [
+            new Change.SetComponentField(this.entity, Components.DirectionalLight,
+                     Components.DirectionalLight.Angle,
+                     normalize(this.entity.get(Components.DirectionalLight).angle + this.angle))
         ];
     }
 }

@@ -34,7 +34,7 @@ export class RangeTable {
             index--;
         }
 
-        assert(index > 0 && index < this.length);
+        assert(index >= 0 && index < this.length);
 
         return index;
     }

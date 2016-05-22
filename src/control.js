@@ -6,6 +6,7 @@ import {makeEnum, substituteValues, makeTable} from 'utils/enum';
 import * as Input from 'utils/input';
 import {Turn} from 'engine/turn';
 import {renderText, HelpText} from 'text';
+import {degreesToRadians as d2r} from 'utils/angle';
 
 export const ControlTypes = makeEnum([
     'West',
@@ -18,6 +19,8 @@ export const ControlTypes = makeEnum([
     'SouthEast',
     'Wait',
     'Close',
+    'TurnLeft',
+    'TurnRight',
 ], true);
 
 const ControlChars = substituteValues(ControlTypes, {
@@ -30,7 +33,9 @@ const ControlChars = substituteValues(ControlTypes, {
     b: 'SouthWest',
     n: 'SouthEast',
     '.': 'Wait',
-    'c': 'Close'
+    'c': 'Close',
+    'q': 'TurnLeft',
+    'e': 'TurnRight'
 });
 
 const ControlNonChars = substituteValues(ControlTypes, {
@@ -61,6 +66,8 @@ function toggleDoor(entity) {
     return null;
 }
 
+const TURN_ANGLE = d2r(45);
+
 export const ControlTable = makeTable(ControlTypes, {
     West:       entity => new Actions.Walk(entity, Direction.West),
     South:      entity => new Actions.Walk(entity, Direction.South),
@@ -71,7 +78,9 @@ export const ControlTable = makeTable(ControlTypes, {
     SouthWest:  entity => new Actions.Walk(entity, Direction.SouthWest),
     SouthEast:  entity => new Actions.Walk(entity, Direction.SouthEast),
     Wait:       entity => new Actions.Wait(entity),
-    Close:      toggleDoor
+    Close:      toggleDoor,
+    TurnLeft:   entity => new Actions.DirectionalLightTurn(entity, TURN_ANGLE),
+    TurnRight:  entity => new Actions.DirectionalLightTurn(entity, -TURN_ANGLE)
 });
 
 export function getControlTypeFromKey(key) {
