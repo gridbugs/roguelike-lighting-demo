@@ -25,7 +25,7 @@ export function PlayerCharacter(x, y) {
         new Components.TurnTaker(new PlayerTurnTaker()),
         new Components.Collider(),
         new Components.PlayerCharacter(),
-        new Components.Observer(observe, 40),
+        new Components.Observer(observe, 100),
         new Components.Unfamiliar(),
         new Components.Light(15, 2),
         new Components.DirectionalLight(30, 2, d2r(90), d2r(60)),
