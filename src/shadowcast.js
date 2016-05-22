@@ -9,6 +9,7 @@ import {RangeTable, RangeTableEntry} from 'utils/range_table';
 import {PI, NEGATIVE_PI} from 'utils/constants';
 
 const NUM_OCTANTS = 8;
+const OCTANT_ANGLE_RANGE = PI / 4; // 45 degrees
 const COORD_IDX = new Vec2(0, 0);
 const FRAME_STACK_INITIAL_SIZE = 64;
 
@@ -76,6 +77,14 @@ class Octant {
 
         /* Corner of a cell closest to the eye in this octant */
         this.facingCorner = combine(this.facingSide, this.acrossSide);
+
+        /* Whether the scan direction is clockwise about the eye */
+        if (lateralDirection == depthDirection.left90) {
+            this.clockwise = true;
+        } else {
+            assert(depthDirection == lateralDirection.left90);
+            this.clockwise = false;
+        }
     }
 }
 
@@ -116,6 +125,18 @@ export function detectVisibleArea(eyePosition, viewDistance, grid, visionCells) 
     }
 }
 
+/* Takes an angle relative to the right-most edge of an octant
+ * and returns the corresponding gradient within that octant */
+function angleToSlope(octant, angle) {
+
+    if (!octant.clockwise) {
+        // use the angle relative to the cardinal edge of the octant
+        angle = OCTANT_ANGLE_RANGE - angle;
+    }
+
+    return Math.tan(angle);
+}
+
 export function detectVisibleAreaConstrained(eyePosition, viewDistance, grid, visionCells,
                                              startAngle, stopAngle) {
     let eyeCell = grid.get(eyePosition);
@@ -130,10 +151,23 @@ export function detectVisibleAreaConstrained(eyePosition, viewDistance, grid, vi
      * of angles within the visible area. */
     OCTANT_TABLE.getRange(startAngle, stopAngle, OCTANT_TABLE_ENTRY_POOL);
 
-    for (let entry of OCTANTS) {
-        let octant = entry;
+    for (let entry of OCTANT_TABLE_ENTRY_POOL) {
+        let octant = entry.value;
+
+        let startSlope = angleToSlope(octant, entry.startOffset);
+        let endSlope = angleToSlope(octant, entry.endOffset);
+
+        let minSlope, maxSlope;
+        if (startSlope < endSlope) {
+            minSlope = startSlope;
+            maxSlope = endSlope;
+        } else {
+            minSlope = endSlope;
+            maxSlope = startSlope;
+        }
+
         detectVisibleAreaOctant(octant, eyeCell, viewDistance, viewDistanceSquared, grid,
-                                visionCells, 0, 1);
+                                visionCells, minSlope, maxSlope);
     }
 }
 

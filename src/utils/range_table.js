@@ -3,9 +3,9 @@ import {assert} from 'utils/assert';
 export const RangeTableEntry = NAMED_TUPLE(
     table = null,
     value = null,
-    key = 0,
     index = 0,
-    offset = 0
+    startOffset = 0,
+    endOffset = 0
 );
 
 /* Data structure mapping ranges of numbers to entries in a table
@@ -39,43 +39,41 @@ export class RangeTable {
         return index;
     }
 
-    indexToKey(index) {
-        return index * this.step + this.min;
-    }
-
-    get(key, result) {
-        if (value < this.min || value > this.max) {
-            return null;
-        }
-
-        let index = this.keyToIndex(key);
-
-        this._populateEntry(key, index, result);
+    computeOffset(key, index) {
+        return key - index * this.step - this.min;
     }
 
     getRange(startKey, endKey, resultPool) {
         let startIndex = this.keyToIndex(startKey);
         let endIndex = this.keyToIndex(endKey);
 
-        let startResult = resultPool.allocate();
-        this._populateEntry(startKey, startIndex, startResult);
+        let startOffset = this.computeOffset(startKey, startIndex);
+        let endOffset = this.computeOffset(endKey, endIndex);
 
-        let rangeStart = (startIndex + 1) % this.length;
-        for (let i = rangeStart; i != endIndex; i++) {
-            let result = resultPool.allocate();
-            let key = this.indexToKey(i);
-            this._populateEntry(key, i, result);
+        if (startIndex == endIndex && endOffset >= startOffset) {
+            /* Special case when there's only one entry */
+            this._populateEntry(resultPool.allocate(), startIndex, startOffset, endOffset);
+            return;
         }
 
-        let endResult = resultPool.allocate();
-        this._populateEntry(endKey, endIndex, endResult);
+        /* Range from start key to the end of the table slot */
+        this._populateEntry(resultPool.allocate(), startIndex, startOffset, this.step);
+
+        /* Intermediate slots */
+        let midStartIndex = (startIndex + 1) % this.length;
+        for (let i = midStartIndex; i != endIndex; i = (i + 1) % this.length) {
+            this._populateEntry(resultPool.allocate(), i, 0, this.step);
+        }
+
+        /* Range from start of table slot to end key */
+        this._populateEntry(resultPool.allocate(), endIndex, 0, endOffset);
     }
 
-    _populateEntry(key, index, entry) {
+    _populateEntry(entry, index, startOffset, endOffset) {
         entry.table = this;
         entry.value = this.array[index];
-        entry.key = key;
         entry.index = index;
-        entry.offset = key - this.indexToKey(index);
+        entry.startOffset = startOffset;
+        entry.endOffset = endOffset;
     }
 }
