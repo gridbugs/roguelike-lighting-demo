@@ -59,6 +59,28 @@ class MaskedSpacialHash {
     }
 }
 
+/* Provides the vision cell list interface required by vision system,
+ * trapping access to masked cells so their visibility isn't affected
+ * despite what the vision system thinks */
+class MaskedVisionCellList {
+    constructor(light, channels) {
+        this.light = light;
+        this.channels = channels;
+    }
+
+    get visionCellList() {
+        return this.light.lightContext.visionCells;
+    }
+
+    addAllSides(coord, visibility) {
+        this.visionCellList.addAllSides(coord, visibility);
+    }
+
+    getDescription(coord) {
+        return this.visionCellList.getDescription(coord);
+    }
+}
+
 let nextLightId = 0;
 
 export class Light {
@@ -77,6 +99,7 @@ export class Light {
         this.sequence = 0;
 
         this.maskedSpacialHash = new MaskedSpacialHash(this, channels);
+        this.maskedVisionCellList = new MaskedVisionCellList(this, channels);
     }
 
     set height(value) {
@@ -96,7 +119,7 @@ export class Light {
 
     detectVisibleArea() {
         detectVisibleArea(this.coord, LIGHT_DISTANCE, this.maskedSpacialHash,
-                this.lightContext.visionCells);
+                this.maskedVisionCellList);
     }
 
     updateLitCells() {
