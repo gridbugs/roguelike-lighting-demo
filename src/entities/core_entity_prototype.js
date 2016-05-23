@@ -3,6 +3,7 @@ import {Tiles} from 'tiles';
 import {EntityPrototypes} from 'entity_prototypes';
 import {bit} from 'utils/bit';
 import {degreesToRadians as d2r} from 'utils/angle';
+import {Lighthouse} from 'lighthouse';
 
 export function Tree(x, y) {
     return [
@@ -101,5 +102,6 @@ export function LighthouseLamp(x, y) {
         new Components.Position(x, y),
         new Components.Tile(Tiles.Lamp, 2),
         new Components.DirectionalLight(30, 4, d2r(90), d2r(30), bit(LIGHTHOUSE_CHANNEL)),
+        new Components.TurnTaker(new Lighthouse()),
     ];
 }
