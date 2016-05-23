@@ -73,7 +73,7 @@ export function Lamp(x, y) {
     return [
         new Components.Position(x, y),
         new Components.Tile(Tiles.Lamp, 2),
-//        new Components.Light(30, 4)
+        new Components.Light(30, 4)
     ];
 }
 

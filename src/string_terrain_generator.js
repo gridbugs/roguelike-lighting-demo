@@ -95,6 +95,10 @@ export class StringTerrainGenerator {
             add('LighthouseLamp');
             add('LighthouseFloor');
             break;
+        case 'd':
+            add('ClosedWoodenDoor');
+            add('LighthouseFloor');
+            break;
         }
     }
 }
