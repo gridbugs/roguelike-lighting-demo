@@ -85,6 +85,9 @@ class KnowledgeCell extends Cell {
     }
 
     see(entity) {
+        if (!entity.has(Components.Tile)) {
+            return;
+        }
         let entityMemory = this.entityMemoryPool.allocate();
         entityMemory.invalidate();
         entityMemory.see(entity);

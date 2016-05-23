@@ -3,7 +3,7 @@ export const Config = {
     AI: true,
     DEBUG: false,
     DEMO: true,
-    OMNISCIENT: false,
+    OMNISCIENT: true,
     TILE_HEIGHT: 16,
     GRID_WIDTH: 64,
     LAZY_KNOWLEDGE: true,

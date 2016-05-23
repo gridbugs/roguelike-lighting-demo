@@ -3,6 +3,9 @@ import {VisionCellList} from 'vision';
 import {detectVisibleArea, detectVisibleAreaConstrained} from 'shadowcast';
 import {Vec3} from 'utils/vec3.js';
 import {normalize} from 'utils/angle';
+import {UINT32_MAX} from 'utils/limits';
+
+export const ALL_CHANNELS = UINT32_MAX;
 
 const LIGHT_DISTANCE = 100;
 
@@ -35,10 +38,31 @@ class LightDescription {
     }
 }
 
+/* Provides the grid interfaces required by the vision system after
+ * applying light masks */
+class MaskedSpacialHash {
+    constructor(light, channels) {
+        this.light = light;
+        this.channels = channels;
+    }
+
+    get spacialHash() {
+        return this.light.lightContext.ecsContext.spacialHash;
+    }
+
+    get limits() {
+        return this.spacialHash.limits;
+    }
+
+    get(coord) {
+        return this.spacialHash.get(coord);
+    }
+}
+
 let nextLightId = 0;
 
 export class Light {
-    constructor(coord, intensity, height) {
+    constructor(coord, intensity, height, channels = ALL_CHANNELS) {
 
         this.id = nextLightId;
         ++nextLightId;
@@ -51,6 +75,8 @@ export class Light {
         this.lightContext = null;
 
         this.sequence = 0;
+
+        this.maskedSpacialHash = new MaskedSpacialHash(this, channels);
     }
 
     set height(value) {
@@ -69,7 +95,7 @@ export class Light {
     }
 
     detectVisibleArea() {
-        detectVisibleArea(this.coord, LIGHT_DISTANCE, this.lightContext.ecsContext.spacialHash,
+        detectVisibleArea(this.coord, LIGHT_DISTANCE, this.maskedSpacialHash,
                 this.lightContext.visionCells);
     }
 
@@ -87,8 +113,8 @@ export class Light {
 }
 
 export class DirectionalLight extends Light {
-    constructor(coord, intensity, height, angle, width) {
-        super(coord, intensity, height);
+    constructor(coord, intensity, height, angle, width, channels = ALL_CHANNELS) {
+        super(coord, intensity, height, channels);
         this.angle = angle;
         this.width = width;
     }

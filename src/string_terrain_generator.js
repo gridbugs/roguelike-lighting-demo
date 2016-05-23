@@ -84,6 +84,17 @@ export class StringTerrainGenerator {
             add('ClosedWoodenDoor');
             add('StoneFloor');
             break;
+        case 'X':
+            add('LighthouseWall');
+            add('LighthouseFloor');
+            break;
+        case 'x':
+            add('LighthouseFloor');
+            break;
+        case 'J':
+            add('LighthouseLamp');
+            add('LighthouseFloor');
+            break;
         }
     }
 }

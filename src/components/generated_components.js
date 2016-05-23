@@ -6,3 +6,4 @@ export const Opacity = ARRAY_TUPLE(EXTENDS(Component), value);
 export const Collider = ARRAY_TUPLE(EXTENDS(Component));
 export const Unfamiliar = ARRAY_TUPLE(EXTENDS(Component));
 export const Solid = ARRAY_TUPLE(EXTENDS(Component));
+export const LightMask = ARRAY_TUPLE(EXTENDS(Component), mask);

@@ -10,6 +10,8 @@ export const TileDescription = {
     Ground:             new CharacterTile('.', IBM_BIOS, '#2d8010', '#06310d'),
     StoneFloor:         new CharacterTile('.', IBM_BIOS, '#222222', '#444444'),
     WoodWall:           new CharacterTile('#', IBM_BIOS, '#332301', '#664602'),
+    LighthouseWall:     new CharacterTile('#', IBM_BIOS, '#ddddbb', '#ccccaa'),
+    LighthouseFloor:    new CharacterTile('.', IBM_BIOS, '#222222', '#444444'),
     Window:             new CharacterTile('#', IBM_BIOS, '#ffffff', '#50e7d4'),
     ClosedWoodenDoor:   new CharacterTile('+', IBM_BIOS, '#332301'),
     OpenWoodenDoor:     new CharacterTile('-', IBM_BIOS, '#332301'),

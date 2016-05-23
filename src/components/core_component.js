@@ -2,7 +2,7 @@ import {Component, ArrayComponent} from 'engine/component';
 import {Knowledge} from 'knowledge';
 
 import {Components} from 'components';
-import {Light as LightImpl, DirectionalLight as DirectionalLightImpl} from 'lighting';
+import {Light as LightImpl, DirectionalLight as DirectionalLightImpl, ALL_CHANNELS} from 'lighting';
 import {Vec2} from 'utils/vec2';
 import {makeEnumInts} from 'utils/enum';
 
@@ -39,9 +39,9 @@ Observer.ViewDistance = ObserverParent.ViewDistance;
 
 const LightParent = ARRAY_TUPLE(EXTENDS(SetComponent), intensity, height);
 export class Light extends LightParent {
-    constructor(intensity, height) {
+    constructor(intensity, height, channels = ALL_CHANNELS) {
         super(intensity, height);
-        this.light = new LightImpl(new Vec2(0, 0), 0, 0);
+        this.light = new LightImpl(new Vec2(0, 0), 0, 0, channels);
     }
 
     get set() {
@@ -67,9 +67,9 @@ Light.Height = LightParent.Height;
 
 const DirectionalLightParent = ARRAY_TUPLE(EXTENDS(SetComponent), intensity, height, angle, width);
 export class DirectionalLight extends DirectionalLightParent {
-    constructor(intensity, height, angle, width) {
+    constructor(intensity, height, angle, width, channels = ALL_CHANNELS) {
         super(intensity, height, angle, width);
-        this.light = new DirectionalLightImpl(new Vec2(0, 0), 0, 0, 0, 0);
+        this.light = new DirectionalLightImpl(new Vec2(0, 0), 0, 0, 0, 0, channels);
     }
 
     get set() {
