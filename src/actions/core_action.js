@@ -78,3 +78,14 @@ export class DirectionalLightTurn extends Action {
         ];
     }
 }
+
+export class Wait extends Action {
+    constructor(entity) {
+        super();
+        this.entity = entity;
+    }
+
+    getChanges() {
+        return [];
+    }
+}
