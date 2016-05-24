@@ -315,6 +315,8 @@ function detectVisibleAreaOctant(octant, eyeCell, viewDistance, viewDistanceSqua
                     let slope = computeSlope(eyeCell.centre, corner, octant.lateralIndex, octant.depthIndex);
                     if (maxSlope > slope) {
                         description.setSide(octant.facingSide, true);
+                    } else if (maxSlope == slope) {
+                        description.setSide(octant.facingCorner, true);
                     }
                 } else {
                     let frame = STACK.push();
