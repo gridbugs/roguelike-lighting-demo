@@ -1,11 +1,12 @@
 import {ObjectPool} from 'utils/object_pool';
 import {Cell, CellGrid} from 'utils/cell_grid';
+import {Direction} from 'utils/direction';
 
 class VisionCellDescription {
     constructor() {
         this.cell = null;
         this.visibility = 0;
-        this.sides = new Array(4);
+        this.sides = new Array(Direction.length);
         this.setAllSides(false);
     }
 
@@ -21,7 +22,7 @@ class VisionCellDescription {
     }
 
     setSide(direction, value) {
-        this.sides[direction.subIndex] = value;
+        this.sides[direction.index] = value;
     }
 }
 

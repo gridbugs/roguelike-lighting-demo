@@ -5,6 +5,7 @@ import {ObjectPool} from 'utils/object_pool';
 import {BestTracker} from 'utils/best_tracker';
 import {Config} from 'config';
 import {InvalidatingComponentTable} from 'engine/invalidating_component_table';
+import {Direction} from 'utils/direction';
 
 class EntityMemory extends InvalidatingComponentTable {
     constructor(cell) {
@@ -65,7 +66,7 @@ class KnowledgeCell extends Cell {
         this.topBackgroundEntityMemory = new BestTracker(compare);
         this.componentTable = new ComponentTable();
         this.realCell = null;
-        this.sides = new Array(4);
+        this.sides = new Array(Direction.length);
     }
 
     *[Symbol.iterator]() {

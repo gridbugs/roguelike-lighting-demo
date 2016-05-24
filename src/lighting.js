@@ -6,6 +6,7 @@ import {normalize} from 'utils/angle';
 import {UINT32_MAX} from 'utils/limits';
 import {Components} from 'components';
 import {ObjectPool} from 'utils/object_pool';
+import {Direction} from 'utils/direction';
 
 export const ALL_CHANNELS = UINT32_MAX;
 
@@ -21,7 +22,7 @@ class LightDescription {
         this.cell = cell;
         this.intensity = 0;
         this.sequence = 0;
-        this.sides = new Array(4);
+        this.sides = new Array(Direction.length);
     }
 
     getIntensity(point) {
@@ -239,7 +240,7 @@ class LightCell extends Cell {
         super(x, y, grid);
         this.lightingCentre = new Vec3(this.centre.x, this.centre.y, 0);
         this.lights = new Map();
-        this.sides = new Array(4);
+        this.sides = new Array(Direction.length);
         this.intensity = 0;
         this.clearSides();
     }
