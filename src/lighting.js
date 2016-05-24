@@ -4,6 +4,8 @@ import {detectVisibleArea, detectVisibleAreaConstrained} from 'shadowcast';
 import {Vec3} from 'utils/vec3.js';
 import {normalize} from 'utils/angle';
 import {UINT32_MAX} from 'utils/limits';
+import {Components} from 'components';
+import {ObjectPool} from 'utils/object_pool';
 
 export const ALL_CHANNELS = UINT32_MAX;
 
@@ -38,12 +40,43 @@ class LightDescription {
     }
 }
 
+class TransparentCell {
+    constructor() {
+        this.cell = null;
+    }
+
+    get opacity() {
+        return 0;
+    }
+
+    get x() {
+        return this.cell.x;
+    }
+
+    get y() {
+        return this.cell.y;
+    }
+
+    get coord() {
+        return this.cell.coord;
+    }
+
+    get centre() {
+        return this.cell.centre;
+    }
+
+    get corners() {
+        return this.cell.corners;
+    }
+}
+
 /* Provides the grid interfaces required by the vision system after
  * applying light masks */
 class MaskedSpacialHash {
     constructor(light, channels) {
         this.light = light;
         this.channels = channels;
+        this.transparentCellPool = new ObjectPool(TransparentCell);
     }
 
     get spacialHash() {
@@ -55,7 +88,31 @@ class MaskedSpacialHash {
     }
 
     get(coord) {
-        return this.spacialHash.get(coord);
+        let cell = this.spacialHash.get(coord);
+        if (cell.entities.hasComponent(Components.LightMask)) {
+            let entity = cell.find(Components.LightMask);
+            let mask = entity.get(Components.LightMask).mask;
+            if (!(this.channels & mask)) {
+                let transparentCell = this.transparentCellPool.allocate();
+                transparentCell.cell = cell;
+                return transparentCell;
+            }
+        }
+        return cell;
+    }
+}
+
+class DummyDescription {
+    constructor() {
+        this.visibility = 0;
+    }
+
+    setSide(side, value) {
+        // do nothing
+    }
+
+    setAllSides(value) {
+        // do nothing
     }
 }
 
@@ -66,18 +123,41 @@ class MaskedVisionCellList {
     constructor(light, channels) {
         this.light = light;
         this.channels = channels;
+        this.dummyDescription = new DummyDescription();
+    }
+
+    get spacialHash() {
+        return this.light.lightContext.ecsContext.spacialHash;
     }
 
     get visionCellList() {
         return this.light.lightContext.visionCells;
     }
 
+    isValidCoord(coord) {
+        let cell = this.spacialHash.get(coord);
+        if (cell.entities.hasComponent(Components.LightMask)) {
+            let entity = cell.find(Components.LightMask);
+            let mask = entity.get(Components.LightMask).mask;
+            if (!(this.channels & mask)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     addAllSides(coord, visibility) {
-        this.visionCellList.addAllSides(coord, visibility);
+        if (this.isValidCoord(coord)) {
+            this.visionCellList.addAllSides(coord, visibility);
+        }
     }
 
     getDescription(coord) {
-        return this.visionCellList.getDescription(coord);
+        if (this.isValidCoord(coord)) {
+            return this.visionCellList.getDescription(coord);
+        } else {
+            return this.dummyDescription;
+        }
     }
 }
 
@@ -97,6 +177,8 @@ export class Light {
         this.lightContext = null;
 
         this.sequence = 0;
+
+        this.channels = channels;
 
         this.maskedSpacialHash = new MaskedSpacialHash(this, channels);
         this.maskedVisionCellList = new MaskedVisionCellList(this, channels);
@@ -118,6 +200,7 @@ export class Light {
     }
 
     detectVisibleArea() {
+        this.maskedSpacialHash.transparentCellPool.flush();
         detectVisibleArea(this.coord, LIGHT_DISTANCE, this.maskedSpacialHash,
                 this.maskedVisionCellList);
     }
@@ -146,8 +229,8 @@ export class DirectionalLight extends Light {
         let halfWidth = this.width / 2;
         let startAngle = normalize(this.angle - halfWidth);
         let endAngle = normalize(this.angle + halfWidth);
-        detectVisibleAreaConstrained(this.coord, LIGHT_DISTANCE, this.lightContext.ecsContext.spacialHash,
-                this.lightContext.visionCells, startAngle, endAngle);
+        detectVisibleAreaConstrained(this.coord, LIGHT_DISTANCE, this.maskedSpacialHash,
+                this.maskedVisionCellList, startAngle, endAngle);
     }
 }
 

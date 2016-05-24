@@ -252,7 +252,6 @@ function detectVisibleAreaOctant(octant, eyeCell, viewDistance, viewDistanceSqua
         /* Information about the previous cell */
         let previousOpaque = false;
         let previousVisibility = -1;
-        let previousDescription = null;
 
         /* Set the depth component of the coord index */
         COORD_IDX.arraySet(octant.depthIndex, depthAbsoluteIndex);
@@ -328,7 +327,6 @@ function detectVisibleAreaOctant(octant, eyeCell, viewDistance, viewDistanceSqua
 
             previousOpaque = currentOpaque;
             previousVisibility = currentVisibility;
-            previousDescription = description;
             firstIteration = false;
         }
     }
