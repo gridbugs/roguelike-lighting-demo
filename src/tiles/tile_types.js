@@ -20,3 +20,12 @@ export const SolidTile = NAMED_TUPLE(
     effects = emptySet,
     type = 'solid'
 );
+
+export const DotTile = NAMED_TUPLE(
+    size,
+    foregroundColour,
+    backgroundColour = Colour.Transparent,
+    transparent = backgroundColour == Colour.Transparent,
+    effects = defaultEffects,
+    type = 'dot'
+);

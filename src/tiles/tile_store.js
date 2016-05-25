@@ -82,6 +82,20 @@ export class TileStore {
         return this.createSprite(`character(${character}, ${colour}, ${font.name}, ${font.size})`);
     }
 
+    createDotSprite(size, colour) {
+        this.getNextOffset();
+
+        this.ctx.beginPath();
+        this.ctx.fillStyle = colour;
+
+        let x = this.xOffset + (this.tileWidth / 2) - (size / 2);
+        let y = this.yOffset + (this.tileHeight / 2) - (size / 2);
+        this.ctx.fillRect(x, y, size, size);
+        this.ctx.fill();
+
+        return this.createSprite(`dot(${size}, ${colour})`);
+    }
+
     createSolidSprite(colour) {
         this.getNextOffset();
 
@@ -190,5 +204,16 @@ export class TileStore {
     createSolidTile(colour, transparent, effects = Effect.Default) {
         let sprite = this.createSolidSprite(colour);
         return new TileFamily(sprite, transparent, effects);
+    }
+
+    createDotTile(size, foregroundColour, backgroundColour, transparent, effects = Effect.Default) {
+        let foregroundSprite = this.createDotSprite(size, foregroundColour);
+
+        if (backgroundColour == Colour.Transparent) {
+            return new TileFamily(foregroundSprite, transparent, effects);
+        } else {
+            let backgroundSprite = this.createSolidSprite(backgroundColour);
+            return new ComplexTileFamily(foregroundSprite, backgroundSprite, transparent, effects);
+        }
     }
 }

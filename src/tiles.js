@@ -30,10 +30,11 @@ const promiseConstructors = {
     },
     dot: (description, tileStore) => {
         return new Promise((resolve, reject) => {
-            resolve(tileStore.allocateDotTile(
+            resolve(tileStore.createDotTile(
                         description.size,
                         description.foregroundColour,
                         description.backgroundColour,
+                        description.transparent,
                         description.effects));
         });
     },

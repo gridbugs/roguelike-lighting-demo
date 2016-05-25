@@ -1,17 +1,18 @@
 import {Font} from 'tiles/font';
 import {Effect} from 'effect';
 import {Colour, rgb, rgba} from 'colour';
-import {CharacterTile, SolidTile} from 'tiles/tile_types';
+import {CharacterTile, SolidTile, DotTile} from 'tiles/tile_types';
 
 const IBM_BIOS = new Font("IBM-BIOS", 16, 1, -2);
+const DOT_SIZE = 4;
 
 export const TileDescription = {
     PlayerCharacter:    new CharacterTile('@', IBM_BIOS, Colour.White),
-    Ground:             new CharacterTile('.', IBM_BIOS, '#2d8010', '#06310d'),
-    StoneFloor:         new CharacterTile('.', IBM_BIOS, '#222222', '#444444'),
+    Ground:             new DotTile(DOT_SIZE, '#2d8010', '#06310d'),
+    StoneFloor:         new DotTile(DOT_SIZE, '#222222', '#444444'),
     WoodWall:           new CharacterTile('#', IBM_BIOS, '#332301', '#664602'),
     LighthouseWall:     new CharacterTile('#', IBM_BIOS, '#ddddbb', '#ccccaa'),
-    LighthouseFloor:    new CharacterTile('.', IBM_BIOS, '#222222', '#444444'),
+    LighthouseFloor:    new DotTile(DOT_SIZE, '#222222', '#444444'),
     Window:             new CharacterTile('#', IBM_BIOS, '#ffffff', '#50e7d4'),
     ClosedWoodenDoor:   new CharacterTile('+', IBM_BIOS, '#332301'),
     OpenWoodenDoor:     new CharacterTile('-', IBM_BIOS, '#332301'),
