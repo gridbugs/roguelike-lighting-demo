@@ -1,7 +1,7 @@
 import {TileStore} from 'tiles/tile_store';
 import {loadImage} from 'utils/image_loader';
 import {Config} from 'config';
-import {Effect} from 'effect';
+import {EMPTY_SET} from 'utils/empty_set';
 import {resolvePromiseStructure} from 'utils/async';
 
 export const Tiles = {};
@@ -12,8 +12,8 @@ const TILE_STORE_HEIGHT = 2048;
 const promiseConstructors = {
     image: (description, tileStore) => {
         return new Promise((resolve, reject) => {
-            loadImage(description.image).then((image) => {
-                resolve(tileStore.allocateImageTile(
+            loadImage(description.path).then((image) => {
+                resolve(tileStore.createImageTile(
                             image,
                             description.transparent,
                             description.effects));
@@ -99,20 +99,20 @@ function initDebugTiles(tileStore) {
     Tiles.debugArray = [];
     for (var i = 0; i <= 9; ++i) {
         Tiles.debugArray.push(
-            tileStore.createCharacterTile('' + i, font, colour, 'rgba(255, 255, 255, 0.25)', true, Effect.None));
+            tileStore.createCharacterTile('' + i, font, colour, 'rgba(255, 255, 255, 0.25)', true, EMPTY_SET));
     }
     for (var i = 0; i < 26; ++i) {
         var c = String.fromCharCode('a'.charCodeAt(0) + i);
         Tiles.debugArray.push(
-            tileStore.createCharacterTile(c, font, colour, 'rgba(255, 255, 255, 0.25)', true, Effect.None));
+            tileStore.createCharacterTile(c, font, colour, 'rgba(255, 255, 255, 0.25)', true, EMPTY_SET));
     }
     for (var i = 0; i < 26; ++i) {
         var c = String.fromCharCode('A'.charCodeAt(0) + i);
         Tiles.debugArray.push(
-            tileStore.createCharacterTile(c, font, colour, 'rgba(255, 255, 255, 0.25)', true, Effect.None));
+            tileStore.createCharacterTile(c, font, colour, 'rgba(255, 255, 255, 0.25)', true, EMPTY_SET));
     }
     Tiles.debugExtra =
-        tileStore.createCharacterTile('?', font, colour, 'rgba(255, 255, 255, 0.25)', true, Effect.None);
+        tileStore.createCharacterTile('?', font, colour, 'rgba(255, 255, 255, 0.25)', true, EMPTY_SET);
 }
 
 export function getDebugTile(i) {

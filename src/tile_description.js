@@ -1,7 +1,7 @@
 import {Font} from 'tiles/font';
 import {Effect} from 'effect';
 import {Colour, rgb, rgba} from 'colour';
-import {CharacterTile, SolidTile, DotTile} from 'tiles/tile_types';
+import {CharacterTile, SolidTile, DotTile, ImageTile} from 'tiles/tile_types';
 
 const IBM_BIOS = new Font("IBM-BIOS", 16, 1, -2);
 const DOT_SIZE = 4;
@@ -16,7 +16,8 @@ export const TileDescription = {
     Window:             new CharacterTile('#', IBM_BIOS, '#ffffff', '#50e7d4'),
     ClosedWoodenDoor:   new CharacterTile('+', IBM_BIOS, '#332301'),
     OpenWoodenDoor:     new CharacterTile('-', IBM_BIOS, '#332301'),
-    Tree:               new CharacterTile('&', IBM_BIOS, '#2d8010'),
+    Tree:               new ImageTile('images/pine-tree.png', true),
+//    Tree:               new CharacterTile('&', IBM_BIOS, '#2d8010'),
     Water:              new CharacterTile('~', IBM_BIOS, '#2288cc', '#004488'),
     Rock:               new CharacterTile('*', IBM_BIOS, '#222222', '#444444'),
     Lamp:               new CharacterTile('£', IBM_BIOS, '#cccc00'),

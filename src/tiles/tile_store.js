@@ -190,7 +190,7 @@ export class TileStore {
         return this.createSprite(`transparent(${sprite.debug}, ${alpha})`);
     }
 
-    createCharacterTile(character, font, colour, backgroundColour, transparent, effects = Effect.Default) {
+    createCharacterTile(character, font, colour, backgroundColour, transparent, effects) {
         let foregroundSprite = this.createCharacterSprite(character, font, colour);
 
         if (backgroundColour == Colour.Transparent) {
@@ -201,12 +201,12 @@ export class TileStore {
         }
     }
 
-    createSolidTile(colour, transparent, effects = Effect.Default) {
+    createSolidTile(colour, transparent, effects) {
         let sprite = this.createSolidSprite(colour);
         return new TileFamily(sprite, transparent, effects);
     }
 
-    createDotTile(size, foregroundColour, backgroundColour, transparent, effects = Effect.Default) {
+    createDotTile(size, foregroundColour, backgroundColour, transparent, effects) {
         let foregroundSprite = this.createDotSprite(size, foregroundColour);
 
         if (backgroundColour == Colour.Transparent) {
@@ -215,5 +215,11 @@ export class TileStore {
             let backgroundSprite = this.createSolidSprite(backgroundColour);
             return new ComplexTileFamily(foregroundSprite, backgroundSprite, transparent, effects);
         }
+    }
+
+    createImageTile(image, transparent, effects) {
+        console.debug(image, transparent, effects);
+
+        return new TileFamily(this.createSolidSprite('blue'));
     }
 }

@@ -29,3 +29,10 @@ export const DotTile = NAMED_TUPLE(
     effects = defaultEffects,
     type = 'dot'
 );
+
+export const ImageTile = NAMED_TUPLE(
+    path,
+    transparent,
+    effects = defaultEffects,
+    type = 'image'
+);

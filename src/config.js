@@ -1,7 +1,7 @@
 export const Config = {
     RNG_SEED: null,
     AI: true,
-    DEBUG: false,
+    DEBUG: true,
     DEMO: true,
     OMNISCIENT: false,
     TILE_HEIGHT: 16,

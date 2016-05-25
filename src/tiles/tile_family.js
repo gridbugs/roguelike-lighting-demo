@@ -53,7 +53,7 @@ export class TileFamily {
 }
 
 export class ComplexTileFamily extends TileFamily {
-    constructor(foregroundSprite, backgroundSprite, transparent, effects = Effect.Default) {
+    constructor(foregroundSprite, backgroundSprite, transparent, effects = defaultEffects) {
         super(
             foregroundSprite.tileStore.createLayeredSprite(foregroundSprite, backgroundSprite),
             transparent,
