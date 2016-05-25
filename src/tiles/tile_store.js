@@ -4,6 +4,9 @@ import {Colour} from 'colour';
 import {Effect} from 'effect';
 import {TileFamily, ComplexTileFamily} from 'tiles/tile_family';
 
+const STAGE_WIDTH = 128;
+const STAGE_HEIGHT = 128;
+
 export class TileStore {
     constructor(tileWidth, tileHeight, width, height) {
         this.tileWidth = tileWidth;
@@ -14,7 +17,8 @@ export class TileStore {
         this.ctx = this.createMemoryCanvas(this.width, this.height);
         this.canvas = this.ctx.canvas;
 
-        this.stageCtx = this.createMemoryCanvas(tileWidth, tileHeight);
+        this.stageCtx = this.createMemoryCanvas(STAGE_WIDTH, STAGE_HEIGHT);
+        this.stageCanvas = this.stageCtx.canvas;
 
         if (Config.DEBUG) {
             $('#canvas').after(this.canvas);
@@ -29,6 +33,12 @@ export class TileStore {
         this.xOffset = 0;
         this.yOffset = 0;
         this.maxColumns = Math.floor(width / tileWidth);
+    }
+
+    clearStage() {
+        this.stageCtx.beginPath();
+        this.stageCtx.clearRect(0, 0, this.stageCanvas.width, this.stageCanvas.height);
+        this.stageCtx.fill();
     }
 
     newLine() {
@@ -94,6 +104,36 @@ export class TileStore {
         this.ctx.fill();
 
         return this.createSprite(`dot(${size}, ${colour})`);
+    }
+
+    createImageSprite(image) {
+        this.getNextOffset();
+
+        this.clearStage();
+
+        this.stageCtx.drawImage(image, 0, 0);
+
+        let fromImageData = this.stageCtx.getImageData(0, 0, image.width, image.height);
+        let toImageData = this.ctx.getImageData(this.xOffset, this.yOffset, this.tileWidth, this.tileHeight);
+
+        let xScale = image.width / this.tileWidth;
+        let yScale = image.height / this.tileHeight;
+
+        for (let y = 0; y < this.tileHeight; ++y) {
+            for (let x = 0; x < this.tileWidth; ++x) {
+                let toI = (y * this.tileWidth + x) * 4;
+                let fromI = (Math.floor(y * yScale) * image.width + Math.floor(x * xScale)) * 4;
+
+                toImageData.data[toI] = fromImageData.data[fromI];
+                toImageData.data[toI+1] = fromImageData.data[fromI+1];
+                toImageData.data[toI+2] = fromImageData.data[fromI+2];
+                toImageData.data[toI+3] = fromImageData.data[fromI+3];
+            }
+        }
+
+        this.ctx.putImageData(toImageData, this.xOffset, this.yOffset);
+
+        return this.createSprite(`image(${image.src})`);
     }
 
     createSolidSprite(colour) {
@@ -218,8 +258,7 @@ export class TileStore {
     }
 
     createImageTile(image, transparent, effects) {
-        console.debug(image, transparent, effects);
-
-        return new TileFamily(this.createSolidSprite('blue'));
+        let sprite = this.createImageSprite(image);
+        return new TileFamily(sprite, transparent, effects);
     }
 }
