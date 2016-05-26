@@ -12,6 +12,8 @@ export const TileDescription = {
     StoneFloor:         new DotTile(DOT_SIZE, '#222222', '#444444'),
     WoodWall:           new CharacterTile('#', IBM_BIOS, '#332301', '#664602'),
     LighthouseWall:     new CharacterTile('#', IBM_BIOS, '#ddddbb', '#ccccaa'),
+    LighthouseWallTop:  new ImageTile('images/lighthouse-wall-top.png', false),
+    LighthouseWallFront:new ImageTile('images/lighthouse-wall-front.png', false),
     LighthouseFloor:    new DotTile(DOT_SIZE, '#222222', '#444444'),
     Window:             new CharacterTile('#', IBM_BIOS, '#ffffff', '#50e7d4'),
     ClosedWoodenDoor:   new ImageTile('images/door-closed.png', true),

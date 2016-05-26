@@ -6,6 +6,9 @@ function getEntityTile(entity) {
     if (entity.has(Components.Tile)) {
         return entity.get(Components.Tile).family;
     }
+    if (entity.has(Components.WallTile)) {
+        return entity.get(Components.WallTile).frontFamily;
+    }
     return Tiles.NoTile;
 }
 

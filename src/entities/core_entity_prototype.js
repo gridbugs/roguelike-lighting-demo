@@ -82,10 +82,9 @@ const LIGHTHOUSE_CHANNEL = 0;
 export function LighthouseWall(x, y) {
     return [
         new Components.Position(x, y),
-        new Components.Tile(Tiles.LighthouseWall, 2),
+        new Components.WallTile(Tiles.LighthouseWallFront, Tiles.LighthouseWallTop, 2),
         new Components.Opacity(1),
         new Components.Solid(),
-        new Components.LightMask(~bit(LIGHTHOUSE_CHANNEL)),
     ];
 }
 
@@ -100,7 +99,6 @@ export function LighthouseFloor(x, y) {
 export function LighthouseLamp(x, y) {
     return [
         new Components.Position(x, y),
-        new Components.Tile(Tiles.Lamp, 2),
         new Components.DirectionalLight(30, 4, d2r(90), d2r(30), bit(LIGHTHOUSE_CHANNEL)),
         new Components.TurnTaker(new Lighthouse()),
     ];

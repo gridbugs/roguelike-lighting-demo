@@ -6,6 +6,7 @@ import {BestTracker} from 'utils/best_tracker';
 import {Config} from 'config';
 import {InvalidatingComponentTable} from 'engine/invalidating_component_table';
 import {Direction} from 'utils/direction';
+import {hasBackground, getTileDepth, hasTileComponent} from 'tiles/tile_components';
 
 class EntityMemory extends InvalidatingComponentTable {
     constructor(cell) {
@@ -17,6 +18,7 @@ class EntityMemory extends InvalidatingComponentTable {
             EntityMemory.RememberedComponents = [
                 Components.Position,
                 Components.Tile,
+                Components.WallTile,
                 Components.Solid,
                 Components.PlayerCharacter
             ];
@@ -34,10 +36,7 @@ class EntityMemory extends InvalidatingComponentTable {
     }
 
     hasBackground() {
-        if (this.has(Components.Tile)) {
-            return !this.get(Components.Tile).family.transparent;
-        }
-        return false;
+        return hasBackground(this);
     }
 
     add(component) {
@@ -48,8 +47,8 @@ class EntityMemory extends InvalidatingComponentTable {
 EntityMemory.RememberedComponents = null;
 
 function compare(a, b) {
-    let aDepth = a.get(Components.Tile).depth;
-    let bDepth = b.get(Components.Tile).depth;
+    let aDepth = getTileDepth(a);
+    let bDepth = getTileDepth(b);
     if (aDepth == null || bDepth == null) {
         throw 'entity has no component with depth';
     }
@@ -86,7 +85,7 @@ class KnowledgeCell extends Cell {
     }
 
     see(entity) {
-        if (!entity.has(Components.Tile)) {
+        if (!hasTileComponent(entity)) {
             return;
         }
         let entityMemory = this.entityMemoryPool.allocate();
