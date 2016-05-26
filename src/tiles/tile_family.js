@@ -26,7 +26,7 @@ export class TileFamily {
             this.lightLevels = new Array(NUM_LIGHT_LEVELS);
             for (let i = 0; i < NUM_LIGHT_LEVELS; ++i) {
                 let litRatio = i * 2 / NUM_LIGHT_LEVELS;
-                let litOffset = (i - NUM_LIGHT_LEVELS / 2) * 2;
+                let litOffset = 0;//(i - NUM_LIGHT_LEVELS / 2) * 2;
                 this.lightLevels[i] = this.tileStore.createLightLevelSprite(
                     this.main,
                     litRatio,

@@ -13,6 +13,7 @@ class EntityMemory extends InvalidatingComponentTable {
         super();
 
         this.cell = cell;
+        this.entity = null;
 
         if (EntityMemory.RememberedComponents == null) {
             EntityMemory.RememberedComponents = [
@@ -26,6 +27,7 @@ class EntityMemory extends InvalidatingComponentTable {
     }
 
     see(entity) {
+        this.entity = entity;
         for (let i = 0; i < EntityMemory.RememberedComponents.length; ++i) {
             let component = EntityMemory.RememberedComponents[i];
             if (entity.has(component)) {

@@ -45,7 +45,7 @@ export function StoneFloor(x, y) {
 export function WoodWall(x, y) {
     return [
         new Components.Position(x, y),
-        new Components.Tile(Tiles.WoodWall, 2),
+        new Components.WallTile(Tiles.WoodWallFront, Tiles.WoodWallTop, 2),
         new Components.Opacity(1),
         new Components.Solid()
     ];
@@ -64,7 +64,7 @@ export function ClosedWoodenDoor(x, y) {
 export function Window(x, y) {
     return [
         new Components.Position(x, y),
-        new Components.Tile(Tiles.Window, 2),
+        new Components.WallTile(Tiles.WoodWindowFront, Tiles.WoodWindowTop, 2),
         new Components.Solid()
     ];
 }
@@ -101,5 +101,13 @@ export function LighthouseLamp(x, y) {
         new Components.Position(x, y),
         new Components.DirectionalLight(30, 4, d2r(90), d2r(30), bit(LIGHTHOUSE_CHANNEL)),
         new Components.TurnTaker(new Lighthouse()),
+    ];
+}
+
+export function LighthouseWindow(x, y) {
+    return [
+        new Components.Position(x, y),
+        new Components.WallTile(Tiles.LighthouseWindowFront, Tiles.LighthouseWindowTop, 2),
+        new Components.Solid()
     ];
 }

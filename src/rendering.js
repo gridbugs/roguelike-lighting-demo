@@ -1,13 +1,19 @@
 import {Tiles} from 'tiles';
 import {Components} from 'components';
 import {constrain} from 'utils/arith';
+import {Direction} from 'utils/direction';
 
 function getEntityTile(entity) {
     if (entity.has(Components.Tile)) {
         return entity.get(Components.Tile).family;
     }
     if (entity.has(Components.WallTile)) {
-        return entity.get(Components.WallTile).frontFamily;
+        let south = entity.entity.cell.getNeighbour(Direction.South);
+        if (south == null || south.has(Components.WallTile)) {
+            return entity.get(Components.WallTile).topFamily;
+        } else {
+            return entity.get(Components.WallTile).frontFamily;
+        }
     }
     return Tiles.NoTile;
 }

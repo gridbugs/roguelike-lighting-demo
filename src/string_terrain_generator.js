@@ -100,7 +100,7 @@ export class StringTerrainGenerator {
             add('LighthouseFloor');
             break;
         case 'w':
-            add('Window');
+            add('LighthouseWindow');
             add('LighthouseFloor');
             break;
         }
