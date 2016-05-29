@@ -30,5 +30,6 @@ export const TileDescription = {
     Unknown:            new SolidTile(Colour.Black),
     OutOfBounds:        new SolidTile(Colour.Black),
     NoTile:             new SolidTile('#ff0000'),
-    Yellow:             new SolidTile('#ffff00', true, new Set([Effect.TransparencyLevels]))
+    Yellow:             new SolidTile('#ffff00', true, new Set([Effect.TransparencyLevels])),
+    Bullet:             new DotTile(8, '#888888')
 };

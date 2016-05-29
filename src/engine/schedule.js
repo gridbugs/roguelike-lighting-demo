@@ -1,20 +1,16 @@
 import {Heap} from 'utils/heap';
 
 class Task {
-    constructor(task, absoluteTime, sequenceNumber, immediate) {
+    constructor(task, absoluteTime, sequenceNumber) {
         this.task = task;
         this.absoluteTime = absoluteTime;
         this.sequenceNumber = sequenceNumber;
-        this.immediate = immediate;
 
         this.enabled = true;
     }
 }
 
 function compare(a, b) {
-    if (a.immediate != b.immediate) {
-        return a.immediate - b.immediate;
-    }
     if (a.absoluteTime != b.absoluteTime) {
         return b.absoluteTime - a.absoluteTime;
     }
@@ -25,34 +21,25 @@ export class Schedule {
     constructor() {
         this.absoluteTime = 0;
         this.timeDelta = 0;
-        this.immediateAbsoluteTime = 0;
-        this.immediateTimeDelta = 0;
         this.sequenceNumber = 0;
         this.heap = new Heap(compare);
     }
 
     flushDisabled() {
-        while (!this.heap.peek().enabled) {
+        while (!this.heap.empty && !this.heap.peek().enabled) {
             this.heap.pop();
         }
     }
 
-    scheduleTask(f, relativeTime, immediate = false) {
-        let absoluteTime;
-        if (immediate) {
-            absoluteTime = this.immediateAbsoluteTime;
-        } else {
-            absoluteTime = this.absoluteTime;
-        }
+    scheduleTask(f, relativeTime) {
         let task = new Task(
             f,
-            absoluteTime + relativeTime,
-            this.sequenceNumber,
-            immediate
+            this.absoluteTime + relativeTime,
+            this.sequenceNumber
         );
 
         this.heap.insert(task);
-        ++this.sequenceNumber;
+        this.sequenceNumber++;
 
         return task;
     }
@@ -68,15 +55,8 @@ export class Schedule {
 
         var entry = this.heap.pop();
 
-        if (entry.immediate) {
-            this.immediateTimeDelta = entry.absoluteTime - this.immediateAbsoluteTime;
-            this.immediateAbsoluteTime = entry.absoluteTime;
-        } else {
-            this.timeDelta = entry.absoluteTime - this.absoluteTime;
-            this.absoluteTime = entry.absoluteTime;
-            this.immediateTimeDelta = this.timeDelta;
-            this.immediateAbsoluteTime = this.absoluteTime;
-        }
+        this.timeDelta = entry.absoluteTime - this.absoluteTime;
+        this.absoluteTime = entry.absoluteTime;
 
         return entry;
     }
@@ -85,12 +65,5 @@ export class Schedule {
         this.flushDisabled();
 
         return this.heap.empty;
-    }
-
-    hasImmediateTasks() {
-        if (this.empty) {
-            return false;
-        }
-        return this.peek().immediate;
     }
 }

@@ -96,3 +96,9 @@ DirectionalLight.Intensity = DirectionalLightParent.Intensity;
 DirectionalLight.Height = DirectionalLightParent.Height;
 DirectionalLight.Angle = DirectionalLightParent.Angle;
 DirectionalLight.Width = DirectionalLightParent.Width;
+
+export class Animated extends SetComponent {
+    get set() {
+        return this.ecsContext.animation.entities;
+    }
+}

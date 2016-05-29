@@ -21,6 +21,7 @@ export const ControlTypes = makeEnum([
     'Close',
     'TurnLeft',
     'TurnRight',
+    'Shoot'
 ], true);
 
 const ControlChars = substituteValues(ControlTypes, {
@@ -35,7 +36,8 @@ const ControlChars = substituteValues(ControlTypes, {
     '.': 'Wait',
     'c': 'Close',
     'q': 'TurnLeft',
-    'e': 'TurnRight'
+    'e': 'TurnRight',
+    'f': 'Shoot'
 });
 
 const ControlNonChars = substituteValues(ControlTypes, {
@@ -80,7 +82,8 @@ export const ControlTable = makeTable(ControlTypes, {
     Wait:       entity => new Actions.Wait(entity),
     Close:      toggleDoor,
     TurnLeft:   entity => new Actions.DirectionalLightTurn(entity, TURN_ANGLE),
-    TurnRight:  entity => new Actions.DirectionalLightTurn(entity, -TURN_ANGLE)
+    TurnRight:  entity => new Actions.DirectionalLightTurn(entity, -TURN_ANGLE),
+    Shoot:      entity => new Actions.Shoot(entity)
 });
 
 export function getControlTypeFromKey(key) {

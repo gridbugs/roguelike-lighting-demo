@@ -16,7 +16,11 @@ export class Collision extends ReactiveSystem {
 
             if (action.entity.is(Components.Collider) &&
                 destination.is(Components.Solid)) {
+                action.success = false;
+            }
 
+            if (action.entity.is(Components.Bullet) &&
+                destination.is(Components.Solid)) {
                 action.success = false;
             }
 
@@ -25,12 +29,32 @@ export class Collision extends ReactiveSystem {
                 for (let entity of destination) {
                     if (entity.is(Components.Door) && entity.get(Components.Door).closed) {
                         action.success = false;
-                        this.ecsContext.scheduleImmediateAction(
+                        this.ecsContext.scheduleAction(
                                 new Actions.OpenDoor(action.entity, entity));
                         break;
                     }
                 }
             }
+        });
+
+        this.on(Actions.VelocityMove, (action) => {
+            let destination = this.getCell(action.destination);
+
+            if (destination == null) {
+                action.success = false;
+                if (action.entity.is(Components.Bullet)) {
+                    this.ecsContext.scheduleAction(new Actions.Destroy(action.entity));
+                }
+                return;
+            }
+
+
+            if (action.entity.is(Components.Bullet) &&
+                destination.is(Components.Solid)) {
+                action.success = false;
+                this.ecsContext.scheduleAction(new Actions.Destroy(action.entity));
+            }
+
         });
     }
 }

@@ -2,6 +2,8 @@ import {Action} from 'engine/action';
 import * as Change from 'engine/change';
 import {Components} from 'components';
 import {normalize} from 'utils/angle';
+import {Direction} from 'utils/direction';
+import {EntityPrototypes} from 'entity_prototypes';
 
 export class Walk extends Action {
     constructor(entity, direction) {
@@ -87,5 +89,61 @@ export class Wait extends Action {
 
     getChanges() {
         return [];
+    }
+}
+
+export class Shoot extends Action {
+    constructor(entity) {
+        super();
+        this.direction = Direction.North;
+        this.entity = entity;
+        this.origin = entity.get(Components.Position).vector;
+    }
+
+    getChanges() {
+        const BULLET = 0;
+
+        return [
+            new Change.Bind(BULLET, new Change.AddEntity(new EntityPrototypes.Bullet(this.origin.x, this.origin.y))),
+            new Change.Refer(BULLET, (bullet) => new Change.AddComponent(bullet, Components.Velocity, this.direction.vector)),
+            new Change.Refer(BULLET, (bullet) => new Change.AddComponent(bullet, Components.Animated)),
+        ];
+    }
+}
+
+export class VelocityMove extends Action {
+    constructor(entity) {
+        super();
+        this.entity = entity;
+        this.position = this.entity.get(Components.Position);
+        this.velocity = this.entity.get(Components.Velocity);
+        this.source = this.position.vector;
+        this.destination = this.source.add(this.velocity.vector);
+    }
+
+    getChanges() {
+        return [
+            new Change.UpdateComponentFieldInPlace(
+                this.entity,
+                Components.Position,
+                Components.Position.Vector,
+                (vector) => {
+                    vector.set(this.destination)
+                }
+            ),
+        ];
+    }
+}
+
+export class Destroy extends Action {
+    constructor(entity) {
+        super();
+        this.entity = entity;
+    }
+
+    getChanges() {
+        return [
+            new Change.RemoveEntity(this.entity)
+        ];
     }
 }

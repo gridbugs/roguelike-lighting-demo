@@ -8,7 +8,15 @@ export class Vec {
     }
 
     get length() {
-        return Math.sqrt(this.dot(this));
+        return this.getLength();
+    }
+
+    getLengthSquared() {
+        return this.dot(this);
+    }
+
+    getLength() {
+        return Math.sqrt(this.getLengthSquared());
     }
 
     getDistance(v) {

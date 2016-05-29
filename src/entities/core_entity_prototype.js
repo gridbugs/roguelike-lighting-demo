@@ -111,3 +111,11 @@ export function LighthouseWindow(x, y) {
         new Components.Solid()
     ];
 }
+
+export function Bullet(x, y) {
+    return [
+        new Components.Position(x, y),
+        new Components.Tile(Tiles.Bullet, 3),
+        new Components.Bullet(),
+    ];
+}
