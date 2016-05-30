@@ -61,6 +61,11 @@ export class Light extends LightParent {
         super.onAdd(entity);
         this.updateLight();
     }
+
+    onRemove(entity) {
+        super.onRemove(entity);
+        this.light.remove();
+    }
 }
 Light.Intensity = LightParent.Intensity;
 Light.Height = LightParent.Height;
@@ -90,6 +95,11 @@ export class DirectionalLight extends DirectionalLightParent {
         this.light.lightContext = entity.ecsContext.lightContext;
         super.onAdd(entity);
         this.updateLight();
+    }
+
+    onRemove(entity) {
+        super.onRemove(entity);
+        this.light.remove();
     }
 }
 DirectionalLight.Intensity = DirectionalLightParent.Intensity;

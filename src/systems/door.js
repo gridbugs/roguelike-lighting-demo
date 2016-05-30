@@ -19,7 +19,7 @@ export class Door extends ReactiveSystem {
                 let door = destination.find(Components.Door);
                 if (!door.get(Components.Door).open) {
                     action.success = false;
-                    this.ecsContext.scheduleImmediateAction(
+                    this.ecsContext.scheduleAction(
                             new Actions.OpenDoor(action.entity, door));
                 }
 

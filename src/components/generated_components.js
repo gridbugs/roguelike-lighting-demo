@@ -10,3 +10,4 @@ export const Solid = ARRAY_TUPLE(EXTENDS(Component));
 export const LightMask = ARRAY_TUPLE(EXTENDS(Component), mask);
 export const Velocity = ARRAY_TUPLE(EXTENDS(Component), vector);
 export const Bullet = ARRAY_TUPLE(EXTENDS(Component));
+export const Flash = ARRAY_TUPLE(EXTENDS(Component));

@@ -24,17 +24,6 @@ export class Collision extends ReactiveSystem {
                 action.success = false;
             }
 
-            if (action.entity.is(Components.Collider) &&
-                destination.has(Components.Door)) {
-                for (let entity of destination) {
-                    if (entity.is(Components.Door) && entity.get(Components.Door).closed) {
-                        action.success = false;
-                        this.ecsContext.scheduleAction(
-                                new Actions.OpenDoor(action.entity, entity));
-                        break;
-                    }
-                }
-            }
         });
 
         this.on(Actions.VelocityMove, (action) => {

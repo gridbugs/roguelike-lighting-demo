@@ -98,6 +98,27 @@ export class Vec2 extends Vec {
         return Math.max(Math.abs(this.x - v.x), Math.abs(this.y - v.y));
     }
 
+    getAngle() {
+        return Math.atan2(this.y, this.x);
+    }
+
+    get angle() {
+        return this.getAngle();
+    }
+
+    getAngleYFlipped() {
+        /* In computer graphics, the convention is for the y axis to
+         * increase going down. In geometry, the y axis increases
+         * going up. When thinking about angles, the convention is
+         * for the angle to increase in the anticlockwise direction.
+         */
+        return Math.atan2(-this.y, this.x);
+    }
+
+    get angleYFlipped() {
+        return this.getAngleYFlipped();
+    }
+
     equals(v) {
         return this.x == v.x && this.y == v.y;
     }

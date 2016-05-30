@@ -124,6 +124,7 @@ export class GameContext extends EcsContext(GameCell) {
     updatePlayer() {
         super.updatePlayer();
 
+        this.lighting.run();
         this.observation.run(this.playerCharacter);
         this.knowledgeRenderer.run(this.playerCharacter);
         this.hud.update(this.playerCharacter);

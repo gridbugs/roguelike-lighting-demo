@@ -217,6 +217,10 @@ export class Light {
             lightCell.updateLight(this, description.visibility, description.sides);
         }
     }
+
+    remove() {
+        this.lightContext.remove(this);
+    }
 }
 
 export class DirectionalLight extends Light {
@@ -279,7 +283,10 @@ class LightCell extends Cell {
                 }
             }
         }
+    }
 
+    remove(light) {
+        this.lights.delete(light);
     }
 }
 
@@ -295,5 +302,12 @@ export class LightContext {
         this.ecsContext = ecsContext;
         this.grid = new LightGrid(ecsContext.width, ecsContext.height);
         this.visionCells = new VisionCellList(ecsContext);
+    }
+
+    remove(light) {
+        this.lights.delete(light);
+        for (let cell of this.grid) {
+            cell.remove(light);
+        }
     }
 }

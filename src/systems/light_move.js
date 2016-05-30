@@ -20,5 +20,11 @@ export class LightMove extends ReactiveSystem {
                 light.updateLight();
             });
         });
+
+        this.on(Actions.VelocityMove, (action) => {
+            action.entity.with(Components.Light, (light) => {
+                light.updateLight();
+            });
+        });
     }
 }

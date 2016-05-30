@@ -102,11 +102,14 @@ export class Shoot extends Action {
 
     getChanges() {
         const BULLET = 0;
+        const MUZZLE_FLASH = 1;
 
         return [
-            new Change.Bind(BULLET, new Change.AddEntity(new EntityPrototypes.Bullet(this.origin.x, this.origin.y))),
+            new Change.Bind(BULLET, new Change.AddEntity(EntityPrototypes.Bullet(this.origin.x, this.origin.y))),
             new Change.Refer(BULLET, (bullet) => new Change.AddComponent(bullet, Components.Velocity, this.direction.vector)),
             new Change.Refer(BULLET, (bullet) => new Change.AddComponent(bullet, Components.Animated)),
+            new Change.Bind(MUZZLE_FLASH, new Change.AddEntity(EntityPrototypes.MuzzleFlash(this.origin.x, this.origin.y, this.direction.vector.angleYFlipped))),
+            new Change.Refer(MUZZLE_FLASH, (muzzleFlash) => new Change.AddComponent(muzzleFlash, Components.Animated)),
         ];
     }
 }

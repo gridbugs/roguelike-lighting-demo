@@ -18,6 +18,12 @@ export class Animation extends System {
                     );
                 }
             });
+            entity.with(Components.Flash, (flash) => {
+                this.ecsContext.scheduleAction(
+                    new Actions.Destroy(entity),
+                    1
+                );
+            });
         }
     }
 }

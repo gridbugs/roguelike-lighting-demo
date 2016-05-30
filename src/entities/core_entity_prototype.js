@@ -2,7 +2,7 @@ import {Components} from 'components';
 import {Tiles} from 'tiles';
 import {EntityPrototypes} from 'entity_prototypes';
 import {bit} from 'utils/bit';
-import {degreesToRadians as d2r} from 'utils/angle';
+import {degreesToRadians as d2r, radiansToDegrees as r2d} from 'utils/angle';
 import {Lighthouse} from 'lighthouse';
 
 export function Tree(x, y) {
@@ -117,5 +117,14 @@ export function Bullet(x, y) {
         new Components.Position(x, y),
         new Components.Tile(Tiles.Bullet, 3),
         new Components.Bullet(),
+    ];
+}
+
+export function MuzzleFlash(x, y, direction) {
+    const WIDTH = d2r(60);
+    return [
+        new Components.Position(x, y),
+        new Components.DirectionalLight(30, 4, direction, WIDTH),
+        new Components.Flash(),
     ];
 }
