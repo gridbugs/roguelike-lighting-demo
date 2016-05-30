@@ -37,6 +37,7 @@ TurnTaker.prototype.takeTurn = async function() {
 }
 
 export class PlayerCharacter extends Component {}
+export class Scheduled extends Component {}
 
 export class Position extends ArrayComponent {
     constructor(x, y) {

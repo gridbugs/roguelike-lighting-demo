@@ -14,6 +14,7 @@ import {KnowledgeRenderer} from 'systems/knowledge_renderer';
 import {Lighting} from 'systems/lighting';
 import {LightMove} from 'systems/light_move';
 import {Animation} from 'systems/animation';
+import {Shooting} from 'systems/shooting';
 
 /* Components */
 import {Components} from 'components';
@@ -59,6 +60,7 @@ export class GameContext extends EcsContext(GameCell) {
         this.lighting = new Lighting(this);
         this.lightMove = new LightMove(this);
         this.animation = new Animation(this);
+        this.shooting = new Shooting(this);
     }
 
     runReactiveSystems(action) {
@@ -72,11 +74,7 @@ export class GameContext extends EcsContext(GameCell) {
         super.runRetroactiveSystems(action);
 
         this.lightMove.run(action);
-    }
-
-    runExhaustedSystems() {
-        super.runExhaustedSystems();
-
+        this.shooting.run(action);
         this.animation.run();
     }
 

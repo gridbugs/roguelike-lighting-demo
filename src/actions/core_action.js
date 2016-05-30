@@ -3,6 +3,7 @@ import * as Change from 'engine/change';
 import {Components} from 'components';
 import {normalize} from 'utils/angle';
 import {Direction} from 'utils/direction';
+import {Vec2} from 'utils/vec2';
 import {EntityPrototypes} from 'entity_prototypes';
 
 export class Walk extends Action {
@@ -34,6 +35,7 @@ export class OpenDoor extends Action {
         super();
         this.character = character;
         this.door = door;
+        this.entity = door;
     }
 
     getChanges() {
@@ -52,6 +54,7 @@ export class CloseDoor extends Action {
         super();
         this.character = character;
         this.door = door;
+        this.entity = door;
     }
 
     getChanges() {
@@ -93,11 +96,12 @@ export class Wait extends Action {
 }
 
 export class Shoot extends Action {
-    constructor(entity) {
+    constructor(entity, count = 5) {
         super();
         this.direction = Direction.North;
         this.entity = entity;
         this.origin = entity.get(Components.Position).vector;
+        this.count = count;
     }
 
     getChanges() {

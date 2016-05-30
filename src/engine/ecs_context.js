@@ -5,7 +5,7 @@ import {ComponentCountingEntitySet} from 'engine/entity_set';
 
 import {assert} from 'utils/assert';
 
-import {Position, TurnTaker, PlayerCharacter} from 'engine/engine_components';
+import {Position, TurnTaker, PlayerCharacter, Scheduled} from 'engine/engine_components';
 
 import {Schedule} from 'engine/schedule';
 
@@ -162,17 +162,26 @@ export function EcsContext(CellType) {
                 this.applyAction(action);
                 this.runRetroactiveSystems(action);
             }
+
+            return action.success;
         }
 
         updatePlayer() {}
 
         scheduleAction(action, relativeTime = 0) {
+
+            action.entity.add(new Scheduled());
+
             this.actionSchedule.scheduleTask(async () => {
-                if (this.actionSchedule.timeDelta > 0) {
+
+                action.entity.remove(Scheduled);
+
+                if (this.maybeApplyAction(action) &&
+                    this.actionSchedule.timeDelta > 0) {
+
                     this.updatePlayer();
                     await msDelay(this.actionSchedule.timeDelta);
                 }
-                this.maybeApplyAction(action);
             }, relativeTime, /* immediate */ true);
         }
 
@@ -186,10 +195,6 @@ export function EcsContext(CellType) {
         /* Systems run at the end of a turn, on the amount of time since
          * the previous turn. */
         runContinuousSystems(timeDelta) {}
-
-        /* Systems run after the action schedule is exhausted.
-         * May schedule additional actions. */
-        runExhaustedSystems() {}
 
         beforeTurn(entity) {}
         afterTurn(entity) {}
@@ -217,13 +222,6 @@ export function EcsContext(CellType) {
         while (!this.actionSchedule.empty) {
             await this.actionSchedule.pop().task();
         }
-        this.runExhaustedSystems();
-    }
-
-    EcsContextInstance.prototype.exhaustActions = async function() {
-        while (!this.actionSchedule.empty) {
-            await this.exhaustActionSchedule();
-        }
     }
 
     EcsContextInstance.prototype.takeTurn = async function(entity) {
@@ -234,7 +232,7 @@ export function EcsContext(CellType) {
 
         this.scheduleAction(turn.action);
 
-        await this.exhaustActions()
+        await this.exhaustActionSchedule()
 
         if (entity.is(PlayerCharacter)) {
             await msDelay(1);

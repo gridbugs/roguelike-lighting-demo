@@ -10,6 +10,9 @@ export class Animation extends System {
 
     run() {
         for (let entity of this.entities) {
+            if (entity.is(Components.Scheduled)) {
+                continue;
+            }
             entity.with(Components.Velocity, (velocity) => {
                 if (velocity.vector.getLengthSquared() != 0) {
                     this.ecsContext.scheduleAction(
