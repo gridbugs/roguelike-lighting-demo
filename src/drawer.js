@@ -40,10 +40,7 @@ export class Drawer {
     }
 
     clear() {
-        this.clearStore();
-        this.ctx.beginPath();
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        this.ctx.fill();
     }
 
     drawTile(tile, x, y) {

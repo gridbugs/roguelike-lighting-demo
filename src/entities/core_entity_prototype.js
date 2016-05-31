@@ -4,6 +4,7 @@ import {EntityPrototypes} from 'entity_prototypes';
 import {bit} from 'utils/bit';
 import {degreesToRadians as d2r, radiansToDegrees as r2d} from 'utils/angle';
 import {Lighthouse} from 'lighthouse';
+import {ALL_CHANNELS} from 'lighting';
 
 export function Tree(x, y) {
     return [
@@ -74,6 +75,22 @@ export function Lamp(x, y) {
         new Components.Position(x, y),
         new Components.Tile(Tiles.Lamp, 2),
         new Components.Light(30, 4)
+    ];
+}
+
+export function GreenLamp(x, y) {
+    return [
+        new Components.Position(x, y),
+        new Components.Tile(Tiles.Lamp, 2),
+        new Components.Light(30, 4, ALL_CHANNELS, Tiles.GreenLight),
+    ];
+}
+
+export function RedLamp(x, y) {
+    return [
+        new Components.Position(x, y),
+        new Components.Tile(Tiles.Lamp, 2),
+        new Components.Light(30, 4, ALL_CHANNELS, Tiles.RedLight),
     ];
 }
 

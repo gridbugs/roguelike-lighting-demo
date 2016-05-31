@@ -3,6 +3,7 @@ import {Sprite} from 'tiles/sprite';
 import {Colour} from 'colour';
 import {Effect} from 'effect';
 import {TileFamily, ComplexTileFamily} from 'tiles/tile_family';
+import {createCanvasContext} from 'utils/canvas';
 
 const STAGE_WIDTH = 128;
 const STAGE_HEIGHT = 128;
@@ -14,10 +15,10 @@ export class TileStore {
         this.width = width;
         this.height = height;
 
-        this.ctx = this.createMemoryCanvas(this.width, this.height);
+        this.ctx = createCanvasContext(this.width, this.height);
         this.canvas = this.ctx.canvas;
 
-        this.stageCtx = this.createMemoryCanvas(STAGE_WIDTH, STAGE_HEIGHT);
+        this.stageCtx = createCanvasContext(STAGE_WIDTH, STAGE_HEIGHT);
         this.stageCanvas = this.stageCtx.canvas;
 
         if (Config.DEBUG) {
@@ -36,9 +37,7 @@ export class TileStore {
     }
 
     clearStage() {
-        this.stageCtx.beginPath();
         this.stageCtx.clearRect(0, 0, this.stageCanvas.width, this.stageCanvas.height);
-        this.stageCtx.fill();
     }
 
     newLine() {
@@ -62,13 +61,6 @@ export class TileStore {
     getSpriteImageData(sprite) {
         return sprite.tileStore.ctx.getImageData(sprite.x, sprite.y,
                                                  sprite.width, sprite.height);
-    }
-
-    createMemoryCanvas(width, height) {
-        let canvas = document.createElement('canvas');
-        canvas.width = width;
-        canvas.height = height;
-        return canvas.getContext('2d');
     }
 
     setFont(font) {

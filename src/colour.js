@@ -3,7 +3,7 @@ export function rgb(r, g, b) {
 }
 
 export function rgba(r, g, b, a) {
-    return `rgb(${r},${g},${b})`;
+    return `rgba(${r},${g},${b},${a})`;
 }
 
 export const Colour = {

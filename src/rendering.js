@@ -2,6 +2,7 @@ import {Tiles} from 'tiles';
 import {Components} from 'components';
 import {constrain} from 'utils/arith';
 import {Direction} from 'utils/direction';
+import {Config} from 'config';
 
 function getEntityTile(entity) {
     if (entity.has(Components.Tile)) {
@@ -40,6 +41,16 @@ function drawLitTile(knowledgeCell, tileFamily, lightCell, drawerCell) {
     }
     intensity = constrain(0, intensity, tileFamily.lightLevels.length - 1);
     drawerCell.drawTile(tileFamily.lightLevels[intensity]);
+
+    drawerCell.drawer.ctx.drawImage(
+        lightCell.grid.canvas,
+        lightCell.xOffset, lightCell.yOffset,
+        Config.TILE_WIDTH, Config.TILE_HEIGHT,
+        drawerCell.x * Config.TILE_WIDTH, drawerCell.y * Config.TILE_HEIGHT,
+        Config.TILE_WIDTH, Config.TILE_HEIGHT
+    );
+
+
 }
 
 function drawVisibleKnowledgeCell(knowledgeCell, lightCell, drawerCell) {

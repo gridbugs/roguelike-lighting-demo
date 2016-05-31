@@ -69,6 +69,14 @@ export class StringTerrainGenerator {
             add('Lamp');
             add('StoneFloor');
             break;
+        case 'G':
+            add('GreenLamp');
+            add('StoneFloor');
+            break;
+        case 'R':
+            add('RedLamp');
+            add('StoneFloor');
+            break;
         case ',':
             add('StoneFloor');
             break;

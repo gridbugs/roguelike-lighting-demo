@@ -7,6 +7,9 @@ import {UINT32_MAX} from 'utils/limits';
 import {Components} from 'components';
 import {ObjectPool} from 'utils/object_pool';
 import {Direction} from 'utils/direction';
+import {createCanvasContext} from 'utils/canvas';
+import {Config} from 'config';
+import {constrain} from 'utils/arith';
 
 export const ALL_CHANNELS = UINT32_MAX;
 
@@ -165,7 +168,7 @@ class MaskedVisionCellList {
 let nextLightId = 0;
 
 export class Light {
-    constructor(coord, intensity, height, channels = ALL_CHANNELS) {
+    constructor(coord, intensity, height, channels = ALL_CHANNELS, colourTile = null) {
 
         this.id = nextLightId;
         ++nextLightId;
@@ -180,6 +183,7 @@ export class Light {
         this.sequence = 0;
 
         this.channels = channels;
+        this.colourTile = colourTile;
 
         this.maskedSpacialHash = new MaskedSpacialHash(this, channels);
         this.maskedVisionCellList = new MaskedVisionCellList(this, channels);
@@ -224,8 +228,8 @@ export class Light {
 }
 
 export class DirectionalLight extends Light {
-    constructor(coord, intensity, height, angle, width, channels = ALL_CHANNELS) {
-        super(coord, intensity, height, channels);
+    constructor(coord, intensity, height, angle, width, channels = ALL_CHANNELS, colourTile = null) {
+        super(coord, intensity, height, channels, colourTile);
         this.angle = angle;
         this.width = width;
     }
@@ -247,6 +251,10 @@ class LightCell extends Cell {
         this.sides = new Array(Direction.length);
         this.intensity = 0;
         this.clearSides();
+
+        /* Light colour framebuffer info */
+        this.xOffset = x * Config.TILE_WIDTH;
+        this.yOffset = y * Config.TILE_HEIGHT;
     }
 
     clearSides() {
@@ -271,15 +279,34 @@ class LightCell extends Cell {
     updateTotals() {
         this.intensity = 0;
         this.clearSides();
+        this.grid.clearBufferCell(this.x, this.y);
 
         for (let description of this.lights.values()) {
-            if (description.light.sequence == description.sequence) {
+            let light = description.light;
+
+            if (light.sequence == description.sequence) {
                 this.intensity += description.intensity;
 
                 for (let i = 0; i < this.sides.length; ++i) {
                     if (description.sides[i]) {
                         this.sides[i] += description.intensity;
                     }
+                }
+
+                if (light.colourTile != null) {
+
+                    let index = Math.floor(constrain(0, description.intensity,
+                        light.colourTile.transparencyLevels.length - 1));
+
+                    let sprite = light.colourTile.transparencyLevels[index];
+
+                    this.grid.ctx.drawImage(
+                        sprite.tileStore.canvas,
+                        sprite.x, sprite.y,
+                        sprite.width, sprite.height,
+                        this.xOffset, this.yOffset,
+                        Config.TILE_WIDTH, Config.TILE_HEIGHT
+                    );
                 }
             }
         }
@@ -293,6 +320,19 @@ class LightCell extends Cell {
 class LightGrid extends CellGrid(LightCell) {
     constructor(width, height) {
         super(width, height);
+        this.ctx = createCanvasContext(width * Config.TILE_WIDTH, height * Config.TILE_HEIGHT);
+        this.canvas = this.ctx.canvas;
+        this.ctx.globalCompositeOperation = 'lighter';
+
+        $('#canvas').after(this.canvas);
+        this.canvas.style.backgroundColor = 'white';
+        this.canvas.style.position = 'absolute';
+        this.canvas.style.top = '800px';
+        this.canvas.style.left = '1200px';
+    }
+
+    clearBufferCell(x, y) {
+        this.ctx.clearRect(x * Config.TILE_WIDTH, y * Config.TILE_HEIGHT, Config.TILE_WIDTH, Config.TILE_HEIGHT);
     }
 }
 

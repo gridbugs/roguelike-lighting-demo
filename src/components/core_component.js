@@ -39,9 +39,9 @@ Observer.ViewDistance = ObserverParent.ViewDistance;
 
 const LightParent = ARRAY_TUPLE(EXTENDS(SetComponent), intensity, height);
 export class Light extends LightParent {
-    constructor(intensity, height, channels = ALL_CHANNELS) {
+    constructor(intensity, height, channels = ALL_CHANNELS, colourTile = null) {
         super(intensity, height);
-        this.light = new LightImpl(new Vec2(0, 0), 0, 0, channels);
+        this.light = new LightImpl(new Vec2(0, 0), 0, 0, channels, colourTile);
     }
 
     get set() {
@@ -72,9 +72,9 @@ Light.Height = LightParent.Height;
 
 const DirectionalLightParent = ARRAY_TUPLE(EXTENDS(SetComponent), intensity, height, angle, width);
 export class DirectionalLight extends DirectionalLightParent {
-    constructor(intensity, height, angle, width, channels = ALL_CHANNELS) {
+    constructor(intensity, height, angle, width, channels = ALL_CHANNELS, colourTile = null) {
         super(intensity, height, angle, width);
-        this.light = new DirectionalLightImpl(new Vec2(0, 0), 0, 0, 0, 0, channels);
+        this.light = new DirectionalLightImpl(new Vec2(0, 0), 0, 0, 0, 0, channels, colourTile);
     }
 
     get set() {
