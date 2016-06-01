@@ -7,13 +7,10 @@ const NUM_TRANSPARENCY_LEVELS = 32;
 const defaultEffects = new Set([Effect.Greyscale, Effect.LightLevels]);
 
 export class TileFamily {
-    constructor(sprite, transparent, effects = defaultEffects) {
-
-        this.tileStore = sprite.tileStore;
+    constructor(sprite, tileStore, transparent, effects = defaultEffects) {
 
         this.main = sprite;
-        this.main.family = this;
-
+        this.tileStore = tileStore;
         this.transparent = transparent;
 
         if (effects.has(Effect.Greyscale)) {
@@ -53,15 +50,16 @@ export class TileFamily {
 }
 
 export class ComplexTileFamily extends TileFamily {
-    constructor(foregroundSprite, backgroundSprite, transparent, effects = defaultEffects) {
+    constructor(foregroundSprite, backgroundSprite, tileStore, transparent, effects = defaultEffects) {
         super(
-            foregroundSprite.tileStore.createLayeredSprite(foregroundSprite, backgroundSprite),
+            tileStore.createLayeredSprite(foregroundSprite, backgroundSprite),
+            tileStore,
             transparent,
             effects
         );
 
-        this.foreground = new TileFamily(foregroundSprite, true, effects);
-        this.background = new TileFamily(backgroundSprite, transparent, effects);
+        this.foreground = new TileFamily(foregroundSprite, tileStore, true, effects);
+        this.background = new TileFamily(backgroundSprite, tileStore, transparent, effects);
 
         this.transparent = transparent;
     }

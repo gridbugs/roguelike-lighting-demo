@@ -116,7 +116,7 @@ export function LighthouseFloor(x, y) {
 export function LighthouseLamp(x, y) {
     return [
         new Components.Position(x, y),
-        new Components.DirectionalLight(30, 4, d2r(90), d2r(30), bit(LIGHTHOUSE_CHANNEL)),
+        new Components.DirectionalLight(30, 4, d2r(90), d2r(30), bit(LIGHTHOUSE_CHANNEL), Tiles.YellowLight),
         new Components.TurnTaker(new Lighthouse()),
     ];
 }

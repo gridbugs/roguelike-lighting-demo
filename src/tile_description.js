@@ -32,5 +32,6 @@ export const TileDescription = {
     NoTile:             new SolidTile('#ff0000'),
     Bullet:             new DotTile(8, '#888888'),
     GreenLight:         new SolidTile(rgba(0, 255, 0, 0.2), true, new Set([Effect.TransparencyLevels])),
-    RedLight:           new SolidTile(rgba(255, 0, 0, 0.2), true, new Set([Effect.TransparencyLevels]))
+    RedLight:           new SolidTile(rgba(255, 0, 0, 0.2), true, new Set([Effect.TransparencyLevels])),
+    YellowLight:        new SolidTile(rgba(255, 255, 0, 0.2), true, new Set([Effect.TransparencyLevels]))
 };

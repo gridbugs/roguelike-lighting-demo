@@ -31,35 +31,38 @@ function drawUnknownKnowledgeCell(knowledgeCell, drawerCell) {
     drawerCell.drawTile(Tiles.Unknown.main);
 }
 
-function drawLitTile(knowledgeCell, tileFamily, lightCell, drawerCell) {
+function drawLitTile(knowledgeCell, tileFamily, lightCell, drawerCell, lightSprites) {
     let intensity = 0;
+    let brightestSideIndex = -1;
 
     for (let i = 0; i < knowledgeCell.sides.length; ++i) {
         if (knowledgeCell.sides[i]) {
-            intensity = Math.max(intensity, Math.floor(lightCell.sides[i]));
+            let sideIntensty = Math.floor(lightCell.sides[i].intensity);
+            if (sideIntensty > intensity) {
+                intensity = sideIntensty;
+                brightestSideIndex = i;
+            }
         }
     }
+
     intensity = constrain(0, intensity, tileFamily.lightLevels.length - 1);
     drawerCell.drawTile(tileFamily.lightLevels[intensity]);
 
-    drawerCell.drawer.ctx.drawImage(
-        lightCell.grid.canvas,
-        lightCell.xOffset, lightCell.yOffset,
-        Config.TILE_WIDTH, Config.TILE_HEIGHT,
-        drawerCell.x * Config.TILE_WIDTH, drawerCell.y * Config.TILE_HEIGHT,
-        Config.TILE_WIDTH, Config.TILE_HEIGHT
-    );
-
-
+    if (lightSprites && brightestSideIndex != -1) {
+        let lightSprite = lightCell.sides[brightestSideIndex].sprite;
+        if (lightSprite) {
+            drawerCell.drawTile(lightSprite);
+        }
+    }
 }
 
 function drawVisibleKnowledgeCell(knowledgeCell, lightCell, drawerCell) {
     let foregroundTile = getForegroundTile(knowledgeCell);
     if (foregroundTile.transparent) {
         let backgroundTile = getBackgroundTile(knowledgeCell);
-        drawLitTile(knowledgeCell, backgroundTile.background, lightCell, drawerCell);
+        drawLitTile(knowledgeCell, backgroundTile.background, lightCell, drawerCell, false);
     }
-    drawLitTile(knowledgeCell, foregroundTile, lightCell, drawerCell);
+    drawLitTile(knowledgeCell, foregroundTile, lightCell, drawerCell, true);
 }
 
 function drawRememberedKnowledgeCell(knowledgeCell, drawerCell) {

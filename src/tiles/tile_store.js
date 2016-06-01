@@ -1,5 +1,5 @@
 import {Config} from 'config';
-import {Sprite} from 'tiles/sprite';
+import {Sprite} from 'utils/sprite';
 import {Colour} from 'colour';
 import {Effect} from 'effect';
 import {TileFamily, ComplexTileFamily} from 'tiles/tile_family';
@@ -55,11 +55,11 @@ export class TileStore {
     }
 
     createSprite(debug = '') {
-        return new Sprite(this, this.xOffset, this.yOffset, this.tileWidth, this.tileHeight, null, debug);
+        return new Sprite(this.ctx, this.xOffset, this.yOffset, this.tileWidth, this.tileHeight, debug);
     }
 
     getSpriteImageData(sprite) {
-        return sprite.tileStore.ctx.getImageData(sprite.x, sprite.y,
+        return sprite.ctx.getImageData(sprite.x, sprite.y,
                                                  sprite.width, sprite.height);
     }
 
@@ -143,7 +143,7 @@ export class TileStore {
         this.getNextOffset();
 
         this.ctx.drawImage(
-            backgroundSprite.tileStore.canvas,
+            backgroundSprite.canvas,
             backgroundSprite.x,
             backgroundSprite.y,
             backgroundSprite.width,
@@ -155,7 +155,7 @@ export class TileStore {
         );
 
         this.ctx.drawImage(
-            foregroundSprite.tileStore.canvas,
+            foregroundSprite.canvas,
             foregroundSprite.x,
             foregroundSprite.y,
             foregroundSprite.width,
@@ -226,31 +226,31 @@ export class TileStore {
         let foregroundSprite = this.createCharacterSprite(character, font, colour);
 
         if (backgroundColour == Colour.Transparent) {
-            return new TileFamily(foregroundSprite, transparent, effects);
+            return new TileFamily(foregroundSprite, this, transparent, effects);
         } else {
             let backgroundSprite = this.createSolidSprite(backgroundColour);
-            return new ComplexTileFamily(foregroundSprite, backgroundSprite, transparent, effects);
+            return new ComplexTileFamily(foregroundSprite, backgroundSprite, this, transparent, effects);
         }
     }
 
     createSolidTile(colour, transparent, effects) {
         let sprite = this.createSolidSprite(colour);
-        return new TileFamily(sprite, transparent, effects);
+        return new TileFamily(sprite, this, transparent, effects);
     }
 
     createDotTile(size, foregroundColour, backgroundColour, transparent, effects) {
         let foregroundSprite = this.createDotSprite(size, foregroundColour);
 
         if (backgroundColour == Colour.Transparent) {
-            return new TileFamily(foregroundSprite, transparent, effects);
+            return new TileFamily(foregroundSprite, this, transparent, effects);
         } else {
             let backgroundSprite = this.createSolidSprite(backgroundColour);
-            return new ComplexTileFamily(foregroundSprite, backgroundSprite, transparent, effects);
+            return new ComplexTileFamily(foregroundSprite, backgroundSprite, this, transparent, effects);
         }
     }
 
     createImageTile(image, transparent, effects) {
         let sprite = this.createImageSprite(image);
-        return new TileFamily(sprite, transparent, effects);
+        return new TileFamily(sprite, this, transparent, effects);
     }
 }
