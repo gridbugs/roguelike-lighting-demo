@@ -20,7 +20,7 @@ const SURFACE_NORMAL = new Vec3(0, 0, 1);
 
 const WORKING_VEC3 = new Vec3(0, 0, 0);
 
-class LightDescription {
+class LightProfile {
     constructor(light, cell) {
         this.light = light;
         this.cell = cell;
@@ -283,15 +283,15 @@ class LightCell extends Cell {
     }
 
     updateLight(light, intensity, sides) {
-        let description;
+        let profile;
         if (this.lights.has(light)) {
-            description = this.lights.get(light);
+            profile = this.lights.get(light);
         } else {
-            description = new LightDescription(light, this);
-            this.lights.set(light, description);
+            profile = new LightProfile(light, this);
+            this.lights.set(light, profile);
         }
 
-        description.update(intensity, sides);
+        profile.update(intensity, sides);
         this.updateTotals();
     }
 
