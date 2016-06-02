@@ -10,11 +10,11 @@ import {Direction} from 'utils/direction';
 import {createCanvasContext} from 'utils/canvas';
 import {Config} from 'config';
 import {constrain} from 'utils/arith';
-import {SpriteAllocator} from 'utils/sprite_allocator';
 
 export const ALL_CHANNELS = UINT32_MAX;
 
 const LIGHT_DISTANCE = 100;
+const MAX_NUM_LIGHTS = 100;
 
 const SURFACE_NORMAL = new Vec3(0, 0, 1);
 
@@ -27,6 +27,11 @@ class LightProfile {
         this.intensity = 0;
         this.sequence = 0;
         this.sides = new Array(Direction.length);
+
+        /* This flag indicates whether the cell that owns this profile
+         * is currently tracking the light described by the profile.
+         */
+        this.tracked = false;
     }
 
     getIntensity(point) {
@@ -140,7 +145,7 @@ class MaskedVisionCellList {
     }
 
     get visionCellList() {
-        return this.light.lightContext.visionCells;
+        return this.light.visionCellList;
     }
 
     isValidCoord(coord) {
@@ -190,8 +195,16 @@ export class Light {
         this.channels = channels;
         this.colourTile = colourTile;
 
+        this._visionCellList = null; // to be created later
         this.maskedSpacialHash = new MaskedSpacialHash(this, channels);
         this.maskedVisionCellList = new MaskedVisionCellList(this, channels);
+    }
+
+    get visionCellList() {
+        if (this._visionCellList == null) {
+            this._visionCellList = new VisionCellList(this.lightContext.ecsContext);
+        }
+        return this._visionCellList;
     }
 
     set height(value) {
@@ -218,10 +231,9 @@ export class Light {
     updateLitCells() {
         ++this.sequence;
 
-        this.lightContext.visionCells.clear();
+        this.visionCellList.clear();
         this.detectVisibleArea();
-
-        for (let description of this.lightContext.visionCells) {
+        for (let description of this.visionCellList) {
             let lightCell = this.lightContext.grid.get(description.cell);
             lightCell.updateLight(this, description.visibility, description.sides);
         }
@@ -249,9 +261,10 @@ export class DirectionalLight extends Light {
 }
 
 class SideProfile {
-    constructor(intensity, sprite) {
-        this.intensity = intensity;
-        this.sprite = sprite;
+    constructor() {
+        this.intensity = 0;
+        this.spriteSet = new Set();
+        this.hasSprite = false;
     }
 }
 
@@ -259,12 +272,13 @@ class LightCell extends Cell {
     constructor(x, y, grid) {
         super(x, y, grid);
         this.lightingCentre = new Vec3(this.centre.x, this.centre.y, 0);
-        this.lights = new Map();
+        this.profileSet = new Set();
+        this.profileTable = new Array(MAX_NUM_LIGHTS);
         this.sides = new Array(Direction.length);
         this.intensity = 0;
 
         for (let i = 0; i < this.sides.length; ++i) {
-            this.sides[i] = new SideProfile(0, null);
+            this.sides[i] = new SideProfile();
         }
 
         /* Light colour framebuffer info */
@@ -276,23 +290,21 @@ class LightCell extends Cell {
         for (let i = 0; i < this.sides.length; ++i) {
             let side = this.sides[i];
             side.intensity = 0;
-            if (side.sprite) {
-                side.sprite.clear();
-            }
+            side.spriteSet.clear();
+            side.hasSprite = false;
         }
     }
 
     updateLight(light, intensity, sides) {
-        let profile;
-        if (this.lights.has(light)) {
-            profile = this.lights.get(light);
-        } else {
-            profile = new LightProfile(light, this);
-            this.lights.set(light, profile);
+        if (!this.profileTable[light.id]) {
+            this.profileTable[light.id] = new LightProfile(light, this);
         }
-
+        let profile =this.profileTable[light.id];
         profile.update(intensity, sides);
-        this.updateTotals();
+        if (!profile.tracked) {
+            this.profileSet.add(profile);
+            profile.tracked = true;
+        }
     }
 
     updateLightIntensityTotal(profile) {
@@ -312,10 +324,8 @@ class LightCell extends Cell {
         for (let i = 0; i < this.sides.length; ++i) {
             if (profile.sides[i]) {
                 let side = this.sides[i];
-                if (!side.sprite) {
-                    side.sprite = this.grid.spriteAllocator.allocate();
-                }
-                side.sprite.drawSprite(lightSprite);
+                side.spriteSet.add(lightSprite);
+                side.hasSprite = true;
             }
         }
     }
@@ -323,10 +333,10 @@ class LightCell extends Cell {
     updateTotals() {
         this.intensity = 0;
         this.clearSides();
-
-        for (let profile of this.lights.values()) {
-
+        for (let profile of this.profileSet) {
             if (!profile.valid) {
+                this.profileSet.delete(profile);
+                profile.tracked = false;
                 continue;
             }
 
@@ -339,33 +349,18 @@ class LightCell extends Cell {
     }
 
     remove(light) {
-        this.lights.delete(light);
+        let profile = this.profileTable[light.id];
+        if (profile) {
+            this.profileSet.delete(profile);
+            this.profileTable[light.id] = null;
+        }
     }
 }
 
 const LIGHT_BUFFER_WIDTH = 60;
 const LIGHT_BUFFER_HEIGHT = 1000;
 
-class LightGrid extends CellGrid(LightCell) {
-    constructor(width, height) {
-        super(width, height);
-
-        this.spriteAllocator = new SpriteAllocator(
-                Config.TILE_WIDTH, Config.TILE_HEIGHT,
-                LIGHT_BUFFER_WIDTH, LIGHT_BUFFER_HEIGHT);
-
-        this.spriteAllocator.ctx.globalCompositeOperation = 'lighter';
-
-        if (Config.DEBUG) {
-            let canvas = this.spriteAllocator.canvas;
-            $('#canvas').after(canvas);
-            canvas.style.backgroundColor = 'white';
-            canvas.style.position = 'absolute';
-            canvas.style.top = '800px';
-            canvas.style.left = '1200px';
-        }
-    }
-}
+class LightGrid extends CellGrid(LightCell) {}
 
 export class LightContext {
     constructor(ecsContext) {

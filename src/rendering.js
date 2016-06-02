@@ -3,6 +3,14 @@ import {Components} from 'components';
 import {constrain} from 'utils/arith';
 import {Direction} from 'utils/direction';
 import {Config} from 'config';
+import {LazySprite} from 'utils/lazy_sprite';
+
+const LIGHT_COLOUR_MIXER_WIDTH = 100;
+const LIGHT_COLOUR_MIXER_HEIGHT = 100;
+const LIGHT_COLOUR_MIXER = new LazySprite(
+        Config.TILE_WIDTH, Config.TILE_HEIGHT,
+        LIGHT_COLOUR_MIXER_WIDTH, LIGHT_COLOUR_MIXER_HEIGHT);
+LIGHT_COLOUR_MIXER.ctx.globalCompositeOperation = 'lighter';
 
 function getEntityTile(entity) {
     if (entity.has(Components.Tile)) {
@@ -49,9 +57,13 @@ function drawLitTile(knowledgeCell, tileFamily, lightCell, drawerCell, lightSpri
     drawerCell.drawTile(tileFamily.lightLevels[intensity]);
 
     if (lightSprites && brightestSideIndex != -1) {
-        let lightSprite = lightCell.sides[brightestSideIndex].sprite;
-        if (lightSprite) {
-            drawerCell.drawTile(lightSprite);
+        let side = lightCell.sides[brightestSideIndex];
+        if (side.hasSprite) {
+            LIGHT_COLOUR_MIXER.clear();
+            for (let sprite of side.spriteSet) {
+                LIGHT_COLOUR_MIXER.drawSprite(sprite);
+            }
+            drawerCell.drawTile(LIGHT_COLOUR_MIXER);
         }
     }
 }

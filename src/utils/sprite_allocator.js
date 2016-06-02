@@ -16,6 +16,31 @@ export class SpriteAllocator {
 
         this.count = 0;
         this.maxNumSprites = numCols * numRows;
+
+        this.xOffset = 0;
+        this.yOffset = 0;
+        this.nextCol = 0;
+        this.nextRow = 0;
+    }
+
+    get full() {
+        return this.count == this.maxNumSprites;
+    }
+
+    newLine() {
+        this.nextCol = 0;
+        ++this.nextRow;
+    }
+
+    getNextOffset() {
+        assert(!this.full);
+        if (this.nextCol == this.numCols) {
+            this.newLine();
+        }
+        this.xOffset = this.nextCol * this.tileWidth;
+        this.yOffset = this.nextRow * this.tileHeight;
+        ++this.nextCol;
+        ++this.count;
     }
 
     clear() {
@@ -24,19 +49,25 @@ export class SpriteAllocator {
 
     flush() {
         this.count = 0;
+        this.xOffset = 0;
+        this.yOffset = 0;
+        this.nextCol = 0;
+        this.nextRow = 0;
     }
 
     allocate() {
 
-        assert(this.count < this.maxNumSprites, "Too many sprites allocated");
+        if (this.full) {
+            return null;
+        }
 
-        let x = this.count % this.numCols;
-        let y = Math.floor(this.count / this.numCols);
+        this.getNextOffset();
+
         let sprite = new Sprite(
                 this.ctx,
-                x * this.tileWidth, y * this.tileHeight,
+                this.xOffset * this.tileWidth, this.yOffset * this.tileHeight,
                 this.tileWidth, this.tileHeight);
-        this.count++;
+
 
         return sprite;
     }
