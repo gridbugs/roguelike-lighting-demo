@@ -39,42 +39,58 @@ function drawUnknownKnowledgeCell(knowledgeCell, drawerCell) {
     drawerCell.drawTile(Tiles.Unknown.main);
 }
 
-function drawLitTile(knowledgeCell, tileFamily, lightCell, drawerCell, lightSprites) {
+function drawLitTile(knowledgeCell, tileFamily, lightCell, drawerCell) {
     let intensity = 0;
-    let brightestSideIndex = -1;
 
     for (let i = 0; i < knowledgeCell.sides.length; i++) {
         if (knowledgeCell.sides[i]) {
             let sideIntensty = Math.floor(lightCell.sides[i].intensity);
-            if (sideIntensty > intensity) {
-                intensity = sideIntensty;
-                brightestSideIndex = i;
-            }
+            intensity = Math.max(intensity, sideIntensty);
         }
     }
 
     intensity = constrain(0, intensity, tileFamily.lightLevels.length - 1);
     drawerCell.drawTile(tileFamily.lightLevels[intensity]);
+}
 
-    if (lightSprites && brightestSideIndex != -1) {
-        let side = lightCell.sides[brightestSideIndex];
-        if (side.hasSprite) {
-            LIGHT_COLOUR_MIXER.clear();
-            for (let sprite of side.spriteSet) {
-                LIGHT_COLOUR_MIXER.drawSprite(sprite);
+function drawColourSprite(knowledgeCell, tileFamily, lightCell, drawerCell) {
+    let intensity = 0;
+    let bestIndex = -1;
+
+    for (let i = 0; i < knowledgeCell.sides.length; i++) {
+        if (knowledgeCell.sides[i]) {
+            if (!lightCell.sides[i].hasSprite) {
+                continue;
             }
-            drawerCell.drawTile(LIGHT_COLOUR_MIXER);
+
+            let sideIntensty = Math.floor(lightCell.sides[i].intensity);
+            if (sideIntensty > intensity) {
+                intensity = sideIntensty;
+                bestIndex = i;
+            }
         }
     }
+
+    if (bestIndex == -1) {
+        return;
+    }
+
+    let side = lightCell.sides[bestIndex];
+    LIGHT_COLOUR_MIXER.clear();
+    for (let sprite of side.spriteSet) {
+        LIGHT_COLOUR_MIXER.drawSprite(sprite);
+    }
+    drawerCell.drawTile(LIGHT_COLOUR_MIXER);
 }
 
 function drawVisibleKnowledgeCell(knowledgeCell, lightCell, drawerCell) {
     let foregroundTile = getForegroundTile(knowledgeCell);
     if (foregroundTile.transparent) {
         let backgroundTile = getBackgroundTile(knowledgeCell);
-        drawLitTile(knowledgeCell, backgroundTile.background, lightCell, drawerCell, false);
+        drawLitTile(knowledgeCell, backgroundTile.background, lightCell, drawerCell);
     }
-    drawLitTile(knowledgeCell, foregroundTile, lightCell, drawerCell, true);
+    drawLitTile(knowledgeCell, foregroundTile, lightCell, drawerCell);
+    drawColourSprite(knowledgeCell, foregroundTile, lightCell, drawerCell);
 }
 
 function drawRememberedKnowledgeCell(knowledgeCell, drawerCell) {
