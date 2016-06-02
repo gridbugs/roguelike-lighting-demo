@@ -14,7 +14,7 @@ function resolvePromiseArray(array, results) {
         if (results == undefined) {
             results = new Array(array.length);
         }
-        for (let i = 0; i < array.length; ++i) {
+        for (let i = 0; i < array.length; i++) {
             (function(index) {
                 let promise = array[index];
                 if (!(promise instanceof Promise)) {

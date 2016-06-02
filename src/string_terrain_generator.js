@@ -27,8 +27,8 @@ export class StringTerrainGenerator {
         level.height = this.stringArray.length;
         level.width = this.stringArray[0].length;
 
-        for (let i = 0; i < level.height; ++i) {
-            for (let j = 0; j < level.width; ++j) {
+        for (let i = 0; i < level.height; i++) {
+            for (let j = 0; j < level.width; j++) {
                 let ch = ' ';
                 if (this.stringArray[i]) {
                     if (this.stringArray[i][j]) {

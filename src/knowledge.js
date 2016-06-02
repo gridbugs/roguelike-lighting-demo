@@ -28,7 +28,7 @@ class EntityMemory extends InvalidatingComponentTable {
 
     see(entity) {
         this.entity = entity;
-        for (let i = 0; i < EntityMemory.RememberedComponents.length; ++i) {
+        for (let i = 0; i < EntityMemory.RememberedComponents.length; i++) {
             let component = EntityMemory.RememberedComponents[i];
             if (entity.has(component)) {
                 this.add(entity.get(component));

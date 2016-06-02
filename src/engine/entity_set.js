@@ -33,7 +33,7 @@ export class ComponentCountingEntitySet extends EntitySet {
     }
 
     clearComponentCount() {
-        for (let i = 0; i < this.componentCount.length; ++i) {
+        for (let i = 0; i < this.componentCount.length; i++) {
             this.componentCount.set(i, 0);
         }
     }

@@ -51,7 +51,7 @@ export class ArrayComponent extends Component {
 
     copyTo(dest) {
         super.copyTo(dest);
-        for (let i = 0; i < this.fields.length; ++i) {
+        for (let i = 0; i < this.fields.length; i++) {
             dest.fields[i] = this.fields[i];
         }
     }

@@ -43,7 +43,7 @@ function drawLitTile(knowledgeCell, tileFamily, lightCell, drawerCell, lightSpri
     let intensity = 0;
     let brightestSideIndex = -1;
 
-    for (let i = 0; i < knowledgeCell.sides.length; ++i) {
+    for (let i = 0; i < knowledgeCell.sides.length; i++) {
         if (knowledgeCell.sides[i]) {
             let sideIntensty = Math.floor(lightCell.sides[i].intensity);
             if (sideIntensty > intensity) {

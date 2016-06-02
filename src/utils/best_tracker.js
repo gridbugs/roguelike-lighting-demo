@@ -18,7 +18,7 @@ export class BestTracker {
         if (this.length == 0 || this.compare(x, this._best) > 0) {
             this._best = x;
         }
-        ++this.length;
+        this.length++;
     }
 
     get best() {

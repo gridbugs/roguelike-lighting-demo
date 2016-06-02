@@ -44,7 +44,7 @@ class LightProfile {
     update(intensity, sides) {
         this.intensity = intensity * this.getIntensity(this.cell.lightingCentre);
         this.sequence = this.light.sequence;
-        for (let i = 0; i < this.sides.length; ++i) {
+        for (let i = 0; i < this.sides.length; i++) {
             this.sides[i] = sides[i];
         }
     }
@@ -181,7 +181,7 @@ export class Light {
     constructor(coord, intensity, height, channels = ALL_CHANNELS, colourTile = null) {
 
         this.id = nextLightId;
-        ++nextLightId;
+        nextLightId++;
 
         this.coord = coord;
         this.intensity = intensity;
@@ -229,7 +229,7 @@ export class Light {
     }
 
     updateLitCells() {
-        ++this.sequence;
+        this.sequence++;
 
         this.visionCellList.clear();
         this.detectVisibleArea();
@@ -277,7 +277,7 @@ class LightCell extends Cell {
         this.sides = new Array(Direction.length);
         this.intensity = 0;
 
-        for (let i = 0; i < this.sides.length; ++i) {
+        for (let i = 0; i < this.sides.length; i++) {
             this.sides[i] = new SideProfile();
         }
 
@@ -287,7 +287,7 @@ class LightCell extends Cell {
     }
 
     clearSides() {
-        for (let i = 0; i < this.sides.length; ++i) {
+        for (let i = 0; i < this.sides.length; i++) {
             let side = this.sides[i];
             side.intensity = 0;
             side.spriteSet.clear();
@@ -308,7 +308,7 @@ class LightCell extends Cell {
     }
 
     updateLightIntensityTotal(profile) {
-        for (let i = 0; i < this.sides.length; ++i) {
+        for (let i = 0; i < this.sides.length; i++) {
             if (profile.sides[i]) {
                 this.sides[i].intensity += profile.intensity;
             }
@@ -321,7 +321,7 @@ class LightCell extends Cell {
 
         let lightSprite = profile.light.colourTile.transparencyLevels[index];
 
-        for (let i = 0; i < this.sides.length; ++i) {
+        for (let i = 0; i < this.sides.length; i++) {
             if (profile.sides[i]) {
                 let side = this.sides[i];
                 side.spriteSet.add(lightSprite);

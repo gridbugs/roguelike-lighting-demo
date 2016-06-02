@@ -15,7 +15,7 @@ export function getRandomElement(array) {
 }
 
 export function shuffleInPlace(array) {
-    for (let i = 0; i < array.length; ++i) {
+    for (let i = 0; i < array.length; i++) {
         let index = Random.getRandomInt(i, array.length);
         swapElements(array, i, index);
     }
@@ -27,7 +27,7 @@ export function getBestIndex(array, compare = (a, b) => {return a - b}) {
     }
     let best = array[0];
     let index = 0;
-    for (let i = 1; i < array.length; ++i) {
+    for (let i = 1; i < array.length; i++) {
         if (compare(array[i], best) > 0) {
             best = array[i];
             index = i;

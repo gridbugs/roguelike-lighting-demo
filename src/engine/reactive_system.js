@@ -9,7 +9,7 @@ export class ReactiveSystem extends System {
         this.height = this.ecsContext.height;
 
         this.actionTable = new Array(Actions.length);
-        for (let i = 0; i < Actions.length; ++i) {
+        for (let i = 0; i < Actions.length; i++) {
             this.actionTable[i] = null;
         }
     }

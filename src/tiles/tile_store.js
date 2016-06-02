@@ -42,7 +42,7 @@ export class TileStore {
 
     newLine() {
         this.nextColumn = 0;
-        ++this.nextRow;
+        this.nextRow++;
     }
 
     getNextOffset() {
@@ -51,7 +51,7 @@ export class TileStore {
         }
         this.xOffset = this.nextColumn * this.tileWidth;
         this.yOffset = this.nextRow * this.tileHeight;
-        ++this.nextColumn;
+        this.nextColumn++;
     }
 
     createSprite(debug = '') {
@@ -111,8 +111,8 @@ export class TileStore {
         let xScale = image.width / this.tileWidth;
         let yScale = image.height / this.tileHeight;
 
-        for (let y = 0; y < this.tileHeight; ++y) {
-            for (let x = 0; x < this.tileWidth; ++x) {
+        for (let y = 0; y < this.tileHeight; y++) {
+            for (let x = 0; x < this.tileWidth; x++) {
                 let toI = (y * this.tileWidth + x) * 4;
                 let fromI = (Math.floor(y * yScale) * image.width + Math.floor(x * xScale)) * 4;
 

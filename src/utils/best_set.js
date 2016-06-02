@@ -23,7 +23,7 @@ export class BestSet {
 
     insertToArray(x) {
         this.array[this.length] = x;
-        ++this.length;
+        this.length++;
     }
 
     insertFirst(x) {
@@ -49,7 +49,7 @@ export class BestSet {
     }
 
     *[Symbol.iterator]() {
-        for (let i = 0; i < this.length; ++i) {
+        for (let i = 0; i < this.length; i++) {
             yield this.array[i];
         }
     }

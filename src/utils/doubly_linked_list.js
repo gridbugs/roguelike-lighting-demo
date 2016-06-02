@@ -53,7 +53,7 @@ export class DoublyLinkedList {
 
         this._tail = node;
 
-        ++this.length;
+        this.length++;
     }
 
     /* Remove and return tail */
@@ -93,7 +93,7 @@ export class DoublyLinkedList {
 
         this._head = node;
 
-        ++this.length;
+        this.length++;
     }
 
     /* Remove and return head */

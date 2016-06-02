@@ -47,7 +47,7 @@ export class InvalidatingComponentTable extends ComponentTable {
     }
 
     invalidate() {
-        for (let i = 0; i < this.length; ++i) {
+        for (let i = 0; i < this.length; i++) {
             let c = this.components[i];
             if (c != null) {
                 c.valid = false;

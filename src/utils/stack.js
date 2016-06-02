@@ -6,7 +6,7 @@ export class Stack {
 
     push(x) {
         this.array[this.index] = x;
-        ++this.index;
+        this.index++;
     }
 
     pop() {
@@ -27,7 +27,7 @@ export class Stack {
     }
 
     *[Symbol.iterator]() {
-        for (let i = 0; i < this.index; ++i) {
+        for (let i = 0; i < this.index; i++) {
             yield this.array[i];
         }
     }

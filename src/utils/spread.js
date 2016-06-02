@@ -1,5 +1,5 @@
 function *interleave(a, b, nEach) {
-    for (let i = 0; i < nEach; ++i) {
+    for (let i = 0; i < nEach; i++) {
         yield a;
         yield b;
     }
@@ -20,7 +20,7 @@ export function *spread(a, b, nA, nB) {
 
     // simple case - yield all a
     if (nB == 0) {
-        for (let i = 0; i < nA; ++i) {
+        for (let i = 0; i < nA; i++) {
             yield a;
         }
         return;
@@ -43,13 +43,13 @@ export function *spread(a, b, nA, nB) {
 
     // interleave sizes of groups
     for (let size of spread(smallGroupSize, largeGroupSize, nSmallGroups, nLargeGroups)) {
-        for (let i = 0; i < size; ++i) {
+        for (let i = 0; i < size; i++) {
             yield a;
-            ++k;
+            k++;
         }
         if (k < n) {
             yield b;
-            ++k;
+            k++;
         }
     }
 }

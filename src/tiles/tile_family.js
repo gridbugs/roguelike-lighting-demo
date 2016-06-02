@@ -21,7 +21,7 @@ export class TileFamily {
 
         if (effects.has(Effect.LightLevels)) {
             this.lightLevels = new Array(NUM_LIGHT_LEVELS);
-            for (let i = 0; i < NUM_LIGHT_LEVELS; ++i) {
+            for (let i = 0; i < NUM_LIGHT_LEVELS; i++) {
                 let litRatio = i * 2 / NUM_LIGHT_LEVELS;
                 let litOffset = 0;
                 this.lightLevels[i] = this.tileStore.createLightLevelSprite(
@@ -36,7 +36,7 @@ export class TileFamily {
 
         if (effects.has(Effect.TransparencyLevels)) {
             this.transparencyLevels = new Array(NUM_TRANSPARENCY_LEVELS);
-            for (let i = 0; i < NUM_TRANSPARENCY_LEVELS; ++i) {
+            for (let i = 0; i < NUM_TRANSPARENCY_LEVELS; i++) {
                 let alpha = i / NUM_TRANSPARENCY_LEVELS;
                 this.transparencyLevels[i] = this.tileStore.createTransparentSprite(
                     this.main,

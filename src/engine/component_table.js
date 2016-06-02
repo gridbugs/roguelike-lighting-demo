@@ -22,7 +22,7 @@ export class ComponentTable {
 
     /* Remove all values */
     clear() {
-        for (let i = 0; i < this.length; ++i) {
+        for (let i = 0; i < this.length; i++) {
             this.components[i] = null;
         }
     }

@@ -18,10 +18,10 @@ export class ObjectPool {
     allocate() {
         if (this.index == this.numObjects) {
             this.array[this.numObjects] = new this.Type(...this.args);
-            ++this.numObjects;
+            this.numObjects++;
         }
         let obj = this.array[this.index];
-        ++this.index;
+        this.index++;
         return obj;
     }
 
@@ -30,7 +30,7 @@ export class ObjectPool {
     }
 
     *[Symbol.iterator]() {
-        for (let i = 0; i < this.index; ++i) {
+        for (let i = 0; i < this.index; i++) {
             yield this.array[i];
         }
     }

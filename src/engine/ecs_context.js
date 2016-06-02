@@ -64,7 +64,7 @@ export function EcsContext(CellType) {
     class EcsContextInstance {
         constructor(level) {
             this.id = instanceCount;
-            ++instanceCount;
+            instanceCount++;
             this.level = level;
             this.entities = new Set();
             this.finalized = false;

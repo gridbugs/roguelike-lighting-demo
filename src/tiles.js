@@ -97,16 +97,16 @@ function initDebugTiles(tileStore) {
     tileStore.newLine();
 
     Tiles.debugArray = [];
-    for (var i = 0; i <= 9; ++i) {
+    for (var i = 0; i <= 9; i++) {
         Tiles.debugArray.push(
             tileStore.createCharacterTile('' + i, font, colour, 'rgba(255, 255, 255, 0.25)', true, EMPTY_SET));
     }
-    for (var i = 0; i < 26; ++i) {
+    for (var i = 0; i < 26; i++) {
         var c = String.fromCharCode('a'.charCodeAt(0) + i);
         Tiles.debugArray.push(
             tileStore.createCharacterTile(c, font, colour, 'rgba(255, 255, 255, 0.25)', true, EMPTY_SET));
     }
-    for (var i = 0; i < 26; ++i) {
+    for (var i = 0; i < 26; i++) {
         var c = String.fromCharCode('A'.charCodeAt(0) + i);
         Tiles.debugArray.push(
             tileStore.createCharacterTile(c, font, colour, 'rgba(255, 255, 255, 0.25)', true, EMPTY_SET));

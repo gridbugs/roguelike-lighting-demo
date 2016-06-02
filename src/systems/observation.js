@@ -24,7 +24,7 @@ export class Observation extends System {
             this.visionCells.clear();
             observer.observe(eyePosition, viewDistance, grid, this.visionCells);
 
-            for (let i = 0; i < this.visionCells.length; ++i) {
+            for (let i = 0; i < this.visionCells.length; i++) {
                 let visionCell =  this.visionCellsArray[i].cell;
                 if (visionCell.description.visibility == 0) {
                     continue;
@@ -32,7 +32,7 @@ export class Observation extends System {
 
                 let cell = grid.get(visionCell);
                 let knowledgeCell = knowledgeGrid.get(cell.coord);
-                for (let j = 0; j < knowledgeCell.sides.length; ++j) {
+                for (let j = 0; j < knowledgeCell.sides.length; j++) {
                     knowledgeCell.sides[j] = visionCell.description.sides[j];
                 }
                 if (knowledgeCell.dirty) {

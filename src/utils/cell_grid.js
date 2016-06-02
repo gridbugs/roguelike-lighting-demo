@@ -83,7 +83,7 @@ export class Cell {
     }
 
     *floodFill(directions = Direction.Directions, maxDepth = -1) {
-        ++this.grid._floodFillCount;
+        this.grid._floodFillCount++;
         yield* this._floodFill(directions, maxDepth);
     }
 
@@ -153,18 +153,18 @@ export function CellGrid(T) {
         }
 
         initOutwardsDirections() {
-            for (let i = 1; i < this.limits.x; ++i) {
+            for (let i = 1; i < this.limits.x; i++) {
                 this.get(i, 0).outwardsDirection = Direction.Direction.North;
                 this.get(i, this.limits.y).outwardsDirection = Direction.Direction.South;
             }
-            for (let i = 1; i < this.limits.y; ++i) {
+            for (let i = 1; i < this.limits.y; i++) {
                 this.get(0, i).outwardsDirection = Direction.Direction.West;
                 this.get(this.limits.x, i).outwardsDirection = Direction.Direction.East;
             }
         }
 
         *floodFill(directions = Direction.Directions, maxDepth = -1) {
-            ++this._floodFillCount;
+            this._floodFillCount++;
 
             for (let cell of this) {
                 if (cell._floodFillCount != this._floodFillCount) {

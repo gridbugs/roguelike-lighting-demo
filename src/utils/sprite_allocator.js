@@ -29,7 +29,7 @@ export class SpriteAllocator {
 
     newLine() {
         this.nextCol = 0;
-        ++this.nextRow;
+        this.nextRow++;
     }
 
     getNextOffset() {
@@ -39,8 +39,8 @@ export class SpriteAllocator {
         }
         this.xOffset = this.nextCol * this.tileWidth;
         this.yOffset = this.nextRow * this.tileHeight;
-        ++this.nextCol;
-        ++this.count;
+        this.nextCol++;
+        this.count++;
     }
 
     clear() {

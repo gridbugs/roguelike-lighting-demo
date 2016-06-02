@@ -8,7 +8,7 @@ class Enumeration {
         let count = 0;
         for (let key of this.keys) {
             this[key] = object[key];
-            ++count;
+            count++;
         }
 
         this.length = count;
@@ -22,7 +22,7 @@ export function makeIntEnumObject(array) {
     let i = 0;
     for (let key of array) {
         object[key] = i;
-        ++i;
+        i++;
     }
     return object;
 }

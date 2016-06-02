@@ -78,10 +78,10 @@ export class Grid {
         let xLimit = this.limits.x - depth;
         let yLimit = this.limits.y - depth;
 
-        for (let i = depth; i <= xLimit; ++i) {
+        for (let i = depth; i <= xLimit; i++) {
             yield this.get(i, depth);
         }
-        for (let i = depth + 1; i <= yLimit; ++i) {
+        for (let i = depth + 1; i <= yLimit; i++) {
             yield this.get(xLimit, i);
         }
         for (let i = xLimit - 1; i > depth; --i) {
@@ -93,19 +93,19 @@ export class Grid {
     }
 
     *edge() {
-        for (let i = 1; i < this.limits.x; ++i) {
+        for (let i = 1; i < this.limits.x; i++) {
             yield this.get(i, 0);
             yield this.get(i, this.limits.y);
         }
-        for (let i = 1; i < this.limits.y; ++i) {
+        for (let i = 1; i < this.limits.y; i++) {
             yield this.get(0, i);
             yield this.get(this.limits.x, i);
         }
     }
 
     *coords() {
-        for (let y = 0; y < this.height; ++y) {
-            for (let x = 0; x < this.width; ++x) {
+        for (let y = 0; y < this.height; y++) {
+            for (let x = 0; x < this.width; x++) {
                 yield new Vec2(x, y);
             }
         }

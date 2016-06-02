@@ -11,7 +11,7 @@ class VisionCellDescription {
     }
 
     setAllSides(value) {
-        for (let i = 0; i < this.sides.length; ++i) {
+        for (let i = 0; i < this.sides.length; i++) {
             this.sides[i] = value;
         }
     }
@@ -57,7 +57,7 @@ export class VisionCellList {
     }
 
     clear() {
-        ++this.current;
+        this.current++;
         this.pool.flush();
     }
 
