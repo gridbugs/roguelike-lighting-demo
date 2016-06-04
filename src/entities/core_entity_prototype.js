@@ -137,6 +137,15 @@ export function Bullet(x, y) {
     ];
 }
 
+export function PlasmaRound(x, y) {
+    return [
+        new Components.Position(x, y),
+        new Components.Tile(Tiles.PlasmaRound, 3),
+        new Components.Bullet(),
+        new Components.Light(40, 2, ALL_CHANNELS, Tiles.CyanLight)
+    ];
+}
+
 export function MuzzleFlash(x, y, direction) {
     const WIDTH = d2r(60);
     return [

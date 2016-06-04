@@ -10,6 +10,7 @@ import {Direction} from 'utils/direction';
 import {createCanvasContext} from 'utils/canvas';
 import {Config} from 'config';
 import {constrain} from 'utils/arith';
+import {ArrayCollection} from 'utils/array_collection';
 
 export const ALL_CHANNELS = UINT32_MAX;
 
@@ -19,6 +20,10 @@ const MAX_NUM_LIGHTS = 100;
 const SURFACE_NORMAL = new Vec3(0, 0, 1);
 
 const WORKING_VEC3 = new Vec3(0, 0, 0);
+
+/* A guess at the maximum number of colour sprites per cell.
+ * Used as a hint to optimize storage of colour sprites in cells. */
+const MAX_NUM_TILE_COLOURS_ESTIMATE = 10;
 
 class LightProfile {
     constructor(light, cell) {
@@ -195,16 +200,12 @@ export class Light {
         this.channels = channels;
         this.colourTile = colourTile;
 
-        this._visionCellList = null; // to be created later
         this.maskedSpacialHash = new MaskedSpacialHash(this, channels);
         this.maskedVisionCellList = new MaskedVisionCellList(this, channels);
     }
 
     get visionCellList() {
-        if (this._visionCellList == null) {
-            this._visionCellList = new VisionCellList(this.lightContext.ecsContext);
-        }
-        return this._visionCellList;
+        return this.lightContext.visionCells;
     }
 
     set height(value) {
@@ -263,8 +264,7 @@ export class DirectionalLight extends Light {
 class SideProfile {
     constructor() {
         this.intensity = 0;
-        this.spriteSet = new Set();
-        this.hasSprite = false;
+        this.sprites = new ArrayCollection(MAX_NUM_TILE_COLOURS_ESTIMATE);
     }
 }
 
@@ -290,8 +290,7 @@ class LightCell extends Cell {
         for (let i = 0; i < this.sides.length; i++) {
             let side = this.sides[i];
             side.intensity = 0;
-            side.spriteSet.clear();
-            side.hasSprite = false;
+            side.sprites.clear();
         }
     }
 
@@ -324,8 +323,7 @@ class LightCell extends Cell {
         for (let i = 0; i < this.sides.length; i++) {
             if (profile.sides[i]) {
                 let side = this.sides[i];
-                side.spriteSet.add(lightSprite);
-                side.hasSprite = true;
+                side.sprites.add(lightSprite);
             }
         }
     }

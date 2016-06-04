@@ -111,6 +111,10 @@ export class StringTerrainGenerator {
             add('LighthouseWindow');
             add('LighthouseFloor');
             break;
+        case 'p':
+            add('PlasmaRound');
+            add('Ground');
+            break;
         }
     }
 }

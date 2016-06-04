@@ -31,7 +31,9 @@ export const TileDescription = {
     OutOfBounds:        new SolidTile(Colour.Black),
     NoTile:             new SolidTile('#ff0000'),
     Bullet:             new DotTile(8, '#888888'),
+    PlasmaRound:        new ImageTile('images/plasma-round.png', true),
     GreenLight:         new SolidTile(rgba(0, 255, 0, 0.2), true, new Set([Effect.TransparencyLevels])),
     RedLight:           new SolidTile(rgba(255, 0, 0, 0.2), true, new Set([Effect.TransparencyLevels])),
-    YellowLight:        new SolidTile(rgba(255, 255, 0, 0.2), true, new Set([Effect.TransparencyLevels]))
+    YellowLight:        new SolidTile(rgba(255, 255, 0, 0.2), true, new Set([Effect.TransparencyLevels])),
+    CyanLight:          new SolidTile(rgba(0, 255, 255, 0.2), true, new Set([Effect.TransparencyLevels]))
 };
