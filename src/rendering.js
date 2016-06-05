@@ -3,14 +3,7 @@ import {Components} from 'components';
 import {constrain} from 'utils/arith';
 import {Direction} from 'utils/direction';
 import {Config} from 'config';
-import {LazySprite} from 'utils/lazy_sprite';
-
-const LIGHT_COLOUR_MIXER_WIDTH = 200;
-const LIGHT_COLOUR_MIXER_HEIGHT = 200;
-const LIGHT_COLOUR_MIXER = new LazySprite(
-        Config.TILE_WIDTH, Config.TILE_HEIGHT,
-        LIGHT_COLOUR_MIXER_WIDTH, LIGHT_COLOUR_MIXER_HEIGHT);
-LIGHT_COLOUR_MIXER.ctx.globalCompositeOperation = 'lighter';
+import {rgba32IsTransparent, rgba32ToString} from 'utils/rgba32';
 
 function getEntityTile(entity) {
     if (entity.has(Components.Tile)) {
@@ -59,7 +52,7 @@ function drawColourSprite(knowledgeCell, tileFamily, lightCell, drawerCell) {
 
     for (let i = 0; i < knowledgeCell.sides.length; i++) {
         if (knowledgeCell.sides[i]) {
-            if (lightCell.sides[i].sprites.empty) {
+            if (rgba32IsTransparent(lightCell.sides[i].colour)) {
                 continue;
             }
 
@@ -76,11 +69,7 @@ function drawColourSprite(knowledgeCell, tileFamily, lightCell, drawerCell) {
     }
 
     let side = lightCell.sides[bestIndex];
-    LIGHT_COLOUR_MIXER.clear();
-    for (let sprite of side.sprites) {
-        LIGHT_COLOUR_MIXER.drawSprite(sprite);
-    }
-    drawerCell.drawTile(LIGHT_COLOUR_MIXER);
+    drawerCell.fillColour(rgba32ToString(side.colour));
 }
 
 function drawVisibleKnowledgeCell(knowledgeCell, lightCell, drawerCell) {

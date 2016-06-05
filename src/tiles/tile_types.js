@@ -1,5 +1,5 @@
 import {Effect} from 'effect';
-import {Strings} from 'utils/colour';
+import {StringColours} from 'utils/colour';
 
 const defaultEffects = new Set([Effect.Greyscale, Effect.LightLevels]);
 const emptySet = new Set();
@@ -8,8 +8,8 @@ export const CharacterTile = NAMED_TUPLE(
     character,
     font,
     foregroundColour,
-    backgroundColour = Strings.Transparent,
-    transparent = backgroundColour == Strings.Transparent,
+    backgroundColour = StringColours.Transparent,
+    transparent = backgroundColour == StringColours.Transparent,
     effects = defaultEffects,
     type = 'character'
 );
@@ -24,8 +24,8 @@ export const SolidTile = NAMED_TUPLE(
 export const DotTile = NAMED_TUPLE(
     size,
     foregroundColour,
-    backgroundColour = Strings.Transparent,
-    transparent = backgroundColour == Strings.Transparent,
+    backgroundColour = StringColours.Transparent,
+    transparent = backgroundColour == StringColours.Transparent,
     effects = defaultEffects,
     type = 'dot'
 );

@@ -20,6 +20,10 @@ class DrawerCell extends Cell {
     drawTileUnstored(tile) {
         this.drawer.drawTileUnstored(tile, this.x, this.y);
     }
+
+    fillColour(colour) {
+        this.drawer.fillColour(colour, this.x, this.y);
+    }
 }
 
 class DrawerGrid extends CellGrid(DrawerCell) {}
@@ -58,6 +62,13 @@ export class Drawer {
         );
     }
 
+    fillColour(colour, x, y) {
+        this.ctx.beginPath();
+        this.ctx.fillStyle = colour;
+        this.ctx.fillRect(x * this.tileWidth, y * this.tileHeight, this.tileWidth, this.tileHeight);
+        this.ctx.fill();
+    }
+
     storeTile(tile, x, y) {
         let cell = this.grid.get(x, y);
         if (cell == null) {
@@ -85,13 +96,6 @@ export class Drawer {
                 this.drawTileUnstored(tile, coord.x, coord.y);
             }
         }
-    }
-
-    fill(colour) {
-        this.ctx.beginPath();
-        this.ctx.fillStyle = colour;
-        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-        this.ctx.fill();
     }
 
     redrawBackgroundTile(x, y) {

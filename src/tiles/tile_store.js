@@ -1,6 +1,6 @@
 import {Config} from 'config';
 import {Sprite} from 'utils/sprite';
-import {Strings} from 'utils/colour';
+import {StringColours} from 'utils/colour';
 import {Effect} from 'effect';
 import {TileFamily, ComplexTileFamily} from 'tiles/tile_family';
 import {createCanvasContext} from 'utils/canvas';
@@ -225,7 +225,7 @@ export class TileStore {
     createCharacterTile(character, font, colour, backgroundColour, transparent, effects) {
         let foregroundSprite = this.createCharacterSprite(character, font, colour);
 
-        if (backgroundColour == Strings.Transparent) {
+        if (backgroundColour == StringColours.Transparent) {
             return new TileFamily(foregroundSprite, this, transparent, effects);
         } else {
             let backgroundSprite = this.createSolidSprite(backgroundColour);
@@ -241,7 +241,7 @@ export class TileStore {
     createDotTile(size, foregroundColour, backgroundColour, transparent, effects) {
         let foregroundSprite = this.createDotSprite(size, foregroundColour);
 
-        if (backgroundColour == Strings.Transparent) {
+        if (backgroundColour == StringColours.Transparent) {
             return new TileFamily(foregroundSprite, this, transparent, effects);
         } else {
             let backgroundSprite = this.createSolidSprite(backgroundColour);

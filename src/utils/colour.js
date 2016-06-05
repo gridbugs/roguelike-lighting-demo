@@ -1,13 +1,7 @@
-export function rgb(r, g, b) {
-    return `rgb(${r},${g},${b})`;
-}
+import {rgbString, rgbaString} from 'utils/rgb_string';
 
-export function rgba(r, g, b, a) {
-    return `rgba(${r},${g},${b},${a})`;
-}
-
-export const Strings = {
-    Black: rgb(0, 0, 0),
-    White: rgb(255, 255, 255),
-    Transparent: rgba(0, 0, 0, 0)
+export const StringColours = {
+    Black: rgbString(0, 0, 0),
+    White: rgbString(255, 255, 255),
+    Transparent: rgbaString(0, 0, 0, 0)
 }

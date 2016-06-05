@@ -5,6 +5,8 @@ import {bit} from 'utils/bit';
 import {degreesToRadians as d2r, radiansToDegrees as r2d} from 'utils/angle';
 import {Lighthouse} from 'lighthouse';
 import {ALL_CHANNELS} from 'lighting';
+import {rgba32, rgba32FloatAlpha} from 'utils/rgba32';
+import {Rgb24Colours} from 'utils/colour';
 
 export function Tree(x, y) {
     return [
@@ -82,7 +84,7 @@ export function GreenLamp(x, y) {
     return [
         new Components.Position(x, y),
         new Components.Tile(Tiles.Lamp, 2),
-        new Components.Light(30, 4, ALL_CHANNELS, Tiles.GreenLight),
+        new Components.Light(30, 4, ALL_CHANNELS, rgba32FloatAlpha(0, 255, 0, 0.2)),
     ];
 }
 
@@ -90,7 +92,7 @@ export function RedLamp(x, y) {
     return [
         new Components.Position(x, y),
         new Components.Tile(Tiles.Lamp, 2),
-        new Components.Light(30, 4, ALL_CHANNELS, Tiles.RedLight),
+        new Components.Light(30, 4, ALL_CHANNELS, rgba32FloatAlpha(255, 0, 0, 0.2)),
     ];
 }
 
@@ -116,7 +118,8 @@ export function LighthouseFloor(x, y) {
 export function LighthouseLamp(x, y) {
     return [
         new Components.Position(x, y),
-        new Components.DirectionalLight(30, 4, d2r(90), d2r(30), bit(LIGHTHOUSE_CHANNEL), Tiles.YellowLight),
+        new Components.DirectionalLight(30, 4, d2r(90), d2r(30), bit(LIGHTHOUSE_CHANNEL),
+                                        rgba32FloatAlpha(255, 255, 0, 0.2)),
         new Components.TurnTaker(new Lighthouse()),
     ];
 }
@@ -142,7 +145,7 @@ export function PlasmaRound(x, y) {
         new Components.Position(x, y),
         new Components.Tile(Tiles.PlasmaRound, 3),
         new Components.Bullet(),
-        new Components.Light(40, 2, ALL_CHANNELS, Tiles.CyanLight)
+        new Components.Light(40, 2, ALL_CHANNELS, rgba32FloatAlpha(0, 255, 255, 0.2))
     ];
 }
 

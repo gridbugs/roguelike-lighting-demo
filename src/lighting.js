@@ -11,8 +11,11 @@ import {createCanvasContext} from 'utils/canvas';
 import {Config} from 'config';
 import {constrain} from 'utils/arith';
 import {ArrayCollection} from 'utils/array_collection';
+import {rgba32TransparentiseRatio, rgba32Add, TRANSPARENT} from 'utils/rgba32';
 
 export const ALL_CHANNELS = UINT32_MAX;
+
+export const NO_COLOUR = TRANSPARENT;
 
 const LIGHT_DISTANCE = 100;
 const MAX_NUM_LIGHTS = 100;
@@ -183,7 +186,7 @@ class MaskedVisionCellList {
 let nextLightId = 0;
 
 export class Light {
-    constructor(coord, intensity, height, channels = ALL_CHANNELS, colourTile = null) {
+    constructor(coord, intensity, height, channels = ALL_CHANNELS, colour = NO_COLOUR) {
 
         this.id = nextLightId;
         nextLightId++;
@@ -198,7 +201,7 @@ export class Light {
         this.sequence = 0;
 
         this.channels = channels;
-        this.colourTile = colourTile;
+        this.colour = colour;
 
         this.maskedSpacialHash = new MaskedSpacialHash(this, channels);
         this.maskedVisionCellList = new MaskedVisionCellList(this, channels);
@@ -246,8 +249,8 @@ export class Light {
 }
 
 export class DirectionalLight extends Light {
-    constructor(coord, intensity, height, angle, width, channels = ALL_CHANNELS, colourTile = null) {
-        super(coord, intensity, height, channels, colourTile);
+    constructor(coord, intensity, height, angle, width, channels = ALL_CHANNELS, colour = NO_COLOUR) {
+        super(coord, intensity, height, channels, colour);
         this.angle = angle;
         this.width = width;
     }
@@ -264,7 +267,7 @@ export class DirectionalLight extends Light {
 class SideProfile {
     constructor() {
         this.intensity = 0;
-        this.sprites = new ArrayCollection(MAX_NUM_TILE_COLOURS_ESTIMATE);
+        this.colour = TRANSPARENT;
     }
 }
 
@@ -290,7 +293,7 @@ class LightCell extends Cell {
         for (let i = 0; i < this.sides.length; i++) {
             let side = this.sides[i];
             side.intensity = 0;
-            side.sprites.clear();
+            side.colour = TRANSPARENT;
         }
     }
 
@@ -315,15 +318,13 @@ class LightCell extends Cell {
     }
 
     updateLightColourTotal(profile) {
-        let index = Math.floor(constrain(0, profile.intensity,
-                profile.light.colourTile.transparencyLevels.length - 1));
-
-        let lightSprite = profile.light.colourTile.transparencyLevels[index];
+        let intensityRatio = profile.intensity / profile.light.intensity;
+        let colour = rgba32TransparentiseRatio(profile.light.colour, intensityRatio);
 
         for (let i = 0; i < this.sides.length; i++) {
             if (profile.sides[i]) {
                 let side = this.sides[i];
-                side.sprites.add(lightSprite);
+                side.colour = rgba32Add(side.colour, colour);
             }
         }
     }
@@ -340,7 +341,7 @@ class LightCell extends Cell {
 
             this.updateLightIntensityTotal(profile);
 
-            if (profile.light.colourTile) {
+            if (profile.light.colour != NO_COLOUR) {
                 this.updateLightColourTotal(profile);
             }
         }
@@ -354,9 +355,6 @@ class LightCell extends Cell {
         }
     }
 }
-
-const LIGHT_BUFFER_WIDTH = 60;
-const LIGHT_BUFFER_HEIGHT = 1000;
 
 class LightGrid extends CellGrid(LightCell) {}
 

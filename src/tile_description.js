@@ -1,13 +1,14 @@
 import {Font} from 'tiles/font';
 import {Effect} from 'effect';
-import {Strings, rgb, rgba} from 'utils/colour';
+import {StringColours} from 'utils/colour';
+import {rgbString, rgbaString} from 'utils/rgb_string';
 import {CharacterTile, SolidTile, DotTile, ImageTile} from 'tiles/tile_types';
 
 const IBM_BIOS = new Font("IBM-BIOS", 16, 1, -2);
 const DOT_SIZE = 4;
 
 export const TileDescription = {
-    PlayerCharacter:    new CharacterTile('@', IBM_BIOS, Strings.White),
+    PlayerCharacter:    new CharacterTile('@', IBM_BIOS, StringColours.White),
     Ground:             new DotTile(DOT_SIZE, '#124400', '#041600'),
     StoneFloor:         new DotTile(DOT_SIZE, '#222222', '#444444'),
     WoodWall:           new CharacterTile('#', IBM_BIOS, '#332301', '#664602'),
@@ -27,13 +28,9 @@ export const TileDescription = {
     Water:              new CharacterTile('~', IBM_BIOS, '#2288cc', '#004488'),
     Rock:               new CharacterTile('*', IBM_BIOS, '#222222', '#444444'),
     Lamp:               new CharacterTile('£', IBM_BIOS, '#cccc00'),
-    Unknown:            new SolidTile(Strings.Black),
-    OutOfBounds:        new SolidTile(Strings.Black),
+    Unknown:            new SolidTile(StringColours.Black),
+    OutOfBounds:        new SolidTile(StringColours.Black),
     NoTile:             new SolidTile('#ff0000'),
     Bullet:             new DotTile(8, '#888888'),
-    PlasmaRound:        new ImageTile('images/plasma-round.png', true),
-    GreenLight:         new SolidTile(rgba(0, 255, 0, 0.2), true, new Set([Effect.TransparencyLevels])),
-    RedLight:           new SolidTile(rgba(255, 0, 0, 0.2), true, new Set([Effect.TransparencyLevels])),
-    YellowLight:        new SolidTile(rgba(255, 255, 0, 0.2), true, new Set([Effect.TransparencyLevels])),
-    CyanLight:          new SolidTile(rgba(0, 255, 255, 0.2), true, new Set([Effect.TransparencyLevels]))
+    PlasmaRound:        new ImageTile('images/plasma-round.png', true)
 };
