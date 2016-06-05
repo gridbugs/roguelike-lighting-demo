@@ -1,13 +1,13 @@
 import {Font} from 'tiles/font';
 import {Effect} from 'effect';
-import {Colour, rgb, rgba} from 'colour';
+import {Strings, rgb, rgba} from 'utils/colour';
 import {CharacterTile, SolidTile, DotTile, ImageTile} from 'tiles/tile_types';
 
 const IBM_BIOS = new Font("IBM-BIOS", 16, 1, -2);
 const DOT_SIZE = 4;
 
 export const TileDescription = {
-    PlayerCharacter:    new CharacterTile('@', IBM_BIOS, Colour.White),
+    PlayerCharacter:    new CharacterTile('@', IBM_BIOS, Strings.White),
     Ground:             new DotTile(DOT_SIZE, '#124400', '#041600'),
     StoneFloor:         new DotTile(DOT_SIZE, '#222222', '#444444'),
     WoodWall:           new CharacterTile('#', IBM_BIOS, '#332301', '#664602'),
@@ -27,8 +27,8 @@ export const TileDescription = {
     Water:              new CharacterTile('~', IBM_BIOS, '#2288cc', '#004488'),
     Rock:               new CharacterTile('*', IBM_BIOS, '#222222', '#444444'),
     Lamp:               new CharacterTile('£', IBM_BIOS, '#cccc00'),
-    Unknown:            new SolidTile(Colour.Black),
-    OutOfBounds:        new SolidTile(Colour.Black),
+    Unknown:            new SolidTile(Strings.Black),
+    OutOfBounds:        new SolidTile(Strings.Black),
     NoTile:             new SolidTile('#ff0000'),
     Bullet:             new DotTile(8, '#888888'),
     PlasmaRound:        new ImageTile('images/plasma-round.png', true),
