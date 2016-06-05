@@ -50,19 +50,27 @@ export function rgba32Add(x, y) {
 }
 
 export function rgba32Lighten(colour, change) {
-    let red = Math.min(rgba32Red(colour) + change, 0xff);
-    let green = Math.min(rgba32Green(colour) + change, 0xff);
-    let blue = Math.min(rgba32Blue(colour) + change, 0xff);
-    let alpha = rgba32Alpha(colour);
-    return rgba32(red, green, blue, alpha);
+    let r = Math.min(rgba32Red(colour) + change, 0xff);
+    let g = Math.min(rgba32Green(colour) + change, 0xff);
+    let b = Math.min(rgba32Blue(colour) + change, 0xff);
+    let a = rgba32Alpha(colour);
+    return rgba32(r, g, b, a);
 }
 
 export function rgba32Darken(colour, change) {
-    let red = Math.max(rgba32Red(colour) - change, 0);
-    let green = Math.max(rgba32Green(colour) - change, 0);
-    let blue = Math.max(rgba32Blue(colour) - change, 0);
-    let alpha = rgba32Alpha(colour);
-    return rgba32(red, green, blue, alpha);
+    let r = Math.max(rgba32Red(colour) - change, 0);
+    let g = Math.max(rgba32Green(colour) - change, 0);
+    let b = Math.max(rgba32Blue(colour) - change, 0);
+    let a = rgba32Alpha(colour);
+    return rgba32(r, g, b, a);
+}
+
+export function rgba32DarkenRatio(colour, ratio) {
+    let r = Math.floor(rgba32Red(colour) * ratio);
+    let g = Math.floor(rgba32Green(colour) * ratio);
+    let b = Math.floor(rgba32Blue(colour) * ratio);
+    let a = rgba32Alpha(colour);
+    return rgba32(r, g, b, a);
 }
 
 export function rgba32Opacify(colour, change) {

@@ -11,7 +11,7 @@ import {createCanvasContext} from 'utils/canvas';
 import {Config} from 'config';
 import {constrain} from 'utils/arith';
 import {ArrayCollection} from 'utils/array_collection';
-import {rgba32TransparentiseRatio, rgba32Add, TRANSPARENT} from 'utils/rgba32';
+import {rgba32DarkenRatio, rgba32TransparentiseRatio, rgba32Add, TRANSPARENT} from 'utils/rgba32';
 
 export const ALL_CHANNELS = UINT32_MAX;
 
@@ -203,12 +203,21 @@ export class Light {
         this.channels = channels;
         this.colour = colour;
 
-        this.maskedSpacialHash = new MaskedSpacialHash(this, channels);
-        this.maskedVisionCellList = new MaskedVisionCellList(this, channels);
+        if (channels == ALL_CHANNELS) {
+            this.maskedSpacialHash = null;
+            this.maskedVisionCellList = null;
+        } else {
+            this.maskedSpacialHash = new MaskedSpacialHash(this, channels);
+            this.maskedVisionCellList = new MaskedVisionCellList(this, channels);
+        }
     }
 
     get visionCellList() {
         return this.lightContext.visionCells;
+    }
+
+    get spacialHash() {
+        return this.lightContext.ecsContext.spacialHash;
     }
 
     set height(value) {
@@ -227,9 +236,18 @@ export class Light {
     }
 
     detectVisibleArea() {
-        this.maskedSpacialHash.transparentCellPool.flush();
-        detectVisibleArea(this.coord, LIGHT_DISTANCE, this.maskedSpacialHash,
-                this.maskedVisionCellList);
+        let spacialHash, visionCellList;
+
+        if (this.channels == ALL_CHANNELS) {
+            spacialHash = this.spacialHash;
+            visionCellList = this.visionCellList;
+        } else {
+            spacialHash = this.maskedSpacialHash;
+            visionCellList = this.maskedVisionCellList;
+            this.maskedSpacialHash.transparentCellPool.flush();
+        }
+
+        detectVisibleArea(this.coord, LIGHT_DISTANCE, spacialHash, visionCellList);
     }
 
     updateLitCells() {
@@ -259,8 +277,20 @@ export class DirectionalLight extends Light {
         let halfWidth = this.width / 2;
         let startAngle = normalize(this.angle - halfWidth);
         let endAngle = normalize(this.angle + halfWidth);
-        detectVisibleAreaConstrained(this.coord, LIGHT_DISTANCE, this.maskedSpacialHash,
-                this.maskedVisionCellList, startAngle, endAngle);
+
+        let spacialHash, visionCellList;
+
+        if (this.channels == ALL_CHANNELS) {
+            spacialHash = this.spacialHash;
+            visionCellList = this.visionCellList;
+        } else {
+            spacialHash = this.maskedSpacialHash;
+            visionCellList = this.maskedVisionCellList;
+            this.maskedSpacialHash.transparentCellPool.flush();
+        }
+
+        detectVisibleAreaConstrained(this.coord, LIGHT_DISTANCE, spacialHash,
+                visionCellList, startAngle, endAngle);
     }
 }
 
@@ -320,6 +350,7 @@ class LightCell extends Cell {
     updateLightColourTotal(profile) {
         let intensityRatio = profile.intensity / profile.light.intensity;
         let colour = rgba32TransparentiseRatio(profile.light.colour, intensityRatio);
+        colour = rgba32DarkenRatio(colour, intensityRatio);
 
         for (let i = 0; i < this.sides.length; i++) {
             if (profile.sides[i]) {
