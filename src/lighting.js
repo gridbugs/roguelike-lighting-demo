@@ -42,6 +42,10 @@ class LightProfile {
     }
 
     getIntensity(point) {
+        /* Compute the dot product of the normalised surface normal and
+         * the normalised vector from the point to the light. This will
+         * be used to reduce the intensity of the light to represent
+         * the fact that the light is hitting the cell at an angle. */
         this.light.vector.subtractInPlace(point, WORKING_VEC3);
         WORKING_VEC3.normalizeInPlace(WORKING_VEC3);
         let dot = SURFACE_NORMAL.dot(WORKING_VEC3);
