@@ -12,6 +12,7 @@ import {Config} from 'config';
 import {constrain} from 'utils/arith';
 import {ArrayCollection} from 'utils/array_collection';
 import {rgba32DarkenRatio, rgba32TransparentiseRatio, rgba32Add, TRANSPARENT} from 'utils/rgba32';
+import {DoublyLinkedList} from 'utils/doubly_linked_list';
 
 export const ALL_CHANNELS = UINT32_MAX;
 
@@ -40,6 +41,8 @@ class LightProfile {
          * is currently tracking the light described by the profile.
          */
         this.tracked = false;
+
+        this.node = null;
     }
 
     getIntensity(point) {
@@ -307,8 +310,8 @@ class LightCell extends Cell {
     constructor(x, y, grid) {
         super(x, y, grid);
         this.lightingCentre = new Vec3(this.centre.x, this.centre.y, 0);
-        this.profileSet = new Set();
         this.profileTable = new Array(MAX_NUM_LIGHTS);
+        this.profileList = new DoublyLinkedList();
         this.sides = new Array(Direction.length);
         this.intensity = 0;
 
@@ -330,14 +333,15 @@ class LightCell extends Cell {
     }
 
     updateLight(light, intensity, sides) {
-        if (!this.profileTable[light.id]) {
-            this.profileTable[light.id] = new LightProfile(light, this);
+        let profile = this.profileTable[light.id];
+        if (!profile) {
+            profile = new LightProfile(light, this);
+            this.profileTable[light.id] = profile;
         }
-        let profile =this.profileTable[light.id];
         profile.update(intensity, sides);
         if (!profile.tracked) {
-            this.profileSet.add(profile);
             profile.tracked = true;
+            profile.node = this.profileList.push(profile);
         }
     }
 
@@ -365,10 +369,12 @@ class LightCell extends Cell {
     updateTotals() {
         this.intensity = 0;
         this.clearSides();
-        for (let profile of this.profileSet) {
+        for (let node = this.profileList.headNode; node != null; node = node.next) {
+            let profile = node.value;
             if (!profile.valid) {
-                this.profileSet.delete(profile);
                 profile.tracked = false;
+                this.profileList.deleteNode(profile.node);
+                profile.node = null;
                 continue;
             }
 
@@ -383,8 +389,11 @@ class LightCell extends Cell {
     remove(light) {
         let profile = this.profileTable[light.id];
         if (profile) {
-            this.profileSet.delete(profile);
             this.profileTable[light.id] = null;
+            if (profile.node != null) {
+                this.profileList.deleteNode(profile.node);
+                profile.node = null;
+            }
         }
     }
 }
