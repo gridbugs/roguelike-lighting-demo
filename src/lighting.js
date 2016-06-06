@@ -37,11 +37,7 @@ class LightProfile {
         this.sequence = 0;
         this.sides = new Array(Direction.length);
 
-        /* This flag indicates whether the cell that owns this profile
-         * is currently tracking the light described by the profile.
-         */
-        this.tracked = false;
-
+        /* linked list node containing this profile */
         this.node = null;
     }
 
@@ -332,6 +328,11 @@ class LightCell extends Cell {
         }
     }
 
+    removeProfile(profile) {
+        this.profileList.deleteNode(profile.node);
+        profile.node = null;
+    }
+
     updateLight(light, intensity, sides) {
         let profile = this.profileTable[light.id];
         if (!profile) {
@@ -339,8 +340,7 @@ class LightCell extends Cell {
             this.profileTable[light.id] = profile;
         }
         profile.update(intensity, sides);
-        if (!profile.tracked) {
-            profile.tracked = true;
+        if (!profile.node) {
             profile.node = this.profileList.push(profile);
         }
     }
@@ -372,9 +372,7 @@ class LightCell extends Cell {
         for (let node = this.profileList.headNode; node != null; node = node.next) {
             let profile = node.value;
             if (!profile.valid) {
-                profile.tracked = false;
-                this.profileList.deleteNode(profile.node);
-                profile.node = null;
+                this.removeProfile(profile);
                 continue;
             }
 
@@ -391,8 +389,7 @@ class LightCell extends Cell {
         if (profile) {
             this.profileTable[light.id] = null;
             if (profile.node != null) {
-                this.profileList.deleteNode(profile.node);
-                profile.node = null;
+                this.removeProfile(profile);
             }
         }
     }
@@ -410,7 +407,8 @@ export class LightContext {
 
     remove(light) {
         this.lights.delete(light);
-        for (let cell of this.grid) {
+        for (let i = 0; i < this.grid.size; i++) {
+            let cell = grid.array[i];
             cell.remove(light);
         }
     }
