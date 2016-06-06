@@ -38,6 +38,29 @@ export class DoublyLinkedList {
         this.length = 0;
     }
 
+    deleteNode(node) {
+        let prev = node.prev;
+        let next = node.next;
+
+        if (prev == null) {
+            /* node was at the start of the list */
+            assert(this.headNode == node);
+            this.headNode = next;
+        } else {
+            prev.next = next;
+        }
+
+        if (next == null) {
+            /* node was at the end of the list */
+            assert(this.tailNode == node);
+            this.tailNode = prev;
+        } else {
+            next.prev = prev;
+        }
+
+        this.length--;
+    }
+
     /* Append value at tail */
     push(value) {
         let node = this.allocateNode();
