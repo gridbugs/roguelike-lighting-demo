@@ -17,7 +17,10 @@ export class Lighting extends System {
                 light.light.updateLitCells();
             });
         }
-        for (let cell of this.ecsContext.lightContext.grid) {
+
+        let grid = this.ecsContext.lightContext.grid;
+        for (let i = 0; i <  grid.size; i++) {
+            let cell = grid.array[i];
             cell.updateTotals();
         }
     }

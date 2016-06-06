@@ -109,7 +109,7 @@ class MaskedSpacialHash {
         return this.spacialHash.limits;
     }
 
-    get(coord) {
+    getCoord(coord) {
         let cell = this.spacialHash.get(coord);
         if (cell.entities.hasComponent(Components.LightMask)) {
             let entity = cell.find(Components.LightMask);

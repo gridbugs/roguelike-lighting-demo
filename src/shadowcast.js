@@ -114,12 +114,13 @@ function computeSlope(fromVec, toVec, lateralIndex, depthIndex) {
 }
 
 export function detectVisibleArea(eyePosition, viewDistance, grid, visionCells) {
-    let eyeCell = grid.get(eyePosition);
+    let eyeCell = grid.getCoord(eyePosition);
     let viewDistanceSquared = viewDistance * viewDistance;
 
     visionCells.addAllSides(eyeCell, 1);
 
-    for (let octant of OCTANTS) {
+    for (let i = 0; i < NUM_OCTANTS; i++) {
+        let octant = OCTANTS[i];
         detectVisibleAreaOctant(octant, eyeCell, viewDistance, viewDistanceSquared, grid,
                                 visionCells, 0, 1);
     }
@@ -139,7 +140,7 @@ function angleToSlope(octant, angle) {
 
 export function detectVisibleAreaConstrained(eyePosition, viewDistance, grid, visionCells,
                                              startAngle, stopAngle) {
-    let eyeCell = grid.get(eyePosition);
+    let eyeCell = grid.getCoord(eyePosition);
     let viewDistanceSquared = viewDistance * viewDistance;
 
     visionCells.addAllSides(eyeCell, 1);
@@ -151,7 +152,8 @@ export function detectVisibleAreaConstrained(eyePosition, viewDistance, grid, vi
      * of angles within the visible area. */
     OCTANT_TABLE.getRange(startAngle, stopAngle, OCTANT_TABLE_ENTRY_POOL);
 
-    for (let entry of OCTANT_TABLE_ENTRY_POOL) {
+    for (let i = 0; i < OCTANT_TABLE_ENTRY_POOL.index; i++) {
+        let entry = OCTANT_TABLE_ENTRY_POOL.array[i];
         let octant = entry.value;
 
         let startSlope = angleToSlope(octant, entry.startOffset);
@@ -264,7 +266,7 @@ function detectVisibleAreaOctant(octant, eyeCell, viewDistance, viewDistanceSqua
 
             COORD_IDX.arraySet(octant.lateralIndex, i);
 
-            let cell = grid.get(COORD_IDX);
+            let cell = grid.getCoord(COORD_IDX);
             let description = visionCells.getDescription(cell);
 
             if (COORD_IDX.getDistanceSquared(eyeCell.coord) < viewDistanceSquared) {
