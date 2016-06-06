@@ -1,5 +1,5 @@
 import {Vec2} from 'utils/vec2';
-import {Direction, combine} from 'utils/direction';
+import {Direction, AllDirectionBits, combine} from 'utils/direction';
 import {constrain} from 'utils/arith';
 import {ObjectStack} from 'utils/object_stack';
 import {ObjectPool} from 'utils/object_pool';
@@ -278,10 +278,10 @@ function detectVisibleAreaOctant(octant, eyeCell, viewDistance, viewDistanceSqua
 
             if (currentOpaque) {
                 if (!lastIteration) {
-                    description.setSide(octant.facingSide, true);
+                    description.sides |= octant.facingSide.bitfield;
                 }
             } else {
-                description.setAllSides(true);
+                description.sides = AllDirectionBits;
             }
 
             if (!firstIteration) {
@@ -306,7 +306,7 @@ function detectVisibleAreaOctant(octant, eyeCell, viewDistance, viewDistanceSqua
                     minSlope = slope;
 
                     if (currentOpaque) {
-                        description.setSide(octant.acrossSide, true);
+                        description.sides |= octant.acrossSide.bitfield;
                     }
                 }
             }
@@ -316,9 +316,9 @@ function detectVisibleAreaOctant(octant, eyeCell, viewDistance, viewDistanceSqua
                     let corner = cell.corners[octant.facingCorner.subIndex];
                     let slope = computeSlope(eyeCell.centre, corner, octant.lateralIndex, octant.depthIndex);
                     if (maxSlope > slope) {
-                        description.setSide(octant.facingSide, true);
+                        description.sides |= octant.facingSide.bitfield;
                     } else if (maxSlope == slope) {
-                        description.setSide(octant.facingCorner, true);
+                        description.sides |= octant.facingCorner.bitfield;
                     }
                 } else {
                     let frame = STACK.push();

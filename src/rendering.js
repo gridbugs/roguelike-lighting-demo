@@ -1,7 +1,7 @@
 import {Tiles} from 'tiles';
 import {Components} from 'components';
 import {constrain} from 'utils/arith';
-import {Direction} from 'utils/direction';
+import {Direction, NumDirections} from 'utils/direction';
 import {Config} from 'config';
 import {rgba32IsTransparent, rgba32ToString} from 'utils/rgba32';
 
@@ -35,8 +35,8 @@ function drawUnknownKnowledgeCell(knowledgeCell, drawerCell) {
 function drawLitTile(knowledgeCell, tileFamily, lightCell, drawerCell) {
     let intensity = 0;
 
-    for (let i = 0; i < knowledgeCell.sides.length; i++) {
-        if (knowledgeCell.sides[i]) {
+    for (let i = 0; i < NumDirections; i++) {
+        if (knowledgeCell.sides & (1 << i)) {
             let sideIntensty = Math.floor(lightCell.sides[i].intensity);
             intensity = Math.max(intensity, sideIntensty);
         }
@@ -50,8 +50,8 @@ function drawColourSprite(knowledgeCell, tileFamily, lightCell, drawerCell) {
     let intensity = 0;
     let bestIndex = -1;
 
-    for (let i = 0; i < knowledgeCell.sides.length; i++) {
-        if (knowledgeCell.sides[i]) {
+    for (let i = 0; i < NumDirections; i++) {
+        if (knowledgeCell.sides & (1 << i)) {
             if (rgba32IsTransparent(lightCell.sides[i].colour)) {
                 continue;
             }

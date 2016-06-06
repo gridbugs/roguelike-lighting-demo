@@ -32,9 +32,7 @@ export class Observation extends System {
 
                 let cell = grid.get(visionCell);
                 let knowledgeCell = knowledgeGrid.get(cell.coord);
-                for (let j = 0; j < knowledgeCell.sides.length; j++) {
-                    knowledgeCell.sides[j] = visionCell.description.sides[j];
-                }
+                knowledgeCell.sides = visionCell.description.sides;
                 if (knowledgeCell.dirty) {
                     knowledgeCell.clear();
                     for (let e of cell.entities.set) {

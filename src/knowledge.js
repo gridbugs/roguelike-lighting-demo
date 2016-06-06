@@ -67,7 +67,7 @@ class KnowledgeCell extends Cell {
         this.topBackgroundEntityMemory = new BestTracker(compare);
         this.componentTable = new ComponentTable();
         this.realCell = null;
-        this.sides = new Array(Direction.length);
+        this.sides = 0; // bitfield indicating visible sides
     }
 
     *[Symbol.iterator]() {

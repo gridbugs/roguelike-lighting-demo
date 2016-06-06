@@ -6,7 +6,7 @@ import {normalize} from 'utils/angle';
 import {UINT32_MAX} from 'utils/limits';
 import {Components} from 'components';
 import {ObjectPool} from 'utils/object_pool';
-import {Direction} from 'utils/direction';
+import {Direction, AllDirectionBits, NumDirections} from 'utils/direction';
 import {createCanvasContext} from 'utils/canvas';
 import {Config} from 'config';
 import {constrain} from 'utils/arith';
@@ -35,7 +35,7 @@ class LightProfile {
         this.cell = cell;
         this.intensity = 0;
         this.sequence = 0;
-        this.sides = new Array(Direction.length);
+        this.sides = 0;
 
         /* linked list node containing this profile */
         this.node = null;
@@ -51,9 +51,7 @@ class LightProfile {
     update(intensity, sides) {
         this.intensity = intensity * this.getIntensity(this.cell.lightingCentre);
         this.sequence = this.light.sequence;
-        for (let i = 0; i < this.sides.length; i++) {
-            this.sides[i] = sides[i];
-        }
+        this.sides = sides;
     }
 
     get valid() {
@@ -126,14 +124,7 @@ class MaskedSpacialHash {
 class DummyDescription {
     constructor() {
         this.visibility = 0;
-    }
-
-    setSide(side, value) {
-        // do nothing
-    }
-
-    setAllSides(value) {
-        // do nothing
+        this.sides = 0;
     }
 }
 
@@ -346,8 +337,8 @@ class LightCell extends Cell {
     }
 
     updateLightIntensityTotal(profile) {
-        for (let i = 0; i < this.sides.length; i++) {
-            if (profile.sides[i]) {
+        for (let i = 0; i < NumDirections; i++) {
+            if (profile.sides & (1 << i)) {
                 this.sides[i].intensity += profile.intensity;
             }
         }
@@ -358,8 +349,8 @@ class LightCell extends Cell {
         let colour = rgba32TransparentiseRatio(profile.light.colour, intensityRatio);
         colour = rgba32DarkenRatio(colour, intensityRatio);
 
-        for (let i = 0; i < this.sides.length; i++) {
-            if (profile.sides[i]) {
+        for (let i = 0; i < NumDirections; i++) {
+            if (profile.sides & (1 << i)) {
                 let side = this.sides[i];
                 side.colour = rgba32Add(side.colour, colour);
             }
@@ -408,7 +399,7 @@ export class LightContext {
     remove(light) {
         this.lights.delete(light);
         for (let i = 0; i < this.grid.size; i++) {
-            let cell = grid.array[i];
+            let cell = this.grid.array[i];
             cell.remove(light);
         }
     }

@@ -1,6 +1,7 @@
 import {Vec2} from 'utils/vec2';
 import {makeEnum} from 'utils/enum';
 import {SQRT2} from 'utils/constants';
+import {bit} from 'utils/bit';
 
 export const DirectionType = makeEnum([
     'Cardinal',
@@ -21,6 +22,7 @@ class DirectionInfo {
         this.right90 = null;
         this.multiplier = multiplier;
         this.vec2Index = vec2Index;
+        this.bitfield = bit(index);
     }
 
     get cardinal() {
@@ -139,3 +141,6 @@ export const OrdinalDirections = Directions.filter(dir => dir.ordinal);
 export const DirectionIndices = Directions.map(dir => dir.index);
 export const CardinalDirectionIndices = CardinalDirections.map(dir => dir.index);
 export const OrdinalDirectionIndices = OrdinalDirections.map(dir => dir.index);
+
+export const AllDirectionBits = 0xff;
+export const NumDirections = 8;

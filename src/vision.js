@@ -1,28 +1,17 @@
 import {ObjectPool} from 'utils/object_pool';
 import {Cell, CellGrid} from 'utils/cell_grid';
-import {Direction} from 'utils/direction';
+import {Direction, AllDirectionBits} from 'utils/direction';
 
 class VisionCellDescription {
     constructor() {
         this.cell = null;
         this.visibility = 0;
-        this.sides = new Array(Direction.length);
-        this.setAllSides(false);
-    }
-
-    setAllSides(value) {
-        for (let i = 0; i < this.sides.length; i++) {
-            this.sides[i] = value;
-        }
+        this.sides = 0;
     }
 
     clear() {
         this.visibility = 0;
-        this.setAllSides(false);
-    }
-
-    setSide(direction, value) {
-        this.sides[direction.index] = value;
+        this.sides = 0;
     }
 }
 
@@ -80,7 +69,7 @@ export class VisionCellList {
 
     addAllSides(coord, visibility) {
         let description = this.getDescription(coord);
-        description.setAllSides(true);
         description.visibility = visibility;
+        description.sides = AllDirectionBits;
     }
 }
