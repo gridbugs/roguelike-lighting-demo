@@ -113,7 +113,8 @@ export function renderKnowledgeGrid(knowledgeGrid, lightContext, drawer, xOffset
     let width = drawer.width;
     let height = drawer.height;
 
-    for (let drawerCell of drawer.grid) {
+    for (let i = 0; i < drawer.grid.size; i++) {
+        let drawerCell = drawer.grid.array[i];
         let xKnowledgeIndex = drawerCell.x + xOffset;
         let yKnowledgeIndex = drawerCell.y + yOffset;
 

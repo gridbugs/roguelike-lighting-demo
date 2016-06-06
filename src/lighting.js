@@ -255,7 +255,9 @@ export class Light {
 
         this.visionCellList.clear();
         this.detectVisibleArea();
-        for (let description of this.visionCellList) {
+
+        for (let i = 0; i < this.visionCellList.pool.index; i++) {
+            let description = this.visionCellList.pool.array[i];
             let lightCell = this.lightContext.grid.get(description.cell);
             lightCell.updateLight(this, description.visibility, description.sides);
         }
