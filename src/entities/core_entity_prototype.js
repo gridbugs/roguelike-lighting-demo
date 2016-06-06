@@ -145,7 +145,7 @@ export function PlasmaRound(x, y) {
         new Components.Position(x, y),
         new Components.Tile(Tiles.PlasmaRound, 3),
         new Components.Bullet(),
-        new Components.Light(40, 2, ALL_CHANNELS, rgba32FloatAlpha(0, 255, 255, 0.3))
+        new Components.Light(40, 1, ALL_CHANNELS, rgba32FloatAlpha(0, 255, 255, 0.2))
     ];
 }
 

@@ -13,6 +13,8 @@ import {constrain} from 'utils/arith';
 import {ArrayCollection} from 'utils/array_collection';
 import {rgba32DarkenRatio, rgba32TransparentiseRatio, rgba32Add, TRANSPARENT} from 'utils/rgba32';
 import {DoublyLinkedList} from 'utils/doubly_linked_list';
+import {IndexAllocator} from 'utils/index_allocator';
+import {assert} from 'utils/assert';
 
 export const ALL_CHANNELS = UINT32_MAX;
 
@@ -24,10 +26,6 @@ const MAX_NUM_LIGHTS = 100;
 const SURFACE_NORMAL = new Vec3(0, 0, 1);
 
 const WORKING_VEC3 = new Vec3(0, 0, 0);
-
-/* A guess at the maximum number of colour sprites per cell.
- * Used as a hint to optimize storage of colour sprites in cells. */
-const MAX_NUM_TILE_COLOURS_ESTIMATE = 10;
 
 class LightProfile {
     constructor(light, cell) {
@@ -177,13 +175,10 @@ class MaskedVisionCellList {
     }
 }
 
-let nextLightId = 0;
-
 export class Light {
     constructor(coord, intensity, height, channels = ALL_CHANNELS, colour = NO_COLOUR) {
 
-        this.id = nextLightId;
-        nextLightId++;
+        this.id = -1;
 
         this.coord = coord;
         this.intensity = intensity;
@@ -204,6 +199,12 @@ export class Light {
             this.maskedSpacialHash = new MaskedSpacialHash(this, channels);
             this.maskedVisionCellList = new MaskedVisionCellList(this, channels);
         }
+    }
+
+    setLightContext(lightContext) {
+        this.lightContext = lightContext;
+        this.id = lightContext.indexAllocator.allocate();
+        console.debug(this.id);
     }
 
     get visionCellList() {
@@ -259,6 +260,8 @@ export class Light {
 
     remove() {
         this.lightContext.remove(this);
+        assert(this.id != -1);
+        this.lightContext.indexAllocator.free(this.id);
     }
 }
 
@@ -398,6 +401,7 @@ export class LightContext {
         this.ecsContext = ecsContext;
         this.grid = new LightGrid(ecsContext.width, ecsContext.height);
         this.visionCells = new VisionCellList(ecsContext);
+        this.indexAllocator = new IndexAllocator();
     }
 
     remove(light) {

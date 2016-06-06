@@ -57,7 +57,7 @@ export class Light extends LightParent {
     }
 
     onAdd(entity) {
-        this.light.lightContext = entity.ecsContext.lightContext;
+        this.light.setLightContext(entity.ecsContext.lightContext);
         super.onAdd(entity);
         this.updateLight();
     }
@@ -92,7 +92,7 @@ export class DirectionalLight extends DirectionalLightParent {
     }
 
     onAdd(entity) {
-        this.light.lightContext = entity.ecsContext.lightContext;
+        this.light.setLightContext(entity.ecsContext.lightContext);
         super.onAdd(entity);
         this.updateLight();
     }
