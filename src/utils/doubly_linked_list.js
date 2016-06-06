@@ -15,24 +15,26 @@ function defaultAllocateNode() {
 export class DoublyLinkedList {
     constructor(allocateNode = defaultAllocateNode) {
         this.allocateNode = allocateNode;
-        this.clear();
+        this.headNode = null;
+        this.tailNode = null;
+        this.length = 0;
     }
 
     get head() {
-        return this._head.value;
+        return this.headNode.value;
     }
 
     get tail() {
-        return this._tail.value;
+        return this.tailNode.value;
     }
 
     get empty() {
-        return this._head == null;
+        return this.headNode == null;
     }
 
     clear() {
-        this._head = null;
-        this._tail = null;
+        this.headNode = null;
+        this.tailNode = null;
         this.length = 0;
     }
 
@@ -40,90 +42,102 @@ export class DoublyLinkedList {
     push(value) {
         let node = this.allocateNode();
         node.value = value;
-        node.prev = this._tail;
+        node.prev = this.tailNode;
         node.next = null;
 
-        if (this._tail == null) {
+        if (this.tailNode == null) {
             assert(this.length == 0);
-            assert(this._head == null);
-            this._head = node;
+            assert(this.headNode == null);
+            this.headNode = node;
         } else {
-            this._tail.next = node;
+            this.tailNode.next = node;
         }
 
-        this._tail = node;
+        this.tailNode = node;
 
         this.length++;
+
+        return node;
     }
 
     /* Remove and return tail */
     pop() {
-        let node = this._tail;
+        return this.popNode().value;
+    }
 
-        this._tail = node.prev;
+    popNode() {
+        let node = this.tailNode;
 
-        if (this._tail == null) {
-            assert(this._head == node);
+        this.tailNode = node.prev;
+
+        if (this.tailNode == null) {
+            assert(this.headNode == node);
             assert(this.length == 1);
-            this._head = null;
+            this.headNode = null;
         } else {
-            assert(this._tail.next == node);
-            this._tail.next = null;
+            assert(this.tailNode.next == node);
+            this.tailNode.next = null;
         }
 
         --this.length;
 
-        return node.value;
+        return node;
     }
 
     /* Prepend value at head */
-    unshift(value) {
+    unshiftNode(value) {
         let node = this.allocateNode();
         node.value = value;
-        node.next = this._head;
+        node.next = this.headNode;
         node.prev = null;
 
-        if (this._head == null) {
+        if (this.headNode == null) {
             assert(this.length == 0);
-            assert(this._tail == null);
-            this._tail = node;
+            assert(this.tailNode == null);
+            this.tailNode = node;
         } else {
-            this._head.prev = node;
+            this.headNode.prev = node;
         }
 
-        this._head = node;
+        this.headNode = node;
 
         this.length++;
+
+        return node;
     }
 
     /* Remove and return head */
     shift() {
-        let node = this._head;
+        return this.shiftNode().value;
+    }
 
-        this._head = node.next;
+    shiftNode() {
+        let node = this.headNode;
 
-        if (this._head == null) {
-            assert(this._tail == node);
+        this.headNode = node.next;
+
+        if (this.headNode == null) {
+            assert(this.tailNode == node);
             assert(this.length == 1);
-            this._tail = null;
+            this.tailNode = null;
         } else {
-            assert(this._head.prev == node);
-            this._head.prev = null;
+            assert(this.headNode.prev == node);
+            this.headNode.prev = null;
         }
 
         --this.length;
 
-        return node.value;
+        return node;
     }
 
     *forwards() {
-        for (let node = this._head; node != null; node = node.next) {
+        for (let node = this.headNode; node != null; node = node.next) {
             yield node.value;
         }
     }
 
     *backwards() {
-        for (let node = this._tail; node != null; node = node.prev) {
+        for (let node = this.tailNode; node != null; node = node.prev) {
             yield node.value;
         }
     }
