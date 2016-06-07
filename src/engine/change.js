@@ -1,4 +1,5 @@
 import {isArray} from 'utils/array_utils';
+import {assert}  from 'utils/assert';
 import {Entity} from 'engine/entity';
 
 /* An embedded domain specific language for mutating the game state */
@@ -6,6 +7,11 @@ import {Entity} from 'engine/entity';
 class Change {
     getEntity(ecsContext) {
         return this.entity;
+    }
+
+    getResolved() {
+        /* by default changes are already resolved */
+        return this;
     }
 }
 
@@ -106,6 +112,10 @@ export class Bind extends Change {
         ecsContext.bindings[this.id] = result;
         return result;
     }
+
+    getResolved() {
+        return this.change;
+    }
 }
 
 export class Refer extends Change {
@@ -131,5 +141,10 @@ export class Refer extends Change {
     apply(ecsContext) {
         this._maybeResolveChange(ecsContext);
         return this.change.apply(ecsContext);
+    }
+
+    getResolved() {
+        assert(this.change != null);
+        return this.change;
     }
 }

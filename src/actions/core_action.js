@@ -14,10 +14,8 @@ export class Walk extends Action {
         this.position = this.entity.get(Components.Position);
         this.source = this.position.vector;
         this.destination = this.source.add(this.direction.vector);
-    }
 
-    getChanges() {
-        return [
+        this.changes = [
             new Change.UpdateComponentFieldInPlace(
                 this.entity,
                 Components.Position,
@@ -36,10 +34,8 @@ export class OpenDoor extends Action {
         this.character = character;
         this.door = door;
         this.entity = door;
-    }
 
-    getChanges() {
-        return [
+        this.changes = [
             new Change.SetComponentField(this.door, Components.Door, Components.Door.Open, true),
             new Change.SetComponentField(this.door, Components.Tile, Components.Tile.Family,
                 this.door.get(Components.Door).openTileFamily),
@@ -55,10 +51,8 @@ export class CloseDoor extends Action {
         this.character = character;
         this.door = door;
         this.entity = door;
-    }
 
-    getChanges() {
-        return [
+        this.changes = [
             new Change.SetComponentField(this.door, Components.Door, Components.Door.Open, false),
             new Change.SetComponentField(this.door, Components.Tile, Components.Tile.Family,
                 this.door.get(Components.Door).closedTileFamily),
@@ -73,10 +67,8 @@ export class DirectionalLightTurn extends Action {
         super();
         this.entity = entity;
         this.angle = angle;
-    }
 
-    getChanges() {
-        return [
+        this.changes = [
             new Change.SetComponentField(this.entity, Components.DirectionalLight,
                      Components.DirectionalLight.Angle,
                      normalize(this.entity.get(Components.DirectionalLight).angle + this.angle))
@@ -88,10 +80,8 @@ export class Wait extends Action {
     constructor(entity) {
         super();
         this.entity = entity;
-    }
 
-    getChanges() {
-        return [];
+        this.changes = [];
     }
 }
 
@@ -102,13 +92,10 @@ export class Shoot extends Action {
         this.entity = entity;
         this.origin = entity.get(Components.Position).vector;
         this.count = count;
-    }
 
-    getChanges() {
         const BULLET = 0;
         const MUZZLE_FLASH = 1;
-
-        return [
+        this.changes = [
             new Change.Bind(BULLET, new Change.AddEntity(EntityPrototypes.PlasmaRound(this.origin.x, this.origin.y))),
             new Change.Refer(BULLET, (bullet) => new Change.AddComponent(bullet, Components.Velocity, this.direction.vector)),
             new Change.Refer(BULLET, (bullet) => new Change.AddComponent(bullet, Components.Animated)),
@@ -126,10 +113,8 @@ export class VelocityMove extends Action {
         this.velocity = this.entity.get(Components.Velocity);
         this.source = this.position.vector;
         this.destination = this.source.add(this.velocity.vector);
-    }
 
-    getChanges() {
-        return [
+        this.changes = [
             new Change.UpdateComponentFieldInPlace(
                 this.entity,
                 Components.Position,
@@ -146,10 +131,8 @@ export class Destroy extends Action {
     constructor(entity) {
         super();
         this.entity = entity;
-    }
 
-    getChanges() {
-        return [
+        this.changes = [
             new Change.RemoveEntity(this.entity)
         ];
     }
