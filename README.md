@@ -1,4 +1,4 @@
-They Came from the Sea
+Mutey Shooty Duty
 ======================
 
-Experimental roguelike where you try to avoid seeing eldrich beings that will drive you mad.
+turn-based, bullet-hell, top-down shooter
