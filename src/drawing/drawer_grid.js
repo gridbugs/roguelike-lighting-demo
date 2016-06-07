@@ -1,19 +1,22 @@
 import {CellGrid, Cell} from 'utils/cell_grid';
 import {Sprite} from 'utils/sprite';
 
-class DrawerCell extends Cell {
-    constructor(x, y, grid) {
+export class DrawerCell extends Cell {
+    constructor(x, y, grid, ctx, tileWidth, tileHeight) {
         super(x, y, grid);
-        this.sprite = new Sprite(grid.ctx,
-                                 x * grid.tileWidth, y * grid.tileHeight,
-                                 grid.tileWidth, grid.tileHeight);
+        this.sprite = new Sprite(ctx,
+                                 x * tileWidth, y * tileHeight,
+                                 tileWidth, tileHeight);
     }
 }
 
 export function DrawerGrid(T) {
     return class DrawerGridInstance extends CellGrid(T) {
         constructor(ctx, tileWidth, tileHeight) {
-            super(Math.floor(ctx.canvas.width / tileWidth), Math.floor(ctx.canvas.height / tileHeight));
+            super(Math.floor(ctx.canvas.width / tileWidth),
+                  Math.floor(ctx.canvas.height / tileHeight),
+                  ctx, tileWidth, tileHeight);
+
             this.ctx = ctx;
             this.canvas = ctx.canvas;
             this.tileWidth = tileWidth;

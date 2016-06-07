@@ -108,7 +108,7 @@ class MaskedSpacialHash {
         return this.spacialHash.limits;
     }
 
-    getCoord(coord) {
+    getVec2(coord) {
         let cell = this.spacialHash.get(coord);
         if (cell.entities.hasComponent(Components.LightMask)) {
             let entity = cell.find(Components.LightMask);
@@ -204,7 +204,6 @@ export class Light {
     setLightContext(lightContext) {
         this.lightContext = lightContext;
         this.id = lightContext.indexAllocator.allocate();
-        console.debug(this.id);
     }
 
     get visionCellList() {

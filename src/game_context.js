@@ -48,7 +48,7 @@ export class GameContext extends EcsContext(GameCell) {
     initSystems() {
         super.initSystems();
 
-        this.drawer = GlobalDrawer.Drawer;
+        this.renderer = GlobalDrawer.Renderer;
         this.hud = GlobalHud.Hud;
 
         this.pathPlanner = new PathPlanner(this);
@@ -56,7 +56,7 @@ export class GameContext extends EcsContext(GameCell) {
         this.collision = new Collision(this);
         this.door = new Door(this);
         this.observation = new Observation(this);
-        this.knowledgeRenderer = new KnowledgeRenderer(this, this.drawer);
+        this.knowledgeRenderer = new KnowledgeRenderer(this, this.renderer);
         this.lighting = new Lighting(this);
         this.lightMove = new LightMove(this);
         this.animation = new Animation(this);

@@ -46,8 +46,12 @@ export class Grid {
         }
     }
 
-    getCoord(vec) {
+    getVec2(vec) {
         return this.array[vec.x + vec.y * this.width];
+    }
+
+    getCoord(x, y) {
+        return this.array[x + y * this.width];
     }
 
     get(x, y) {

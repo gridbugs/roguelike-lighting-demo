@@ -114,7 +114,7 @@ function computeSlope(fromVec, toVec, lateralIndex, depthIndex) {
 }
 
 export function detectVisibleArea(eyePosition, viewDistance, grid, visionCells) {
-    let eyeCell = grid.getCoord(eyePosition);
+    let eyeCell = grid.getVec2(eyePosition);
     let viewDistanceSquared = viewDistance * viewDistance;
 
     visionCells.addAllSides(eyeCell, 1);
@@ -140,7 +140,7 @@ function angleToSlope(octant, angle) {
 
 export function detectVisibleAreaConstrained(eyePosition, viewDistance, grid, visionCells,
                                              startAngle, stopAngle) {
-    let eyeCell = grid.getCoord(eyePosition);
+    let eyeCell = grid.getVec2(eyePosition);
     let viewDistanceSquared = viewDistance * viewDistance;
 
     visionCells.addAllSides(eyeCell, 1);
@@ -266,7 +266,7 @@ function detectVisibleAreaOctant(octant, eyeCell, viewDistance, viewDistanceSqua
 
             COORD_IDX.arraySet(octant.lateralIndex, i);
 
-            let cell = grid.getCoord(COORD_IDX);
+            let cell = grid.getVec2(COORD_IDX);
             let description = visionCells.getDescription(cell);
 
             if (COORD_IDX.getDistanceSquared(eyeCell.coord) < viewDistanceSquared) {

@@ -30,7 +30,7 @@ export class Sprite {
     fillColour(colourString) {
         this.ctx.beginPath();
         this.ctx.fillStyle = colourString;
-        this.ctx.fill(this.x, this.y, this.width, this.height);
+        this.ctx.fillRect(this.x, this.y, this.width, this.height);
         this.ctx.fill();
     }
 
