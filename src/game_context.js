@@ -74,6 +74,7 @@ export class GameContext extends EcsContext(GameCell) {
         super.runRetroactiveSystems(action);
 
         this.lightMove.run(action);
+        this.lighting.run(action);
         this.shooting.run(action);
         this.animation.run();
     }
@@ -96,11 +97,11 @@ export class GameContext extends EcsContext(GameCell) {
         super.beforeTurn(entity);
 
         if (entity.is(Components.Observer)) {
-            this.lighting.run();
             this.observation.run(entity);
         }
 
         if (entity.is(Components.PlayerCharacter)) {
+            this.lighting.updateAll();
             this.knowledgeRenderer.run(entity);
             this.hud.update(entity);
             this.hud.messageChanged = false;
@@ -122,7 +123,7 @@ export class GameContext extends EcsContext(GameCell) {
     updatePlayer() {
         super.updatePlayer();
 
-        this.lighting.run();
+        this.lighting.updateChanged();
         this.observation.run(this.playerCharacter);
         this.knowledgeRenderer.run(this.playerCharacter);
         this.hud.update(this.playerCharacter);

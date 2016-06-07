@@ -72,6 +72,7 @@ export function EcsContext(CellType) {
             this.turnSchedule = new Schedule();
             this.actionSchedule = new Schedule();
             this.bindings = new Array();
+            this.actionCells = new Set();
         }
 
         get width() {
@@ -124,7 +125,9 @@ export function EcsContext(CellType) {
 
         applyAction(action) {
             let changes = action.changes;
-            let cells = new Set();
+            let cells = this.actionCells;
+
+            cells.clear();
 
             for (let change of changes) {
                 let entity = change.getEntity(this);

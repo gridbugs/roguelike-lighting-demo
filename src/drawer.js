@@ -11,6 +11,7 @@ class DrawerCell extends Cell {
         super(x, y, grid);
         this.drawer = drawer;
         this.stack = new Stack(INITIAL_STACK_SIZE);
+        this.unknown = false;
     }
 
     drawTile(tile) {

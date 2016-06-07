@@ -29,7 +29,10 @@ function getBackgroundTile(knowledgeCell) {
 }
 
 function drawUnknownKnowledgeCell(knowledgeCell, drawerCell) {
-    drawerCell.drawTile(Tiles.Unknown.main);
+    if (!drawerCell.unknown) {
+        drawerCell.unknown = true;
+        drawerCell.drawTile(Tiles.Unknown.main);
+    }
 }
 
 function drawLitTile(knowledgeCell, tileFamily, lightCell, drawerCell) {
@@ -73,6 +76,7 @@ function drawColourSprite(knowledgeCell, tileFamily, lightCell, drawerCell) {
 }
 
 function drawVisibleKnowledgeCell(knowledgeCell, lightCell, drawerCell) {
+    drawerCell.unknown = false;
     let foregroundTile = getForegroundTile(knowledgeCell);
     if (foregroundTile.transparent) {
         let backgroundTile = getBackgroundTile(knowledgeCell);
@@ -92,9 +96,7 @@ function drawRememberedKnowledgeCell(knowledgeCell, drawerCell) {
 }
 
 function drawKnowledgeCell(knowledgeCell, lightCell, drawerCell) {
-    if (!knowledgeCell.known) {
-        drawUnknownKnowledgeCell(knowledgeCell, drawerCell);
-    } else if (knowledgeCell.visible) {
+    if (knowledgeCell.visible) {
         drawVisibleKnowledgeCell(knowledgeCell, lightCell, drawerCell);
     } else {
         drawUnknownKnowledgeCell(knowledgeCell, drawerCell);

@@ -300,13 +300,15 @@ class SideProfile {
 }
 
 class LightCell extends Cell {
-    constructor(x, y, grid) {
+    constructor(x, y, grid, lightContext) {
         super(x, y, grid);
         this.lightingCentre = new Vec3(this.centre.x, this.centre.y, 0);
         this.profileTable = new Array(MAX_NUM_LIGHTS);
         this.profileList = new DoublyLinkedList();
         this.sides = new Array(Direction.length);
         this.intensity = 0;
+        this.lightContext = lightContext;
+        this.lastSequence = -1;
 
         for (let i = 0; i < this.sides.length; i++) {
             this.sides[i] = new SideProfile();
@@ -340,6 +342,8 @@ class LightCell extends Cell {
         if (!profile.node) {
             profile.node = this.profileList.push(profile);
         }
+
+        this.lastSequence = this.lightContext.sequence;
     }
 
     updateLightIntensityTotal(profile) {
@@ -364,6 +368,11 @@ class LightCell extends Cell {
     }
 
     updateTotals() {
+
+        if (this.lastSequence != this.lightContext.sequence) {
+            return;
+        }
+
         this.intensity = 0;
         this.clearSides();
         for (let node = this.profileList.headNode; node != null; node = node.next) {
@@ -398,9 +407,16 @@ export class LightContext {
     constructor(ecsContext) {
         this.lights = new Set();
         this.ecsContext = ecsContext;
-        this.grid = new LightGrid(ecsContext.width, ecsContext.height);
+        this.grid = new LightGrid(ecsContext.width, ecsContext.height, this);
         this.visionCells = new VisionCellList(ecsContext);
         this.indexAllocator = new IndexAllocator();
+
+        this.sequence = 0;
+    }
+
+    beginUpdate() {}
+    endUpdate() {
+        this.sequence++;
     }
 
     remove(light) {
