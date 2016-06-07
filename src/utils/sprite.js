@@ -27,6 +27,13 @@ export class Sprite {
                 this.width, this.height);
     }
 
+    fillColour(colourString) {
+        this.ctx.beginPath();
+        this.ctx.fillStyle = colourString;
+        this.ctx.fill(this.x, this.y, this.width, this.height);
+        this.ctx.fill();
+    }
+
     clear() {
         this.ctx.clearRect(this.x, this.y, this.width, this.height);
     }

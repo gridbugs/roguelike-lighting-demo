@@ -4,3 +4,8 @@ export function createCanvasContext(width, height) {
     canvas.height = height;
     return canvas.getContext('2d');
 }
+
+export function getCanvasContextById(id) {
+    let canvas = document.getElementById(id);
+    return canvas.getContext('2d');
+}
