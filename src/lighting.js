@@ -204,7 +204,6 @@ export class Light {
     setLightContext(lightContext) {
         this.lightContext = lightContext;
         this.id = lightContext.indexAllocator.allocate();
-        console.debug(this.id);
     }
 
     get visionCellList() {
