@@ -4,8 +4,6 @@ import {EcsContext, SpacialHashCell} from 'engine/ecs_context';
 import {GlobalDrawer} from 'global_drawer';
 import {GlobalHud} from 'global_hud';
 
-import {PathPlanner} from 'path_planner';
-
 /* Systems */
 import {Collision} from 'systems/collision';
 import {Door} from 'systems/door';
@@ -50,8 +48,6 @@ export class GameContext extends EcsContext(GameCell) {
 
         this.drawer = GlobalDrawer.Drawer;
         this.hud = GlobalHud.Hud;
-
-        this.pathPlanner = new PathPlanner(this);
 
         this.collision = new Collision(this);
         this.door = new Door(this);

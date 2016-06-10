@@ -52,6 +52,17 @@ const ControlNonChars = substituteValues(ControlTypes, {
     [Input.NonChar.NUMPAD_5]: 'Wait',
 });
 
+export const DirectionTable = makeTable(ControlTypes, {
+    West:       Direction.West,
+    South:      Direction.South,
+    North:      Direction.North,
+    East:       Direction.East,
+    NorthWest:  Direction.NorthWest,
+    NorthEast:  Direction.NorthEast,
+    SouthWest:  Direction.SouthWest,
+    SouthEast:  Direction.SouthEast
+});
+
 function toggleDoor(entity) {
     for (let neighbour of entity.cell.neighbours) {
         let door = neighbour.find(Components.Door);
