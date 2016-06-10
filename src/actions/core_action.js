@@ -86,9 +86,9 @@ export class Wait extends Action {
 }
 
 export class Shoot extends Action {
-    constructor(entity, count = 5) {
+    constructor(entity, direction, count = 5) {
         super();
-        this.direction = Direction.North;
+        this.direction = direction;
         this.entity = entity;
         this.origin = entity.get(Components.Position).vector;
         this.count = count;

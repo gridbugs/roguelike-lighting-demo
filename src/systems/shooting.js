@@ -8,7 +8,7 @@ export class Shooting extends ReactiveSystem {
 
         this.on(Actions.Shoot, (action) => {
             if (action.count > 0) {
-                this.ecsContext.scheduleAction(new Actions.Shoot(action.entity, action.count - 1), 4);
+                this.ecsContext.scheduleAction(new Actions.Shoot(action.entity, action.direction, action.count - 1), 4);
             }
         });
     }

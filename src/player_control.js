@@ -21,6 +21,8 @@ async function getControlAction(entity) {
             continue;
         }
 
+        entity.ecsContext.hud.message = "";
+
         return action;
     }
 }

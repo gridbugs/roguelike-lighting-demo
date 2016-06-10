@@ -52,7 +52,7 @@ const ControlNonChars = substituteValues(ControlTypes, {
     [Input.NonChar.NUMPAD_5]: 'Wait',
 });
 
-export const DirectionTable = makeTable(ControlTypes, {
+const DirectionTable = makeTable(ControlTypes, {
     West:       Direction.West,
     South:      Direction.South,
     North:      Direction.North,
@@ -62,6 +62,16 @@ export const DirectionTable = makeTable(ControlTypes, {
     SouthWest:  Direction.SouthWest,
     SouthEast:  Direction.SouthEast
 });
+
+async function getDirection() {
+    let key = await Input.getNonModifierKey();
+    let controlType = getControlTypeFromKey(key);
+    let direction = DirectionTable[controlType];
+    if (direction == undefined) {
+        return null;
+    }
+    return direction;
+}
 
 function toggleDoor(entity) {
     for (let neighbour of entity.cell.neighbours) {
@@ -79,6 +89,18 @@ function toggleDoor(entity) {
     return null;
 }
 
+async function aimFire(entity) {
+    entity.ecsContext.hud.message = "Shoot in which direction?";
+    let direction = await getDirection();
+    if (direction == null) {
+        entity.ecsContext.hud.message = "That wasn't a direction!";
+        return null;
+    } else {
+        entity.ecsContext.hud.message = "";
+        return new Actions.Shoot(entity, direction, 0);
+    }
+}
+
 const TURN_ANGLE = d2r(45);
 
 export const ControlTable = makeTable(ControlTypes, {
@@ -94,7 +116,7 @@ export const ControlTable = makeTable(ControlTypes, {
     Close:      toggleDoor,
     TurnLeft:   entity => new Actions.DirectionalLightTurn(entity, TURN_ANGLE),
     TurnRight:  entity => new Actions.DirectionalLightTurn(entity, -TURN_ANGLE),
-    Shoot:      entity => new Actions.Shoot(entity)
+    Shoot:      aimFire
 });
 
 export function getControlTypeFromKey(key) {

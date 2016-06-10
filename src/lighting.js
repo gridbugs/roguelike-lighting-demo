@@ -370,7 +370,7 @@ class LightCell extends Cell {
     updateTotals() {
 
         if (this.lastSequence != this.lightContext.sequence) {
-            return;
+//            return;
         }
 
         this.intensity = 0;
