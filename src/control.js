@@ -25,14 +25,14 @@ export const ControlTypes = makeEnum([
 ], true);
 
 const ControlChars = substituteValues(ControlTypes, {
-    h: 'West',
-    j: 'South',
-    k: 'North',
-    l: 'East',
-    y: 'NorthWest',
-    u: 'NorthEast',
-    b: 'SouthWest',
-    n: 'SouthEast',
+    'h': 'West',
+    'j': 'South',
+    'k': 'North',
+    'l': 'East',
+    'y': 'NorthWest',
+    'u': 'NorthEast',
+    'b': 'SouthWest',
+    'n': 'SouthEast',
     '.': 'Wait',
     'c': 'Close',
     'q': 'TurnLeft',
