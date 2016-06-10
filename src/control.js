@@ -19,8 +19,6 @@ export const ControlTypes = makeEnum([
     'SouthEast',
     'Wait',
     'Close',
-    'TurnLeft',
-    'TurnRight',
     'Shoot'
 ], true);
 
@@ -35,8 +33,6 @@ const ControlChars = substituteValues(ControlTypes, {
     'n': 'SouthEast',
     '.': 'Wait',
     'c': 'Close',
-    'q': 'TurnLeft',
-    'e': 'TurnRight',
     'f': 'Shoot'
 });
 
@@ -101,8 +97,6 @@ async function aimFire(entity) {
     }
 }
 
-const TURN_ANGLE = d2r(45);
-
 export const ControlTable = makeTable(ControlTypes, {
     West:       entity => new Actions.Walk(entity, Direction.West),
     South:      entity => new Actions.Walk(entity, Direction.South),
@@ -114,8 +108,6 @@ export const ControlTable = makeTable(ControlTypes, {
     SouthEast:  entity => new Actions.Walk(entity, Direction.SouthEast),
     Wait:       entity => new Actions.Wait(entity),
     Close:      toggleDoor,
-    TurnLeft:   entity => new Actions.DirectionalLightTurn(entity, TURN_ANGLE),
-    TurnRight:  entity => new Actions.DirectionalLightTurn(entity, -TURN_ANGLE),
     Shoot:      aimFire
 });
 
