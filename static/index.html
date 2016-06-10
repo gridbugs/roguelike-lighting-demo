@@ -23,7 +23,7 @@ body {
     font-family: 'GothicPixel';
     src: url('fonts/Gothic-Pixel.otf');
 }
-#canvas {
+.canvas {
     position: absolute;
     left: 0px;
     top: 16px;
@@ -94,12 +94,19 @@ body {
     top: 16px;
     left: 16px;
 }
+#game-canvas {
+    z-index: 1;
+}
+#ui-canvas {
+    z-index: 2;
+}
     </style>
 
 </head>
 <body>
     <div id="game">
-        <canvas id="canvas" width=1024 height=640></canvas>
+        <canvas id="game-canvas" class="canvas" width=1024 height=640></canvas>
+        <canvas id="ui-canvas"   class="canvas" width=1024 height=640></canvas>
         <div id="hud">
             <div id="top-hud">
                 <div id="message"></div>

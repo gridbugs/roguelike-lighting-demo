@@ -4,7 +4,12 @@ import {Config} from 'config';
 export const GlobalDrawer = {
     init() {
         this.Drawer = new Drawer(
-            document.getElementById('canvas'),
+            document.getElementById('game-canvas'),
+            Config.TILE_WIDTH,
+            Config.TILE_HEIGHT
+        );
+        this.UiDrawer = new Drawer(
+            document.getElementById('ui-canvas'),
             Config.TILE_WIDTH,
             Config.TILE_HEIGHT
         );
