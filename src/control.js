@@ -93,7 +93,7 @@ async function aimFire(entity) {
         return null;
     } else {
         entity.ecsContext.hud.message = "";
-        return new Actions.Shoot(entity, direction, 0);
+        return new Actions.Shoot(entity, direction, 5);
     }
 }
 
