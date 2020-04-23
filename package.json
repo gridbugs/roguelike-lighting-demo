@@ -1,39 +1,39 @@
 {
-  "name": "they-came-from-the-sea",
+  "name": "roguelike-lighting-demo",
   "version": "0.0.1",
   "description": "Experimental roguelike where you try to avoid seeing eldrich beings that will drive you mad.",
   "author": "Stephen Sherratt",
   "license": "MIT",
   "main": "index.html",
   "devDependencies": {
-    "babel-plugin-transform-async-to-generator": "*",
-    "babel-plugin-transform-runtime": "*",
-    "babel-preset-es2015": "*",
-    "glob": "*",
-    "gulp": "*",
-    "gulp-babel": "*",
-    "gulp-changed": "*",
-    "gulp-print": "*",
-    "gulp-identity": "*",
-    "gulp-plumber": "*",
-    "gulp-rimraf": "*",
-    "gulp-sourcemaps": "*",
-    "gulp-sweetjs": "*",
-    "gulp-uglify": "*",
-    "gulp-webserver": "*",
-    "run-sequence": "*",
-    "source-map-loader": "*",
-    "webpack-stream": "*",
-    "yargs": "*"
+    "babel-plugin-transform-async-to-generator": "6.8.0",
+    "babel-plugin-transform-runtime": "6.9.0",
+    "babel-preset-es2015": "6.9.0",
+    "glob": "7.0.3",
+    "gulp": "3.9.1",
+    "gulp-babel": "6.1.2",
+    "gulp-changed": "1.3.0",
+    "gulp-print": "2.0.1",
+    "gulp-identity": "0.1.0",
+    "gulp-plumber": "1.1.0",
+    "gulp-rimraf": "0.2.0",
+    "gulp-sourcemaps": "1.6.0",
+    "gulp-sweetjs": "0.6.1",
+    "gulp-uglify": "1.5.3",
+    "gulp-webserver": "0.9.1",
+    "run-sequence": "1.2.0",
+    "source-map-loader": "0.1.5",
+    "webpack-stream": "3.2.0",
+    "yargs": "4.7.1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/stevebob/they-came-from-the-sea.git"
+    "url": "git+https://github.com/stevebob/roguelike-lighting-demo.git"
   },
   "bugs": {
-    "url": "https://github.com/stevebob/they-came-from-the-sea/issues"
+    "url": "https://github.com/stevebob/roguelike-lighting-demo/issues"
   },
-  "homepage": "https://github.com/stevebob/they-came-from-the-sea#readme",
+  "homepage": "https://github.com/stevebob/roguelike-lighting-demo",
   "window": {
     "toolbar": false,
     "resizable": false,
